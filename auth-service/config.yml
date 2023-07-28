@@ -1,0 +1,3 @@
+sessions_storage:
+  container_name: redis_sessions
+  port: 6379
