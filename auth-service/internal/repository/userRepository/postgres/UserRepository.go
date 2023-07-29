@@ -11,11 +11,14 @@ import (
 	"os"
 )
 
+type UserStorage interface {
+}
+
 type UserRepository struct {
 	pool *pgxpool.Pool
 }
 
-func NewUserRepository(config config.Config) *UserRepository {
+func NewUserRepository(config config.Config) UserStorage {
 
 	if err := godotenv.Load("postgres.env"); err != nil {
 		logger.Logger.Error(err.Error())
@@ -39,5 +42,6 @@ func NewUserRepository(config config.Config) *UserRepository {
 		return nil
 	}
 
+	logger.Logger.Info("Success")
 	return &UserRepository{pool: pool}
 }
