@@ -1,0 +1,29 @@
+version: "3"
+services:
+  redis_sessions:
+    container_name: redis_sessions
+    image: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - cache:/data
+  postgres_auth:
+    container_name: postgres_auth
+    image: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_auth_data:/var/lib/postgresql/data
+    env_file:
+      - ./auth-service/postgres.env
+  auth_service:
+    build:
+      context: .
+      dockerfile: ./auth-service/Dockerfile
+    container_name: auth_service
+
+
+volumes:
+  cache:
+  postgres_auth_data:
+
