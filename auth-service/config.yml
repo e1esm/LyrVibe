@@ -1,3 +1,6 @@
 sessions_storage:
   container_name: redis_sessions
   port: 6379
+users_storage:
+  container_name: postgres_auth
+  max_connections: 100
