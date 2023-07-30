@@ -42,6 +42,5 @@ func NewUserRepository(config config.Config) UserStorage {
 		return nil
 	}
 
-	logger.Logger.Info("Success")
 	return &UserRepository{pool: pool}
 }

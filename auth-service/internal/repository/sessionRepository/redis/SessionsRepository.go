@@ -38,7 +38,6 @@ func NewSessionsStorage(config config.Config) SessionStorage {
 	if cli == nil {
 		logger.Logger.Error("Error")
 	}
-	logger.Logger.Info("Success redis")
 	return SessionsRepository{redis: cli}
 
 }
