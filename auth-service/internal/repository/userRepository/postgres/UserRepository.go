@@ -3,15 +3,22 @@ package postgres
 import (
 	"context"
 	"fmt"
+	"github.com/e1esm/LyrVibe/auth-service/internal/models"
 	"github.com/e1esm/LyrVibe/auth-service/pkg/config"
 	"github.com/e1esm/LyrVibe/auth-service/pkg/logger"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/joho/godotenv"
 	"go.uber.org/zap"
 	"os"
+	"time"
+)
+
+const (
+	timeoutTime = 5 * time.Second
 )
 
 type UserStorage interface {
+	Add(context.Context, *models.User) error
 }
 
 type UserRepository struct {
@@ -43,4 +50,24 @@ func NewUserRepository(config config.Config) UserStorage {
 	}
 
 	return &UserRepository{pool: pool}
+}
+
+func (ur *UserRepository) Add(ctx context.Context, user *models.User) error {
+	ctx, cancel := context.WithTimeout(ctx, timeoutTime)
+	defer cancel()
+
+	_, err := ur.pool.Exec(ctx, "INSERT INTO users VALUES($1, $2, $3, $4, $5, $6, $7, $8)",
+		user.ID,
+		user.Username,
+		user.FirstName,
+		user.SecondName,
+		user.Password,
+		user.Role,
+		user.Country,
+		user.ProfilePicture,
+	)
+	if err != nil {
+		return err
+	}
+	return nil
 }

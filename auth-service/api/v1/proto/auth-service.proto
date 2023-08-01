@@ -6,9 +6,11 @@ option go_package = "github.com/e1esm/LyrVibe/auth-service/api/v1/proto";
 message SignUpRequest{
   string username = 1;
   string password = 2;
-  string role = 3;
+  int64 role = 3;
   string country = 4;
   string image = 5;
+  string firstName = 6;
+  string secondName = 7;
 }
 
 message SignUpResponse{

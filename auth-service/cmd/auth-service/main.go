@@ -14,8 +14,8 @@ import (
 )
 
 func main() {
-	config := *config.NewConfig()
-	authServer := configureServer(configureService(*configureRepositories(config)))
+	cfg := *config.NewConfig()
+	authServer := configureServer(configureService(*configureRepositories(cfg)))
 
 	listener, err := net.Listen("tcp", ":8081")
 	if err != nil {
