@@ -2,6 +2,8 @@ version: "3"
 services:
   redis_sessions:
     container_name: redis_sessions
+    env_file:
+      - auth-service/redis.env
     image: redis
     ports:
       - "6379:6379"

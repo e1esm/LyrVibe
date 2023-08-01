@@ -1,0 +1,43 @@
+syntax = "proto3";
+package api.v1.proto;
+import "google/protobuf/empty.proto";
+option go_package = "github.com/e1esm/LyrVibe/auth-service/api/v1/proto";
+
+message SignUpRequest{
+  string username = 1;
+  string password = 2;
+  string role = 3;
+  string country = 4;
+  string image = 5;
+}
+
+message SignUpResponse{
+  string signupStatus = 1;
+  string errorMessage = 2;
+  string username = 3;
+}
+
+message SignInRequest{
+  string username = 1;
+  string password = 2;
+}
+
+
+message SignInResponse{
+  string user_id = 1;
+  string role = 2;
+}
+
+message RefreshRequest{
+  string token = 1;
+  string user_id = 2;
+  string role = 3;
+}
+
+
+
+service AuthService{
+  rpc SignUp(SignUpRequest) returns (SignUpResponse){}
+  rpc SignIn(SignInRequest) returns (SignInResponse) {}
+  rpc RefreshToken(RefreshRequest) returns(google.protobuf.Empty) {}
+}
