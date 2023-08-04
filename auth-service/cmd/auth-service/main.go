@@ -38,7 +38,7 @@ func configureServer(authService service.Service) *server.Server {
 	authServer := server.Server{}
 	authServer.Server = grpc.NewServer([]grpc.ServerOption{}...)
 	authServer.AuthService = authService
-	proto.RegisterAuthServiceServer(authServer.Server, authServer)
+	proto.RegisterAuthServiceServer(authServer.Server, &authServer)
 
 	return &authServer
 }

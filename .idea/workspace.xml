@@ -5,10 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c8b42bef-5454-4090-ac2f-27d93ce0c2b1" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/LyrVibe.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/LyrVibe.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/auth-service/internal/repository/sessionRepository/redis/SessionsRepository.go" beforeDir="false" afterPath="$PROJECT_DIR$/auth-service/internal/repository/sessionRepository/redis/SessionsRepository.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/auth-service/internal/repository/userRepository/postgres/UserRepository.go" beforeDir="false" afterPath="$PROJECT_DIR$/auth-service/internal/repository/userRepository/postgres/UserRepository.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/auth-service/cmd/auth-service/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/auth-service/cmd/auth-service/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/auth-service/postgres.Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/auth-service/postgres.Dockerfile" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />

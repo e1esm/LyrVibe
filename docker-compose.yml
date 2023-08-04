@@ -12,12 +12,20 @@ services:
   postgres_auth:
     container_name: postgres_auth
     image: postgres
+    build:
+      context: .
+      dockerfile: ./auth-service/postgres.Dockerfile
     ports:
       - "5432:5432"
     volumes:
       - postgres_auth_data:/var/lib/postgresql/data
     env_file:
       - ./auth-service/postgres.env
+    healthcheck:
+      test: ["CMD", "pg_isready"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
   auth_service:
     build:
       context: .
