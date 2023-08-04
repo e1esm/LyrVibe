@@ -21,11 +21,12 @@ const (
 )
 
 const (
-	CreatingModelError = "User with nickname of %s cannot be created"
-	BadRequestError    = "bad request"
-	SaveError          = "Error while saving %s"
-	InternalError      = "internal error occurred while operating on the provided input"
-	NoUserFound        = "User with username of %s wasn't found in the database or password was incorrect: %s"
+	SessionCreationError = "Failed to create a session"
+	CreatingModelError   = "User with nickname of %s cannot be created"
+	BadRequestError      = "bad request"
+	SaveError            = "Error while saving %s"
+	InternalError        = "internal error occurred while operating on the provided input"
+	NoUserFound          = "User with username of %s wasn't found in the database or password was incorrect: %s"
 )
 
 type Server struct {
@@ -70,7 +71,10 @@ func (s *Server) SignIn(ctx context.Context, request *proto.SignInRequest) (*pro
 	user, err := s.AuthService.GetUser(ctx, request.Username, request.Password)
 	if err == sql.ErrNoRows {
 		return &proto.SignInResponse{
-			Token: "",
+			Tokens: &proto.CachedTokens{
+				AccessToken:  "",
+				RefreshToken: "",
+			},
 			Status: &proto.RequestStatus{
 				RequestStatus: string(Fail),
 				ErrorMessage:  fmt.Sprintf(NoUserFound, request.Username, request.Password),
@@ -80,11 +84,23 @@ func (s *Server) SignIn(ctx context.Context, request *proto.SignInRequest) (*pro
 
 	cachedTokens, err := s.AuthService.CreateSession(ctx, user)
 	if err != nil {
-
+		return &proto.SignInResponse{
+			Tokens: &proto.CachedTokens{
+				AccessToken:  "",
+				RefreshToken: "",
+			},
+			Status: &proto.RequestStatus{
+				RequestStatus: string(Fail),
+				ErrorMessage:  SessionCreationError,
+			},
+		}, err
 	}
 
 	return &proto.SignInResponse{
-
+		Tokens: &proto.CachedTokens{
+			AccessToken:  cachedTokens.AccessToken,
+			RefreshToken: cachedTokens.RefreshToken,
+		},
 		Status: &proto.RequestStatus{
 			RequestStatus: string(Success),
 			ErrorMessage:  "",

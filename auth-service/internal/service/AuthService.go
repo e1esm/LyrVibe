@@ -6,6 +6,7 @@ import (
 	"github.com/e1esm/LyrVibe/auth-service/internal/models"
 	"github.com/e1esm/LyrVibe/auth-service/internal/repository"
 	"github.com/e1esm/LyrVibe/auth-service/pkg/logger"
+	"github.com/google/uuid"
 	"github.com/joho/godotenv"
 	"os"
 	"time"
@@ -19,6 +20,7 @@ type Service interface {
 	SaveUser(context.Context, *models.User) error
 	GetUser(context.Context, string, string) (*models.User, error)
 	CreateSession(context.Context, *models.User) (models.CachedTokens, error)
+	GetSessionCredentials(context.Context, uuid.UUID) (models.CachedTokens, error)
 }
 
 type AuthService struct {
@@ -43,6 +45,14 @@ func NewAuthService(repositories repository.Repositories, serviceBuilder TokenSe
 	}
 	manager := serviceBuilder.WithSigningKey(os.Getenv("SIGNING_KEY")).WithTTL(accessTTL).Build()
 	return &AuthService{repositories, manager, accessTTL, refreshTTL}
+}
+
+func (as *AuthService) GetSessionCredentials(ctx context.Context, id uuid.UUID) (models.CachedTokens, error) {
+	tokens, err := as.Repositories.SessionRepository.Get(ctx, id)
+	if err != nil {
+		return models.CachedTokens{}, err
+	}
+	return tokens, nil
 }
 
 func (as *AuthService) SaveUser(ctx context.Context, user *models.User) error {
