@@ -1,9 +1,9 @@
 package models
 
-type Role int
+type Role string
 
 const (
-	Guest Role = iota
-	Artist
-	Admin
+	Guest  Role = "Guest"
+	Artist Role = "Artist"
+	Admin  Role = "Admin"
 )

@@ -2,6 +2,7 @@ package server
 
 import (
 	"context"
+	"database/sql"
 	"errors"
 	"fmt"
 	"github.com/e1esm/LyrVibe/auth-service/api/v1/proto"
@@ -24,6 +25,7 @@ const (
 	BadRequestError    = "bad request"
 	SaveError          = "Error while saving %s"
 	InternalError      = "internal error occurred while operating on the provided input"
+	NoUserFound        = "User with username of %s wasn't found in the database or password was incorrect: %s"
 )
 
 type Server struct {
@@ -37,9 +39,11 @@ func (s *Server) SignUp(ctx context.Context, request *proto.SignUpRequest) (*pro
 
 	if user == nil {
 		return &proto.SignUpResponse{
-			Username:     request.Username,
-			SignupStatus: string(Fail),
-			ErrorMessage: fmt.Sprintf(CreatingModelError, request.Username),
+			Username: request.Username,
+			Status: &proto.RequestStatus{
+				RequestStatus: string(Fail),
+				ErrorMessage:  fmt.Sprintf(CreatingModelError, request.Username),
+			},
 		}, errors.New(BadRequestError)
 	}
 
@@ -47,19 +51,40 @@ func (s *Server) SignUp(ctx context.Context, request *proto.SignUpRequest) (*pro
 	if err != nil {
 		logger.Logger.Error(err.Error())
 		return &proto.SignUpResponse{Username: request.Username,
-			SignupStatus: string(Fail),
-			ErrorMessage: fmt.Sprintf(SaveError, request.Username)}, errors.New(InternalError)
+			Status: &proto.RequestStatus{
+				RequestStatus: string(Fail),
+				ErrorMessage:  fmt.Sprintf(SaveError, request.Username)},
+		}, errors.New(InternalError)
 	}
 
 	return &proto.SignUpResponse{
-		Username:     request.Username,
-		SignupStatus: string(Success),
-		ErrorMessage: "",
+		Username: request.Username,
+		Status: &proto.RequestStatus{
+			RequestStatus: string(Success),
+			ErrorMessage:  "",
+		},
 	}, nil
 }
 
 func (s *Server) SignIn(ctx context.Context, request *proto.SignInRequest) (*proto.SignInResponse, error) {
-	return nil, nil
+	user, err := s.AuthService.GetUser(ctx, request.Username, request.Password)
+	if err == sql.ErrNoRows {
+		return &proto.SignInResponse{
+			Token: "",
+			Status: &proto.RequestStatus{
+				RequestStatus: string(Fail),
+				ErrorMessage:  fmt.Sprintf(NoUserFound, request.Username, request.Password),
+			},
+		}, err
+	}
+
+	return &proto.SignInResponse{
+
+		Status: &proto.RequestStatus{
+			RequestStatus: string(Success),
+			ErrorMessage:  "",
+		},
+	}, nil
 }
 
 func (s *Server) RefreshToken(ctx context.Context, request *proto.RefreshRequest) (*emptypb.Empty, error) {

@@ -13,11 +13,3 @@ func GenerateHash(password string) (string, error) {
 	}
 	return string(bytes), nil
 }
-
-func ValidateHash(inputPassword, hashedPassword string) bool {
-	password, err := GenerateHash(inputPassword)
-	if err != nil {
-		return false
-	}
-	return password == hashedPassword
-}

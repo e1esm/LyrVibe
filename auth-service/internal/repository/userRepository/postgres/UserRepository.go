@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/e1esm/LyrVibe/auth-service/internal/models"
 	"github.com/e1esm/LyrVibe/auth-service/pkg/config"
+	"github.com/e1esm/LyrVibe/auth-service/pkg/hash"
 	"github.com/e1esm/LyrVibe/auth-service/pkg/logger"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/joho/godotenv"
@@ -19,6 +20,7 @@ const (
 
 type UserStorage interface {
 	Add(context.Context, *models.User) error
+	GetOne(context.Context, string, string) *models.User
 }
 
 type UserRepository struct {
@@ -70,4 +72,26 @@ func (ur *UserRepository) Add(ctx context.Context, user *models.User) error {
 		return err
 	}
 	return nil
+}
+
+func (ur *UserRepository) GetOne(ctx context.Context, username, password string) *models.User {
+	ctx, cancel := context.WithTimeout(ctx, timeoutTime)
+	password, err := hash.GenerateHash(password)
+	if err != nil {
+		return nil
+	}
+	defer cancel()
+	var user models.User
+	resultedRow := ur.pool.QueryRow(ctx, "SELECT * FROM users WHERE username = $1 AND password = $2;", username, password)
+	if err := resultedRow.Scan(&user.ID,
+		&user.Username,
+		&user.Password,
+		&user.Role,
+		&user.Country,
+		&user.FirstName,
+		&user.SecondName,
+		&user.ProfilePicture); err != nil {
+		return nil
+	}
+	return &user
 }

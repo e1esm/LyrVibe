@@ -14,9 +14,8 @@ message SignUpRequest{
 }
 
 message SignUpResponse{
-  string signupStatus = 1;
-  string errorMessage = 2;
-  string username = 3;
+  RequestStatus status = 1;
+  string username = 2;
 }
 
 message SignInRequest{
@@ -26,8 +25,8 @@ message SignInRequest{
 
 
 message SignInResponse{
-  string user_id = 1;
-  string role = 2;
+  RequestStatus status = 1;
+  string Token = 2;
 }
 
 message RefreshRequest{
@@ -36,6 +35,10 @@ message RefreshRequest{
   string role = 3;
 }
 
+message RequestStatus{
+  string requestStatus = 1;
+  string errorMessage = 2;
+}
 
 
 service AuthService{
