@@ -10,7 +10,6 @@ import (
 	"github.com/e1esm/LyrVibe/auth-service/internal/service"
 	"github.com/e1esm/LyrVibe/auth-service/pkg/logger"
 	"google.golang.org/grpc"
-	"google.golang.org/protobuf/types/known/emptypb"
 )
 
 type RequestStatus string
@@ -106,8 +105,4 @@ func (s *Server) SignIn(ctx context.Context, request *proto.SignInRequest) (*pro
 			ErrorMessage:  "",
 		},
 	}, nil
-}
-
-func (s *Server) RefreshToken(ctx context.Context, request *proto.RefreshRequest) (*emptypb.Empty, error) {
-	return nil, nil
 }

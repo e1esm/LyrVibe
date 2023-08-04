@@ -62,7 +62,7 @@ func (sr *SessionsRepository) Get(ctx context.Context, userID uuid.UUID) (models
 }
 
 func (sr *SessionsRepository) Add(ctx context.Context, user *models.User, tokens models.CachedTokens) (models.CachedTokens, error) {
-	status := sr.redis.SetEx(ctx, fmt.Sprintf("%x", user.ID), tokens, tokens.AccessTTL)
+	status := sr.redis.SetEx(ctx, fmt.Sprintf("%x", user.ID), tokens, tokens.RefreshTTL)
 	if err := status.Err(); err != nil {
 		return tokens, err
 	}

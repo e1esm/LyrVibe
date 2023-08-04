@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-grpc v1.3.0
 // - protoc             v3.21.12
-// source: api/v1/proto/auth-service.proto
+// source: v1/proto/auth-service.proto
 
 package proto
 
@@ -20,9 +20,10 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	AuthService_SignUp_FullMethodName       = "/api.v1.proto.AuthService/SignUp"
-	AuthService_SignIn_FullMethodName       = "/api.v1.proto.AuthService/SignIn"
-	AuthService_RefreshToken_FullMethodName = "/api.v1.proto.AuthService/RefreshToken"
+	AuthService_SignUp_FullMethodName   = "/api.v1.proto.AuthService/SignUp"
+	AuthService_SignIn_FullMethodName   = "/api.v1.proto.AuthService/SignIn"
+	AuthService_Logout_FullMethodName   = "/api.v1.proto.AuthService/Logout"
+	AuthService_Identify_FullMethodName = "/api.v1.proto.AuthService/Identify"
 )
 
 // AuthServiceClient is the client API for AuthService service.
@@ -31,7 +32,8 @@ const (
 type AuthServiceClient interface {
 	SignUp(ctx context.Context, in *SignUpRequest, opts ...grpc.CallOption) (*SignUpResponse, error)
 	SignIn(ctx context.Context, in *SignInRequest, opts ...grpc.CallOption) (*SignInResponse, error)
-	RefreshToken(ctx context.Context, in *RefreshRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	Logout(ctx context.Context, in *LogoutRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	Identify(ctx context.Context, in *IdentifyRequest, opts ...grpc.CallOption) (*IdentifyResponse, error)
 }
 
 type authServiceClient struct {
@@ -60,9 +62,18 @@ func (c *authServiceClient) SignIn(ctx context.Context, in *SignInRequest, opts 
 	return out, nil
 }
 
-func (c *authServiceClient) RefreshToken(ctx context.Context, in *RefreshRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *authServiceClient) Logout(ctx context.Context, in *LogoutRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, AuthService_RefreshToken_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, AuthService_Logout_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authServiceClient) Identify(ctx context.Context, in *IdentifyRequest, opts ...grpc.CallOption) (*IdentifyResponse, error) {
+	out := new(IdentifyResponse)
+	err := c.cc.Invoke(ctx, AuthService_Identify_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -75,7 +86,8 @@ func (c *authServiceClient) RefreshToken(ctx context.Context, in *RefreshRequest
 type AuthServiceServer interface {
 	SignUp(context.Context, *SignUpRequest) (*SignUpResponse, error)
 	SignIn(context.Context, *SignInRequest) (*SignInResponse, error)
-	RefreshToken(context.Context, *RefreshRequest) (*emptypb.Empty, error)
+	Logout(context.Context, *LogoutRequest) (*emptypb.Empty, error)
+	Identify(context.Context, *IdentifyRequest) (*IdentifyResponse, error)
 	mustEmbedUnimplementedAuthServiceServer()
 }
 
@@ -89,8 +101,11 @@ func (UnimplementedAuthServiceServer) SignUp(context.Context, *SignUpRequest) (*
 func (UnimplementedAuthServiceServer) SignIn(context.Context, *SignInRequest) (*SignInResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SignIn not implemented")
 }
-func (UnimplementedAuthServiceServer) RefreshToken(context.Context, *RefreshRequest) (*emptypb.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method RefreshToken not implemented")
+func (UnimplementedAuthServiceServer) Logout(context.Context, *LogoutRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Logout not implemented")
+}
+func (UnimplementedAuthServiceServer) Identify(context.Context, *IdentifyRequest) (*IdentifyResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Identify not implemented")
 }
 func (UnimplementedAuthServiceServer) mustEmbedUnimplementedAuthServiceServer() {}
 
@@ -141,20 +156,38 @@ func _AuthService_SignIn_Handler(srv interface{}, ctx context.Context, dec func(
 	return interceptor(ctx, in, info, handler)
 }
 
-func _AuthService_RefreshToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(RefreshRequest)
+func _AuthService_Logout_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(LogoutRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AuthServiceServer).RefreshToken(ctx, in)
+		return srv.(AuthServiceServer).Logout(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: AuthService_RefreshToken_FullMethodName,
+		FullMethod: AuthService_Logout_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthServiceServer).RefreshToken(ctx, req.(*RefreshRequest))
+		return srv.(AuthServiceServer).Logout(ctx, req.(*LogoutRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AuthService_Identify_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(IdentifyRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServiceServer).Identify(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AuthService_Identify_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServiceServer).Identify(ctx, req.(*IdentifyRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -175,10 +208,14 @@ var AuthService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _AuthService_SignIn_Handler,
 		},
 		{
-			MethodName: "RefreshToken",
-			Handler:    _AuthService_RefreshToken_Handler,
+			MethodName: "Logout",
+			Handler:    _AuthService_Logout_Handler,
+		},
+		{
+			MethodName: "Identify",
+			Handler:    _AuthService_Identify_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "api/v1/proto/auth-service.proto",
+	Metadata: "v1/proto/auth-service.proto",
 }
