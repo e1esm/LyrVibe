@@ -18,13 +18,14 @@ const (
 type Service interface {
 	SaveUser(context.Context, *models.User) error
 	GetUser(context.Context, string, string) (*models.User, error)
-	CreateSession(context.Context, *models.User) (models.Tokens, error)
+	CreateSession(context.Context, *models.User) (models.CachedTokens, error)
 }
 
 type AuthService struct {
 	Repositories repository.Repositories
 	TokenService TokenManager
-	ttl          time.Duration
+	accessTTL    time.Duration
+	refreshTTL   time.Duration
 }
 
 func init() {
@@ -35,12 +36,13 @@ func init() {
 }
 
 func NewAuthService(repositories repository.Repositories, serviceBuilder TokenServiceBuilder) Service {
-	ttl, err := time.ParseDuration(os.Getenv("TTL"))
+	accessTTL, err := time.ParseDuration(os.Getenv("ACCESS_TTL"))
+	refreshTTL, err := time.ParseDuration(os.Getenv("REFRESH_TTL"))
 	if err != nil {
-		ttl = defaultTTL
+		accessTTL = defaultTTL
 	}
-	manager := serviceBuilder.WithSigningKey(os.Getenv("SIGNING_KEY")).WithTTL(ttl).Build()
-	return &AuthService{repositories, manager, ttl}
+	manager := serviceBuilder.WithSigningKey(os.Getenv("SIGNING_KEY")).WithTTL(accessTTL).Build()
+	return &AuthService{repositories, manager, accessTTL, refreshTTL}
 }
 
 func (as *AuthService) SaveUser(ctx context.Context, user *models.User) error {
@@ -59,6 +61,22 @@ func (as *AuthService) GetUser(ctx context.Context, username, password string) (
 	return user, nil
 }
 
-func (as *AuthService) CreateSession(ctx context.Context, user *models.User) (models.Tokens, error) {
-	return models.Tokens{}, nil
+func (as *AuthService) CreateSession(ctx context.Context, user *models.User) (models.CachedTokens, error) {
+	jwtToken, err := as.TokenService.NewJWT(user)
+	if err != nil {
+		return models.CachedTokens{}, err
+	}
+	refreshToken, err := as.TokenService.NewRefreshToken()
+	if err != nil {
+		return models.CachedTokens{}, err
+	}
+
+	tokens := models.CachedTokens{
+		AccessTTL:    as.accessTTL,
+		RefreshTTL:   as.refreshTTL,
+		AccessToken:  jwtToken,
+		RefreshToken: refreshToken,
+	}
+
+	return as.Repositories.SessionRepository.Add(ctx, user, tokens)
 }

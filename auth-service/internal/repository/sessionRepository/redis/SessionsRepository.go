@@ -1,15 +1,25 @@
 package redis
 
 import (
+	"context"
+	"errors"
 	"fmt"
+	"github.com/e1esm/LyrVibe/auth-service/internal/models"
 	"github.com/e1esm/LyrVibe/auth-service/pkg/config"
 	"github.com/e1esm/LyrVibe/auth-service/pkg/logger"
+	"github.com/google/uuid"
 	"github.com/joho/godotenv"
 	"github.com/redis/go-redis/v9"
 	"os"
 )
 
+var (
+	expiredErr = errors.New("session's expired or have never been started")
+)
+
 type SessionStorage interface {
+	Add(context.Context, *models.User, models.CachedTokens) (models.CachedTokens, error)
+	Get(context.Context, uuid.UUID) (models.CachedTokens, error)
 }
 
 type SessionsRepository struct {
@@ -38,6 +48,24 @@ func NewSessionsStorage(config config.Config) SessionStorage {
 	if cli == nil {
 		logger.Logger.Error("Error")
 	}
-	return SessionsRepository{redis: cli}
+	return &SessionsRepository{redis: cli}
 
+}
+
+func (sr *SessionsRepository) Get(ctx context.Context, userID uuid.UUID) (models.CachedTokens, error) {
+	cmd := sr.redis.Get(ctx, fmt.Sprintf("%x", userID))
+	var cachedTokens models.CachedTokens
+	if err := cmd.Scan(&cachedTokens); err != nil {
+		return models.CachedTokens{}, expiredErr
+	}
+	return cachedTokens, nil
+}
+
+func (sr *SessionsRepository) Add(ctx context.Context, user *models.User, tokens models.CachedTokens) (models.CachedTokens, error) {
+	status := sr.redis.SetEx(ctx, fmt.Sprintf("%x", user.ID), tokens, tokens.AccessTTL)
+	if err := status.Err(); err != nil {
+		return tokens, err
+	}
+
+	return tokens, nil
 }

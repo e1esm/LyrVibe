@@ -6,9 +6,16 @@
   <component name="ChangeListManager">
     <list default="true" id="c8b42bef-5454-4090-ac2f-27d93ce0c2b1" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/auth-service/cmd/auth-service/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/auth-service/cmd/auth-service/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/auth-service/postgres.Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/auth-service/postgres.Dockerfile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/auth-service/api/v1/proto/auth-service.pb.go" beforeDir="false" afterPath="$PROJECT_DIR$/auth-service/api/v1/proto/auth-service.pb.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/auth-service/api/v1/proto/auth-service.proto" beforeDir="false" afterPath="$PROJECT_DIR$/auth-service/api/v1/proto/auth-service.proto" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/auth-service/internal/models/JWT.go" beforeDir="false" afterPath="$PROJECT_DIR$/auth-service/internal/models/JWT.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/auth-service/internal/models/Tokens.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/auth-service/internal/models/session.go" beforeDir="false" afterPath="$PROJECT_DIR$/auth-service/internal/models/session.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/auth-service/internal/repository/sessionRepository/redis/SessionsRepository.go" beforeDir="false" afterPath="$PROJECT_DIR$/auth-service/internal/repository/sessionRepository/redis/SessionsRepository.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/auth-service/internal/server/server.go" beforeDir="false" afterPath="$PROJECT_DIR$/auth-service/internal/server/server.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/auth-service/internal/service/AuthService.go" beforeDir="false" afterPath="$PROJECT_DIR$/auth-service/internal/service/AuthService.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/auth-service/internal/service/TokenService.go" beforeDir="false" afterPath="$PROJECT_DIR$/auth-service/internal/service/TokenService.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/auth-service/jwt.env" beforeDir="false" afterPath="$PROJECT_DIR$/auth-service/jwt.env" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -34,22 +41,23 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;DefaultGoTemplateProperty&quot;: &quot;Go File&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.go.formatter.settings.were.checked&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.go.migrated.go.modules.settings&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.go.modules.go.list.on.any.changes.was.set&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;go.import.settings.migrated&quot;: &quot;true&quot;,
-    &quot;go.sdk.automatically.set&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/elesm/GolandProjects/LyrVibe&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "DefaultGoTemplateProperty": "Go File",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.go.formatter.settings.were.checked": "true",
+    "RunOnceActivity.go.migrated.go.modules.settings": "true",
+    "RunOnceActivity.go.modules.go.list.on.any.changes.was.set": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "git-widget-placeholder": "master",
+    "go.import.settings.migrated": "true",
+    "go.sdk.automatically.set": "true",
+    "last_opened_file_path": "/Users/elesm/GolandProjects/LyrVibe",
+    "node.js.detected.package.eslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "settings.editor.selected.configurable": "preferences.lookFeel"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/auth-service" />

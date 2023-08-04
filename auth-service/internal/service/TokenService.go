@@ -26,7 +26,7 @@ type TokenManager interface {
 
 type TokenService struct {
 	signingKey string
-	ttl        time.Duration
+	accessTTL  time.Duration
 }
 
 type TokenServiceBuilder struct {
@@ -43,7 +43,7 @@ func (tsb *TokenServiceBuilder) WithSigningKey(signingKey string) *TokenServiceB
 }
 
 func (tsb *TokenServiceBuilder) WithTTL(TTL time.Duration) *TokenServiceBuilder {
-	tsb.TokenService.ttl = TTL
+	tsb.TokenService.accessTTL = TTL
 	return tsb
 }
 
@@ -56,7 +56,7 @@ func (ts *TokenService) NewJWT(user *models.User) (string, error) {
 		UserID:   user.ID,
 		UserRole: user.Role,
 		StandardClaims: jwt.StandardClaims{
-			ExpiresAt: time.Now().Add(ts.ttl).Unix(),
+			ExpiresAt: time.Now().Add(ts.accessTTL).Unix(),
 			IssuedAt:  time.Now().Unix(),
 		},
 	})

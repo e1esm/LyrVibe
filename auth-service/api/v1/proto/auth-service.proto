@@ -26,7 +26,12 @@ message SignInRequest{
 
 message SignInResponse{
   RequestStatus status = 1;
-  string Token = 2;
+  CachedTokens tokens = 2;
+}
+
+message CachedTokens{
+  string AccessToken = 1;
+  string RefreshToken = 2;
 }
 
 message RefreshRequest{

@@ -78,6 +78,11 @@ func (s *Server) SignIn(ctx context.Context, request *proto.SignInRequest) (*pro
 		}, err
 	}
 
+	cachedTokens, err := s.AuthService.CreateSession(ctx, user)
+	if err != nil {
+
+	}
+
 	return &proto.SignInResponse{
 
 		Status: &proto.RequestStatus{
