@@ -15,7 +15,7 @@ import (
 
 func main() {
 	cfg := *config.NewConfig()
-	authServer := configureServer(configureService(*configureRepositories(cfg), service.NewTokenServiceBuilder()))
+	authServer := configureServer(configureService(*configureRepositories(cfg), *service.NewTokenServiceBuilder()))
 
 	listener, err := net.Listen("tcp", ":8081")
 	if err != nil {

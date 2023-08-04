@@ -2,12 +2,16 @@
 
 LyrVibe is an API made for songwriters and music lovers which lets the first to share their song lyrics with the customers and provides the second to share their feelings about the song itself and about precise lyric line. It will help artists to summarize feedback better from the actual audience and let them know towards which direction to move in order to improve their further crafts.
 
+
+## Gateway: 
+- Routing between microservices - ❌
+
 ## Auth Service:
-- Sign up the service - ❌
-- Log in the service - ❌
-- Refresh token - ❌
-- Store session in the Redis - ❌
-- Store user's password, role etc - ❌
+- Sign up the service - ✅
+- Log in the service - ✅
+- Refresh token - ✅
+- Store session in the Redis - ✅
+- Store user's password, role etc - ✅
 
 
 ## Artist Service:
