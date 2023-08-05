@@ -9,6 +9,7 @@ import (
 	"github.com/e1esm/LyrVibe/auth-service/internal/models"
 	"github.com/e1esm/LyrVibe/auth-service/internal/service"
 	"github.com/e1esm/LyrVibe/auth-service/pkg/logger"
+	"go.uber.org/zap"
 	"google.golang.org/grpc"
 )
 
@@ -34,9 +35,13 @@ type Server struct {
 	proto.UnimplementedAuthServiceServer
 }
 
-func (s *Server) SignUp(ctx context.Context, request *proto.SignUpRequest) (*proto.SignUpResponse, error) {
-	user := models.NewUser(request)
+func (s *Server) Identify(ctx context.Context, request *proto.IdentifyRequest) (*proto.IdentifyResponse, error) {
+	return nil, nil
+}
 
+func (s *Server) SignUp(ctx context.Context, request *proto.SignUpRequest) (*proto.SignUpResponse, error) {
+	logger.Logger.Info("User: ", zap.String("user", fmt.Sprintf("%v", request)))
+	user := models.NewUser(request)
 	if user == nil {
 		return &proto.SignUpResponse{
 			Username: request.Username,

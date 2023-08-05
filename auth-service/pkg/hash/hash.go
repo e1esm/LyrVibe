@@ -3,7 +3,7 @@ package hash
 import "golang.org/x/crypto/bcrypt"
 
 const (
-	cost = 20
+	cost = bcrypt.DefaultCost
 )
 
 func GenerateHash(password string) (string, error) {

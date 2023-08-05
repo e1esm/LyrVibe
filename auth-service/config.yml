@@ -4,3 +4,7 @@ sessions_storage:
 users_storage:
   container_name: postgres_auth
   max_connections: 100
+grpc:
+  address: 0.0.0.0:8080
+http:
+  address: 0.0.0.0:9090

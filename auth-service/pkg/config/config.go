@@ -16,6 +16,12 @@ type Config struct {
 		Port              int    `yaml:"port,omitempty"`
 		MaxConnectionPool int    `yaml:"max_connections"`
 	} `yaml:"users_storage"`
+	GRPC struct {
+		Address string `json:"address"`
+	} `json:"grpc"`
+	HTTP struct {
+		Address string `json:"address"`
+	} `json:"http"`
 }
 
 func NewConfig() *Config {

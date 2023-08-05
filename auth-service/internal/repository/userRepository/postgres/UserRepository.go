@@ -58,14 +58,14 @@ func (ur *UserRepository) Add(ctx context.Context, user *models.User) error {
 	ctx, cancel := context.WithTimeout(ctx, timeoutTime)
 	defer cancel()
 
-	_, err := ur.pool.Exec(ctx, "INSERT INTO users VALUES($1, $2, $3, $4, $5, $6, $7, $8)",
+	_, err := ur.pool.Exec(ctx, "INSERT INTO users VALUES($1, $2, $3, $4, $5, $6, $7, $8);",
 		user.ID,
 		user.Username,
-		user.FirstName,
-		user.SecondName,
 		user.Password,
 		user.Role,
 		user.Country,
+		user.FirstName,
+		user.SecondName,
 		user.ProfilePicture,
 	)
 	if err != nil {

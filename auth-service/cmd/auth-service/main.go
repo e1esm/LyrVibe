@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"github.com/e1esm/LyrVibe/auth-service/api/v1/proto"
 	"github.com/e1esm/LyrVibe/auth-service/internal/repository"
 	"github.com/e1esm/LyrVibe/auth-service/internal/repository/sessionRepository/redis"
@@ -9,22 +10,40 @@ import (
 	"github.com/e1esm/LyrVibe/auth-service/internal/service"
 	"github.com/e1esm/LyrVibe/auth-service/pkg/config"
 	"github.com/e1esm/LyrVibe/auth-service/pkg/logger"
+	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 	"net"
+	"net/http"
+	"sync"
 )
 
 func main() {
 	cfg := *config.NewConfig()
 	authServer := configureServer(configureService(*configureRepositories(cfg), *service.NewTokenServiceBuilder()))
 
-	listener, err := net.Listen("tcp", ":8081")
+	listener, err := net.Listen("tcp", ":12201")
 	if err != nil {
 		logger.Logger.Error(err.Error())
 	}
 
-	if err = authServer.Server.Serve(listener); err != nil {
-		logger.Logger.Error(err.Error())
-	}
+	mux := configureHTTPServer(":8801")
+	var wg sync.WaitGroup
+	wg.Add(2)
+	go func() {
+		defer wg.Done()
+		if err := http.ListenAndServe(":8801", mux); err != nil {
+			logger.Logger.Error(err.Error())
+		}
+	}()
+	go func() {
+		defer wg.Done()
+		if err := authServer.Server.Serve(listener); err != nil {
+			logger.Logger.Error(err.Error())
+		}
+	}()
+
+	wg.Wait()
 }
 
 func configureRepositories(config config.Config) *repository.Repositories {
@@ -41,6 +60,19 @@ func configureServer(authService service.Service) *server.Server {
 	proto.RegisterAuthServiceServer(authServer.Server, &authServer)
 
 	return &authServer
+}
+
+func configureHTTPServer(address string) *runtime.ServeMux {
+	mux := runtime.NewServeMux()
+	opts := []grpc.DialOption{
+		grpc.WithTransportCredentials(insecure.NewCredentials()),
+	}
+	err := proto.RegisterAuthServiceHandlerFromEndpoint(context.Background(), mux, "localhost:12201", opts)
+	if err != nil {
+		logger.Logger.Fatal("Couldn't have registered server from endpoint")
+		return nil
+	}
+	return mux
 }
 
 func configureService(repositories repository.Repositories, manager service.TokenServiceBuilder) service.Service {
