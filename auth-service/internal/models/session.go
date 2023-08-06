@@ -1,6 +1,8 @@
 package models
 
-import "time"
+import (
+	"time"
+)
 
 type Session struct {
 	StartTime time.Time    `json:"start_time"`

@@ -76,13 +76,9 @@ func (ur *UserRepository) Add(ctx context.Context, user *models.User) error {
 
 func (ur *UserRepository) GetOne(ctx context.Context, username, password string) *models.User {
 	ctx, cancel := context.WithTimeout(ctx, timeoutTime)
-	password, err := hash.GenerateHash(password)
-	if err != nil {
-		return nil
-	}
 	defer cancel()
 	var user models.User
-	resultedRow := ur.pool.QueryRow(ctx, "SELECT * FROM users WHERE username = $1 AND password = $2;", username, password)
+	resultedRow := ur.pool.QueryRow(ctx, "SELECT * FROM users WHERE username = $1", username)
 	if err := resultedRow.Scan(&user.ID,
 		&user.Username,
 		&user.Password,
@@ -91,6 +87,11 @@ func (ur *UserRepository) GetOne(ctx context.Context, username, password string)
 		&user.FirstName,
 		&user.SecondName,
 		&user.ProfilePicture); err != nil {
+		logger.Logger.Error(err.Error())
+		return nil
+	}
+
+	if !hash.ComparePasswords(password, []byte(user.Password)) {
 		return nil
 	}
 	return &user

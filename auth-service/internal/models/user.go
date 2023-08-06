@@ -1,6 +1,7 @@
 package models
 
 import (
+	"fmt"
 	"github.com/e1esm/LyrVibe/auth-service/api/v1/proto"
 	"github.com/e1esm/LyrVibe/auth-service/pkg/hash"
 	"github.com/google/uuid"
@@ -11,17 +12,14 @@ type User struct {
 	Username       string    `json:"username"`
 	Password       string    `json:"password"`
 	Role           Role      `json:"role"`
-	Country        string    `json:"country"`
+	Country        string    `json:"country" `
 	FirstName      string    `json:"first_name"`
 	SecondName     string    `json:"second_name"`
 	ProfilePicture string    `json:"profile_picture,omitempty"`
 }
 
 func NewUser(pr *proto.SignUpRequest) *User {
-	password, err := hash.GenerateHash(pr.Password)
-	if err != nil {
-		return nil
-	}
+	password := fmt.Sprintf("%x", hash.GenerateHash(pr.Password))
 	var userRole Role
 	switch {
 	case Role(pr.Role) == Admin:

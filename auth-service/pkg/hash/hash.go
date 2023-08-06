@@ -1,15 +1,18 @@
 package hash
 
-import "golang.org/x/crypto/bcrypt"
-
-const (
-	cost = bcrypt.DefaultCost
+import (
+	"bytes"
+	"crypto/sha256"
+	"fmt"
 )
 
-func GenerateHash(password string) (string, error) {
-	bytes, err := bcrypt.GenerateFromPassword([]byte(password), cost)
-	if err != nil {
-		return "", err
-	}
-	return string(bytes), nil
+func GenerateHash(password string) []byte {
+	hash := sha256.New()
+	hash.Write([]byte(password))
+	return hash.Sum(nil)
+}
+
+func ComparePasswords(password string, hashedPassword []byte) bool {
+	receivedHash := fmt.Sprintf("%x", GenerateHash(password))
+	return bytes.Equal([]byte(receivedHash), hashedPassword)
 }

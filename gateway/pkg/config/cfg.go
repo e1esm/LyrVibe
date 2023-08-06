@@ -11,7 +11,7 @@ type Config struct {
 	AuthService struct {
 		Address string `yaml:"addr"`
 		Port    string `yaml:"port"`
-	} `yaml:"auth-service"`
+	} `yaml:"auth_service"`
 }
 
 func NewConfig() *Config {

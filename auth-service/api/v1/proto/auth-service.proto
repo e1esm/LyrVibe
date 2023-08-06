@@ -11,8 +11,8 @@ message SignUpRequest{
   string role = 3;
   string country = 4;
   string image = 5;
-  string firstName = 6;
-  string secondName = 7;
+  string first_name = 6;
+  string second_name = 7;
 }
 
 message SignUpResponse{
