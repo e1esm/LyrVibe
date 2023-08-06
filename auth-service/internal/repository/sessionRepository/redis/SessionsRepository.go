@@ -10,6 +10,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/joho/godotenv"
 	"github.com/redis/go-redis/v9"
+	"go.uber.org/zap"
 	"os"
 )
 
@@ -62,7 +63,8 @@ func (sr *SessionsRepository) Get(ctx context.Context, userID uuid.UUID) (models
 }
 
 func (sr *SessionsRepository) Add(ctx context.Context, user *models.User, tokens models.CachedTokens) (models.CachedTokens, error) {
-	status := sr.redis.SetEx(ctx, fmt.Sprintf("%x", user.ID), tokens, tokens.RefreshTTL)
+	logger.Logger.Info("Tokens", zap.String("session", fmt.Sprintf("%v", tokens)))
+	status := sr.redis.SetEx(ctx, user.Username, tokens, tokens.RefreshTTL)
 	if err := status.Err(); err != nil {
 		return tokens, err
 	}

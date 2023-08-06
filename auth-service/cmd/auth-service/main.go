@@ -22,17 +22,17 @@ func main() {
 	cfg := *config.NewConfig()
 	authServer := configureServer(configureService(*configureRepositories(cfg), *service.NewTokenServiceBuilder()))
 
-	listener, err := net.Listen("tcp", ":12201")
+	listener, err := net.Listen("tcp", cfg.GRPC.Address)
 	if err != nil {
 		logger.Logger.Error(err.Error())
 	}
 
-	mux := configureHTTPServer(":8801")
+	mux := configureHTTPServer(cfg.GRPC.Address)
 	var wg sync.WaitGroup
 	wg.Add(2)
 	go func() {
 		defer wg.Done()
-		if err := http.ListenAndServe(":8801", mux); err != nil {
+		if err := http.ListenAndServe(cfg.HTTP.Address, mux); err != nil {
 			logger.Logger.Error(err.Error())
 		}
 	}()
@@ -67,7 +67,7 @@ func configureHTTPServer(address string) *runtime.ServeMux {
 	opts := []grpc.DialOption{
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
 	}
-	err := proto.RegisterAuthServiceHandlerFromEndpoint(context.Background(), mux, "localhost:12201", opts)
+	err := proto.RegisterAuthServiceHandlerFromEndpoint(context.Background(), mux, address, opts)
 	if err != nil {
 		logger.Logger.Fatal("Couldn't have registered server from endpoint")
 		return nil

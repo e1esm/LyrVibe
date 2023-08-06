@@ -1,6 +1,7 @@
 package models
 
 import (
+	"encoding/json"
 	"github.com/golang-jwt/jwt"
 	"github.com/google/uuid"
 	"time"
@@ -17,4 +18,9 @@ type CachedTokens struct {
 	AccessTTL    time.Duration `json:"access_ttl"`
 	RefreshToken string        `json:"refresh_token"`
 	RefreshTTL   time.Duration `json:"refresh_ttl"`
+}
+
+func (ct CachedTokens) MarshalBinary() (data []byte, err error) {
+	data, err = json.Marshal(&ct)
+	return
 }

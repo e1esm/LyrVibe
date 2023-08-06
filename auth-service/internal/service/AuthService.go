@@ -41,6 +41,7 @@ func NewAuthService(repositories repository.Repositories, serviceBuilder TokenSe
 	accessTTL, err := time.ParseDuration(os.Getenv("ACCESS_TTL"))
 	refreshTTL, err := time.ParseDuration(os.Getenv("REFRESH_TTL"))
 	if err != nil {
+		logger.Logger.Info(err.Error())
 		accessTTL = defaultTTL
 	}
 	manager := serviceBuilder.WithSigningKey(os.Getenv("SIGNING_KEY")).WithTTL(accessTTL).Build()

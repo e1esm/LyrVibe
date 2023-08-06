@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/e1esm/LyrVibe/auth-service/internal/models"
+
 	"github.com/e1esm/LyrVibe/auth-service/pkg/logger"
 	"github.com/golang-jwt/jwt"
 	"github.com/google/uuid"
