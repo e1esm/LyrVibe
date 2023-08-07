@@ -35,11 +35,17 @@ type Server struct {
 	proto.UnimplementedAuthServiceServer
 }
 
-func (s *Server) Identify(ctx context.Context, request *proto.IdentifyRequest) (*proto.IdentifyResponse, error) {
-	return nil, nil
-}
-
 func (s *Server) SignUp(ctx context.Context, request *proto.SignUpRequest) (*proto.SignUpResponse, error) {
+	err := request.ValidateAll()
+	if err != nil {
+		return &proto.SignUpResponse{
+			Username: request.Username,
+			Status: &proto.RequestStatus{
+				RequestStatus: string(Fail),
+				ErrorMessage:  err.Error(),
+			},
+		}, err
+	}
 	logger.Logger.Info("User: ", zap.String("user", fmt.Sprintf("%v", request)))
 	user := models.NewUser(request)
 	if user == nil {
@@ -52,7 +58,7 @@ func (s *Server) SignUp(ctx context.Context, request *proto.SignUpRequest) (*pro
 		}, errors.New(BadRequestError)
 	}
 
-	err := s.AuthService.SaveUser(ctx, user)
+	err = s.AuthService.SaveUser(ctx, user)
 	if err != nil {
 		logger.Logger.Error(err.Error())
 		return &proto.SignUpResponse{Username: request.Username,
@@ -72,6 +78,19 @@ func (s *Server) SignUp(ctx context.Context, request *proto.SignUpRequest) (*pro
 }
 
 func (s *Server) SignIn(ctx context.Context, request *proto.SignInRequest) (*proto.SignInResponse, error) {
+	err := request.ValidateAll()
+	if err != nil {
+		return &proto.SignInResponse{
+			Tokens: &proto.CachedTokens{
+				AccessToken:  "",
+				RefreshToken: "",
+			},
+			Status: &proto.RequestStatus{
+				RequestStatus: string(Fail),
+				ErrorMessage:  err.Error(),
+			},
+		}, err
+	}
 	user, err := s.AuthService.GetUser(ctx, request.Username, request.Password)
 	if err == sql.ErrNoRows {
 		return &proto.SignInResponse{

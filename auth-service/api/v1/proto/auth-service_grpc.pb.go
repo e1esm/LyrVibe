@@ -20,10 +20,9 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	AuthService_SignUp_FullMethodName   = "/api.v1.proto.AuthService/SignUp"
-	AuthService_SignIn_FullMethodName   = "/api.v1.proto.AuthService/SignIn"
-	AuthService_Logout_FullMethodName   = "/api.v1.proto.AuthService/Logout"
-	AuthService_Identify_FullMethodName = "/api.v1.proto.AuthService/Identify"
+	AuthService_SignUp_FullMethodName = "/api.v1.proto.AuthService/SignUp"
+	AuthService_SignIn_FullMethodName = "/api.v1.proto.AuthService/SignIn"
+	AuthService_Logout_FullMethodName = "/api.v1.proto.AuthService/Logout"
 )
 
 // AuthServiceClient is the client API for AuthService service.
@@ -33,7 +32,6 @@ type AuthServiceClient interface {
 	SignUp(ctx context.Context, in *SignUpRequest, opts ...grpc.CallOption) (*SignUpResponse, error)
 	SignIn(ctx context.Context, in *SignInRequest, opts ...grpc.CallOption) (*SignInResponse, error)
 	Logout(ctx context.Context, in *LogoutRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	Identify(ctx context.Context, in *IdentifyRequest, opts ...grpc.CallOption) (*IdentifyResponse, error)
 }
 
 type authServiceClient struct {
@@ -71,15 +69,6 @@ func (c *authServiceClient) Logout(ctx context.Context, in *LogoutRequest, opts 
 	return out, nil
 }
 
-func (c *authServiceClient) Identify(ctx context.Context, in *IdentifyRequest, opts ...grpc.CallOption) (*IdentifyResponse, error) {
-	out := new(IdentifyResponse)
-	err := c.cc.Invoke(ctx, AuthService_Identify_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 // AuthServiceServer is the server API for AuthService service.
 // All implementations must embed UnimplementedAuthServiceServer
 // for forward compatibility
@@ -87,7 +76,6 @@ type AuthServiceServer interface {
 	SignUp(context.Context, *SignUpRequest) (*SignUpResponse, error)
 	SignIn(context.Context, *SignInRequest) (*SignInResponse, error)
 	Logout(context.Context, *LogoutRequest) (*emptypb.Empty, error)
-	Identify(context.Context, *IdentifyRequest) (*IdentifyResponse, error)
 	mustEmbedUnimplementedAuthServiceServer()
 }
 
@@ -103,9 +91,6 @@ func (UnimplementedAuthServiceServer) SignIn(context.Context, *SignInRequest) (*
 }
 func (UnimplementedAuthServiceServer) Logout(context.Context, *LogoutRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Logout not implemented")
-}
-func (UnimplementedAuthServiceServer) Identify(context.Context, *IdentifyRequest) (*IdentifyResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Identify not implemented")
 }
 func (UnimplementedAuthServiceServer) mustEmbedUnimplementedAuthServiceServer() {}
 
@@ -174,24 +159,6 @@ func _AuthService_Logout_Handler(srv interface{}, ctx context.Context, dec func(
 	return interceptor(ctx, in, info, handler)
 }
 
-func _AuthService_Identify_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(IdentifyRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(AuthServiceServer).Identify(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: AuthService_Identify_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthServiceServer).Identify(ctx, req.(*IdentifyRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 // AuthService_ServiceDesc is the grpc.ServiceDesc for AuthService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -210,10 +177,6 @@ var AuthService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Logout",
 			Handler:    _AuthService_Logout_Handler,
-		},
-		{
-			MethodName: "Identify",
-			Handler:    _AuthService_Identify_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

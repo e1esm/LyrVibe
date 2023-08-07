@@ -2,17 +2,18 @@ syntax = "proto3";
 package api.v1.proto;
 import "google/protobuf/empty.proto";
 import "google/api/annotations.proto";
+import "validate/validate.proto";
 option go_package = "github.com/e1esm/LyrVibe/auth-service/api/v1/proto";
 
 
 message SignUpRequest{
-  string username = 1;
-  string password = 2;
-  string role = 3;
-  string country = 4;
+  string username = 1 [(validate.rules).string = {pattern: "(?i)^[A-Za-z0-9_]+$", min_len: 4, max_len: 10}];
+  string password = 2 [(validate.rules).string.min_len = 5];
+  string role = 3 [(validate.rules).string = {in: ["Admin", "Guest", "Artist"]}];
+  string country = 4 [(validate.rules).string = {pattern: "(?i)^[A-Za-z]+$"}];
   string image = 5;
-  string first_name = 6;
-  string second_name = 7;
+  string first_name = 6 [(validate.rules).string = {pattern: "(?i)^[A-Za-z]+$",min_len: 1, max_len: 12}];
+  string second_name = 7 [(validate.rules).string = {pattern: "(?i)^[A-Za-z]+$", min_len: 1, max_len: 24}];
 }
 
 message SignUpResponse{
@@ -21,8 +22,8 @@ message SignUpResponse{
 }
 
 message SignInRequest{
-  string username = 1;
-  string password = 2;
+  string username = 1 [(validate.rules).string = {pattern: "(?i)^[A-Za-z0-9_]+$", min_len: 4, max_len: 10}];;
+  string password = 2 [(validate.rules).string.min_len = 5];
 }
 
 message SignInResponse{
@@ -41,7 +42,7 @@ message RequestStatus{
 }
 
 message LogoutRequest{
-  string username = 1;
+  IdentifyRequest identifyRequest = 1;
 }
 
 message IdentifyRequest{
@@ -71,5 +72,4 @@ service AuthService{
       body: "*"
     };
   }
-  rpc Identify(IdentifyRequest) returns(IdentifyResponse){};
 }
