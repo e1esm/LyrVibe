@@ -11,6 +11,9 @@ import (
 	"github.com/e1esm/LyrVibe/auth-service/pkg/logger"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
+	"google.golang.org/protobuf/types/known/emptypb"
 )
 
 type RequestStatus string
@@ -27,6 +30,7 @@ const (
 	SaveError            = "Error while saving %s"
 	InternalError        = "internal error occurred while operating on the provided input"
 	NoUserFound          = "User with username of %s wasn't found in the database or password was incorrect: %s"
+	LogoutErr            = "Couldn't have logged out"
 )
 
 type Server struct {
@@ -129,4 +133,12 @@ func (s *Server) SignIn(ctx context.Context, request *proto.SignInRequest) (*pro
 			ErrorMessage:  "",
 		},
 	}, nil
+}
+
+func (s *Server) Logout(ctx context.Context, request *proto.LogoutRequest) (*emptypb.Empty, error) {
+	err := s.AuthService.Logout(ctx, request.AccessToken)
+	if err != nil {
+		return &emptypb.Empty{}, status.Errorf(codes.Internal, LogoutErr)
+	}
+	return &emptypb.Empty{}, status.Errorf(codes.OK, "")
 }

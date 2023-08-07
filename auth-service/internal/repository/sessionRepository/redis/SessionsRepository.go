@@ -21,6 +21,7 @@ var (
 type SessionStorage interface {
 	Add(context.Context, *models.User, models.CachedTokens) (models.CachedTokens, error)
 	Get(context.Context, uuid.UUID) (models.CachedTokens, error)
+	Delete(context.Context, uuid.UUID) error
 }
 
 type SessionsRepository struct {
@@ -70,4 +71,9 @@ func (sr *SessionsRepository) Add(ctx context.Context, user *models.User, tokens
 	}
 
 	return tokens, nil
+}
+
+func (sr *SessionsRepository) Delete(ctx context.Context, id uuid.UUID) error {
+	res := sr.redis.Del(ctx, fmt.Sprintf("%v", id))
+	return res.Err()
 }

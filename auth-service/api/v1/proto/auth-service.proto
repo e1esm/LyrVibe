@@ -42,7 +42,7 @@ message RequestStatus{
 }
 
 message LogoutRequest{
-  IdentifyRequest identifyRequest = 1;
+  string access_token = 1;
 }
 
 message IdentifyRequest{

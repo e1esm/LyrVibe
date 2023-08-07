@@ -903,34 +903,7 @@ func (m *LogoutRequest) validate(all bool) error {
 
 	var errors []error
 
-	if all {
-		switch v := interface{}(m.GetIdentifyRequest()).(type) {
-		case interface{ ValidateAll() error }:
-			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, LogoutRequestValidationError{
-					field:  "IdentifyRequest",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		case interface{ Validate() error }:
-			if err := v.Validate(); err != nil {
-				errors = append(errors, LogoutRequestValidationError{
-					field:  "IdentifyRequest",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		}
-	} else if v, ok := interface{}(m.GetIdentifyRequest()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return LogoutRequestValidationError{
-				field:  "IdentifyRequest",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
-		}
-	}
+	// no validation rules for AccessToken
 
 	if len(errors) > 0 {
 		return LogoutRequestMultiError(errors)

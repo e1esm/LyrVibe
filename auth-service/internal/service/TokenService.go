@@ -5,10 +5,8 @@ import (
 	"fmt"
 	"github.com/e1esm/LyrVibe/auth-service/internal/models"
 
-	"github.com/e1esm/LyrVibe/auth-service/pkg/logger"
 	"github.com/golang-jwt/jwt"
 	"github.com/google/uuid"
-	"go.uber.org/zap"
 	"math/rand"
 	"time"
 )
@@ -85,8 +83,7 @@ func (ts *TokenService) NewRefreshToken() (string, error) {
 	bytes := make([]byte, 32)
 	s := rand.NewSource(time.Now().Unix())
 	r := rand.New(s)
-	writtenLen, err := r.Read(bytes)
-	logger.Logger.Info("Written length", zap.Int("len", writtenLen))
+	_, err := r.Read(bytes)
 	if err != nil {
 		return "", err
 	}

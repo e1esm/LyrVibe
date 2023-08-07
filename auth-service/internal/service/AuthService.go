@@ -21,6 +21,7 @@ type Service interface {
 	GetUser(context.Context, string, string) (*models.User, error)
 	CreateSession(context.Context, *models.User) (models.CachedTokens, error)
 	GetSessionCredentials(context.Context, uuid.UUID) (models.CachedTokens, error)
+	Logout(context.Context, string) error
 }
 
 type AuthService struct {
@@ -90,4 +91,13 @@ func (as *AuthService) CreateSession(ctx context.Context, user *models.User) (mo
 	}
 
 	return as.Repositories.SessionRepository.Add(ctx, user, tokens)
+}
+
+func (as *AuthService) Logout(ctx context.Context, accessToken string) error {
+	id, _, err := as.TokenService.ParseToken(accessToken)
+	if err != nil {
+		return err
+	}
+	err = as.Repositories.SessionRepository.Delete(ctx, id)
+	return err
 }
