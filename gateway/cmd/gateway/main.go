@@ -12,6 +12,6 @@ func main() {
 		logger.Logger.Fatal("Couldn't have loaded config file",
 			zap.String("err", err.Error()))
 	}
-	_ = config.NewConfig()
+	cfg := config.NewConfig()
 
 }
