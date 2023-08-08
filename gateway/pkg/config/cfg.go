@@ -12,6 +12,10 @@ type Config struct {
 		Address string `yaml:"addr"`
 		Port    string `yaml:"port"`
 	} `yaml:"auth_service"`
+	Server struct {
+		Address string `yaml:"address"`
+		Port    string `yaml:"port"`
+	} `yaml:"server"`
 }
 
 func NewConfig() *Config {

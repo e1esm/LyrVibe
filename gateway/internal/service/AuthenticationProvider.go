@@ -14,5 +14,5 @@ type AuthenticationService struct {
 }
 
 func NewAuthenticationService(cfg config.Config) AuthenticationProvider {
-	return AuthenticationService{client: registrator.RegisterAuthService(cfg)}
+	return &AuthenticationService{client: registrator.RegisterAuthService(cfg)}
 }
