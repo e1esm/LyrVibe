@@ -8,9 +8,11 @@ import (
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 	"net/http"
+	"time"
 )
 
 var (
+	TTLErr        = errors.New("error while setting TTL to the cookie")
 	successLogOut = "Successfully logged out of the service"
 	reqBodyErr    = errors.New("body of the request doesn't fullfil server requirements")
 )
@@ -54,7 +56,16 @@ func (ps *ProxyServer) Login(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, resp)
 		return
 	}
-
+	accessTTL, err := time.ParseDuration(resp.Tokens.AccessTTL)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, TTLErr)
+		return
+	}
+	refreshTTL, err := time.ParseDuration(resp.Tokens.RefreshTTL)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, TTLErr)
+		return
+	}
 	c.JSON(http.StatusOK, resp)
 }
 

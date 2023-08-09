@@ -10,6 +10,8 @@ github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/e1esm/LyrVibe/auth-service v0.0.0-20230808020428-b44225f52dfd h1:hYHnaO9+RVfR+Lsq+4pnTGJgVN+eKgWPvm48mGMYH4U=
 github.com/e1esm/LyrVibe/auth-service v0.0.0-20230808020428-b44225f52dfd/go.mod h1:gAquTi714sT1OzEEwYCfBLx7f9P+h/Ia10nV8yBpolo=
+github.com/e1esm/LyrVibe/auth-service v0.0.0-20230809113021-672d3a5bbd25 h1:vFCoN4t2c3gHsWAoX5bJSbkQVQGdxAADxl1NJn6XYwQ=
+github.com/e1esm/LyrVibe/auth-service v0.0.0-20230809113021-672d3a5bbd25/go.mod h1:gAquTi714sT1OzEEwYCfBLx7f9P+h/Ia10nV8yBpolo=
 github.com/envoyproxy/protoc-gen-validate v1.0.2 h1:QkIBuU5k+x7/QXPvPPnWXWlCdaBFApVqftFV6k087DA=
 github.com/envoyproxy/protoc-gen-validate v1.0.2/go.mod h1:GpiZQP3dDbg4JouG/NNS7QWXpgx6x8QiMKdmN72jogE=
 github.com/gabriel-vasile/mimetype v1.4.2 h1:w5qFW6JKBz9Y393Y4q372O9A7cUSequkh1Q7OhCmWKU=
