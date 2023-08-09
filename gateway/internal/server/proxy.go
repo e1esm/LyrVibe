@@ -3,8 +3,8 @@ package server
 import (
 	"errors"
 	"github.com/e1esm/LyrVibe/auth-service/api/v1/proto"
-	"github.com/e1esm/LyrVibe/auth-service/pkg/logger"
 	"github.com/e1esm/LyrVibe/gateway/internal/service"
+	"github.com/e1esm/LyrVibe/gateway/pkg/logger"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 	"net/http"
@@ -70,7 +70,6 @@ func (ps *ProxyServer) SignUp(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, resp)
 		return
 	}
-
 	c.JSON(http.StatusOK, resp)
 }
 

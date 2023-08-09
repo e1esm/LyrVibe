@@ -76,7 +76,6 @@ func (s *Server) SignUp(ctx context.Context, request *proto.SignUpRequest) (*pro
 		Username: request.Username,
 		Status: &proto.RequestStatus{
 			RequestStatus: string(Success),
-			ErrorMessage:  "",
 		},
 	}, nil
 }
@@ -85,10 +84,7 @@ func (s *Server) SignIn(ctx context.Context, request *proto.SignInRequest) (*pro
 	err := request.ValidateAll()
 	if err != nil {
 		return &proto.SignInResponse{
-			Tokens: &proto.CachedTokens{
-				AccessToken:  "",
-				RefreshToken: "",
-			},
+			Tokens: &proto.CachedTokens{},
 			Status: &proto.RequestStatus{
 				RequestStatus: string(Fail),
 				ErrorMessage:  err.Error(),
@@ -98,10 +94,7 @@ func (s *Server) SignIn(ctx context.Context, request *proto.SignInRequest) (*pro
 	user, err := s.AuthService.GetUser(ctx, request.Username, request.Password)
 	if err == sql.ErrNoRows {
 		return &proto.SignInResponse{
-			Tokens: &proto.CachedTokens{
-				AccessToken:  "",
-				RefreshToken: "",
-			},
+			Tokens: &proto.CachedTokens{},
 			Status: &proto.RequestStatus{
 				RequestStatus: string(Fail),
 				ErrorMessage:  fmt.Sprintf(NoUserFound, request.Username, request.Password),
@@ -112,10 +105,7 @@ func (s *Server) SignIn(ctx context.Context, request *proto.SignInRequest) (*pro
 	cachedTokens, err := s.AuthService.CreateSession(ctx, user)
 	if err != nil {
 		return &proto.SignInResponse{
-			Tokens: &proto.CachedTokens{
-				AccessToken:  "",
-				RefreshToken: "",
-			},
+			Tokens: &proto.CachedTokens{},
 			Status: &proto.RequestStatus{
 				RequestStatus: string(Fail),
 				ErrorMessage:  SessionCreationError,
@@ -127,10 +117,11 @@ func (s *Server) SignIn(ctx context.Context, request *proto.SignInRequest) (*pro
 		Tokens: &proto.CachedTokens{
 			AccessToken:  cachedTokens.AccessToken,
 			RefreshToken: cachedTokens.RefreshToken,
+			AccessTTL:    fmt.Sprintf("%s", cachedTokens.AccessTTL),
+			RefreshTTL:   fmt.Sprintf("%s", cachedTokens.RefreshTTL),
 		},
 		Status: &proto.RequestStatus{
 			RequestStatus: string(Success),
-			ErrorMessage:  "",
 		},
 	}, nil
 }

@@ -698,7 +698,11 @@ func (m *CachedTokens) validate(all bool) error {
 
 	// no validation rules for AccessToken
 
+	// no validation rules for AccessTTL
+
 	// no validation rules for RefreshToken
+
+	// no validation rules for RefreshTTL
 
 	if len(errors) > 0 {
 		return CachedTokensMultiError(errors)

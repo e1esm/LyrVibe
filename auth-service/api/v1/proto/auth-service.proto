@@ -33,7 +33,9 @@ message SignInResponse{
 
 message CachedTokens{
   string AccessToken = 1;
-  string RefreshToken = 2;
+  string AccessTTL = 2;
+  string RefreshToken = 3;
+  string RefreshTTL = 4;
 }
 
 message RequestStatus{
