@@ -9,7 +9,6 @@ import (
 	"github.com/e1esm/LyrVibe/auth-service/internal/models"
 	"github.com/e1esm/LyrVibe/auth-service/internal/service"
 	"github.com/e1esm/LyrVibe/auth-service/pkg/logger"
-	"go.uber.org/zap"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -24,13 +23,12 @@ const (
 )
 
 const (
-	SessionCreationError = "Failed to create a session"
-	CreatingModelError   = "User with nickname of %s cannot be created"
-	BadRequestError      = "bad request"
-	SaveError            = "Error while saving %s"
-	InternalError        = "internal error occurred while operating on the provided input"
-	NoUserFound          = "User with username of %s wasn't found in the database or password was incorrect: %s"
-	LogoutErr            = "Couldn't have logged out"
+	CreatingModelError = "User with nickname of %s cannot be created"
+	BadRequestError    = "bad request"
+	SaveError          = "Error while saving %s"
+	InternalError      = "internal error occurred while operating on the provided input"
+	NoUserFound        = "User with username of %s wasn't found in the database or password was incorrect: %s"
+	LogoutErr          = "Couldn't have logged out"
 )
 
 type Server struct {
@@ -40,7 +38,6 @@ type Server struct {
 }
 
 func (s *Server) SignUp(ctx context.Context, request *proto.SignUpRequest) (*proto.SignUpResponse, error) {
-	logger.Logger.Info(fmt.Sprintf("%v", *request))
 	err := request.ValidateAll()
 	if err != nil {
 		return &proto.SignUpResponse{
@@ -51,7 +48,6 @@ func (s *Server) SignUp(ctx context.Context, request *proto.SignUpRequest) (*pro
 			},
 		}, err
 	}
-	logger.Logger.Info("User: ", zap.String("user", fmt.Sprintf("%v", request)))
 	user := models.NewUser(request)
 	if user == nil {
 		return &proto.SignUpResponse{
@@ -109,7 +105,7 @@ func (s *Server) SignIn(ctx context.Context, request *proto.SignInRequest) (*pro
 			Tokens: &proto.CachedTokens{},
 			Status: &proto.RequestStatus{
 				RequestStatus: string(Fail),
-				ErrorMessage:  SessionCreationError,
+				ErrorMessage:  err.Error(),
 			},
 		}, err
 	}

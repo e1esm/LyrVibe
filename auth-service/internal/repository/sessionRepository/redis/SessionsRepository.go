@@ -19,7 +19,7 @@ var (
 )
 
 type SessionStorage interface {
-	Add(context.Context, *models.User, models.CachedTokens) (models.CachedTokens, error)
+	Add(context.Context, *models.User, models.CachedTokens) (bool, error)
 	Get(context.Context, uuid.UUID) (models.CachedTokens, error)
 	Delete(context.Context, uuid.UUID) error
 }
@@ -63,14 +63,10 @@ func (sr *SessionsRepository) Get(ctx context.Context, userID uuid.UUID) (models
 	return cachedTokens, nil
 }
 
-func (sr *SessionsRepository) Add(ctx context.Context, user *models.User, tokens models.CachedTokens) (models.CachedTokens, error) {
+func (sr *SessionsRepository) Add(ctx context.Context, user *models.User, tokens models.CachedTokens) (bool, error) {
 	logger.Logger.Info("Tokens", zap.String("session", fmt.Sprintf("%v", tokens)))
-	status := sr.redis.SetEx(ctx, fmt.Sprintf("%v", user.ID), tokens, tokens.RefreshTTL)
-	if err := status.Err(); err != nil {
-		return tokens, err
-	}
-
-	return tokens, nil
+	isOk, err := sr.redis.SetNX(ctx, fmt.Sprintf("%v", user.ID), tokens, tokens.RefreshTTL).Result()
+	return isOk, err
 }
 
 func (sr *SessionsRepository) Delete(ctx context.Context, id uuid.UUID) error {

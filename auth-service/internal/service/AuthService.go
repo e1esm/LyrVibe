@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"database/sql"
+	"errors"
 	"github.com/e1esm/LyrVibe/auth-service/internal/models"
 	"github.com/e1esm/LyrVibe/auth-service/internal/repository"
 	"github.com/e1esm/LyrVibe/auth-service/pkg/logger"
@@ -14,6 +15,10 @@ import (
 
 const (
 	defaultTTL = 100
+)
+
+var (
+	wasAlreadyCached = errors.New("already logged in")
 )
 
 type Service interface {
@@ -90,7 +95,11 @@ func (as *AuthService) CreateSession(ctx context.Context, user *models.User) (mo
 		RefreshToken: refreshToken,
 	}
 
-	return as.Repositories.SessionRepository.Add(ctx, user, tokens)
+	wasAdded, err := as.Repositories.SessionRepository.Add(ctx, user, tokens)
+	if !wasAdded {
+		return models.CachedTokens{}, wasAlreadyCached
+	}
+	return tokens, nil
 }
 
 func (as *AuthService) Logout(ctx context.Context, accessToken string) error {
