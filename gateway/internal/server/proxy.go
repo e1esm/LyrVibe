@@ -54,7 +54,7 @@ func (ps *ProxyServer) Login(c *gin.Context) {
 	}
 	resp, err := ps.Services.AuthService.Login(&signInRequest)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, resp)
+		c.JSON(http.StatusInternalServerError, err)
 		return
 	}
 	accessTTL, err := time.ParseDuration(resp.Tokens.AccessTTL)
@@ -64,6 +64,7 @@ func (ps *ProxyServer) Login(c *gin.Context) {
 	}
 	refreshTTL, err := time.ParseDuration(resp.Tokens.RefreshTTL)
 	if err != nil {
+		logger.Logger.Info(err.Error())
 		c.JSON(http.StatusInternalServerError, TTLErr)
 		return
 	}

@@ -4,7 +4,7 @@ LyrVibe is an API made for songwriters and music lovers which lets the first to 
 
 
 ## Gateway: 
-- Routing between microservices - 0/4❌
+- Routing between microservices - 1/4❌
 
 ## Auth Service:
 - Sign up the service - ✅
