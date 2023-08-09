@@ -1,7 +1,6 @@
 syntax = "proto3";
 package api.v1.proto;
 import "google/protobuf/empty.proto";
-import "google/api/annotations.proto";
 import "validate/validate.proto";
 option go_package = "github.com/e1esm/LyrVibe/auth-service/api/v1/proto";
 
@@ -11,7 +10,7 @@ message SignUpRequest{
   string password = 2 [(validate.rules).string.min_len = 5];
   string role = 3 [(validate.rules).string = {in: ["Admin", "Guest", "Artist"]}];
   string country = 4 [(validate.rules).string = {pattern: "(?i)^[A-Za-z]+$"}];
-  string image = 5;
+  bytes image = 5;
   string first_name = 6 [(validate.rules).string = {pattern: "(?i)^[A-Za-z]+$",min_len: 1, max_len: 12}];
   string second_name = 7 [(validate.rules).string = {pattern: "(?i)^[A-Za-z]+$", min_len: 1, max_len: 24}];
 }
@@ -56,22 +55,7 @@ message IdentifyResponse{
 }
 
 service AuthService{
-  rpc SignUp(SignUpRequest) returns (SignUpResponse){
-    option (google.api.http) = {
-      post: "/v1/auth/signup"
-      body: "*"
-    };
-  };
-  rpc SignIn(SignInRequest) returns (SignInResponse) {
-    option (google.api.http) = {
-      post: "/v1/auth/login"
-      body: "*"
-    };
-  }
-  rpc Logout(LogoutRequest) returns (google.protobuf.Empty){
-    option (google.api.http) = {
-      post: "/v1/auth/logout"
-      body: "*"
-    };
-  }
+  rpc SignUp(SignUpRequest) returns (SignUpResponse){};
+  rpc SignIn(SignInRequest) returns (SignInResponse) {};
+  rpc Logout(LogoutRequest) returns (google.protobuf.Empty){};
 }

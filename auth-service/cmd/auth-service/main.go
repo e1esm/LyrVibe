@@ -1,7 +1,6 @@
 package main
 
 import (
-	"context"
 	"github.com/e1esm/LyrVibe/auth-service/api/v1/proto"
 	"github.com/e1esm/LyrVibe/auth-service/internal/repository"
 	"github.com/e1esm/LyrVibe/auth-service/internal/repository/sessionRepository/redis"
@@ -10,11 +9,8 @@ import (
 	"github.com/e1esm/LyrVibe/auth-service/internal/service"
 	"github.com/e1esm/LyrVibe/auth-service/pkg/config"
 	"github.com/e1esm/LyrVibe/auth-service/pkg/logger"
-	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials/insecure"
 	"net"
-	"net/http"
 	"sync"
 )
 
@@ -26,16 +22,8 @@ func main() {
 	if err != nil {
 		logger.Logger.Error(err.Error())
 	}
-
-	mux := configureHTTPServer(cfg.GRPC.Address)
 	var wg sync.WaitGroup
-	wg.Add(2)
-	go func() {
-		defer wg.Done()
-		if err := http.ListenAndServe(cfg.HTTP.Address, mux); err != nil {
-			logger.Logger.Error(err.Error())
-		}
-	}()
+	wg.Add(1)
 	go func() {
 		defer wg.Done()
 		if err := authServer.Server.Serve(listener); err != nil {
@@ -60,19 +48,6 @@ func configureServer(authService service.Service) *server.Server {
 	proto.RegisterAuthServiceServer(authServer.Server, &authServer)
 
 	return &authServer
-}
-
-func configureHTTPServer(address string) *runtime.ServeMux {
-	mux := runtime.NewServeMux()
-	opts := []grpc.DialOption{
-		grpc.WithTransportCredentials(insecure.NewCredentials()),
-	}
-	err := proto.RegisterAuthServiceHandlerFromEndpoint(context.Background(), mux, address, opts)
-	if err != nil {
-		logger.Logger.Fatal("Couldn't have registered server from endpoint")
-		return nil
-	}
-	return mux
 }
 
 func configureService(repositories repository.Repositories, manager service.TokenServiceBuilder) service.Service {

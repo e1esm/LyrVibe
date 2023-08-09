@@ -6,7 +6,7 @@ CREATE TABLE users(
     country varchar(100),
     first_name varchar(15),
     second_name varchar(30),
-    profilePicture text
+    profile_picture bytea
 );
 
 
