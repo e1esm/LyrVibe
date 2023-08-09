@@ -1,5 +1,5 @@
 auth_service:
-  addr: auth-service
+  addr: auth_service
   port: 12201
 server:
   addr: 0.0.0.0

@@ -14,5 +14,5 @@ func (sb *ServicesBuilder) Build() Services {
 }
 
 func NewServiceBuilder() *ServicesBuilder {
-	return &ServicesBuilder{}
+	return &ServicesBuilder{Services: Services{}}
 }

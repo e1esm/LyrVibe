@@ -40,6 +40,7 @@ type Server struct {
 }
 
 func (s *Server) SignUp(ctx context.Context, request *proto.SignUpRequest) (*proto.SignUpResponse, error) {
+	logger.Logger.Info(fmt.Sprintf("%v", *request))
 	err := request.ValidateAll()
 	if err != nil {
 		return &proto.SignUpResponse{

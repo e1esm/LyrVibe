@@ -5,6 +5,6 @@ users_storage:
   container_name: postgres_auth
   max_connections: 100
 grpc:
-  address: 0.0.0.0:12201
+  address: :12201
 http:
-  address: 0.0.0.0:8801
+  address: :8801

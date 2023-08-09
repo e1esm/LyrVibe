@@ -12,6 +12,7 @@ import (
 )
 
 var (
+	LogInOk       = "Successfully logged in"
 	TTLErr        = errors.New("error while setting TTL to the cookie")
 	successLogOut = "Successfully logged out of the service"
 	reqBodyErr    = errors.New("body of the request doesn't fullfil server requirements")
@@ -32,8 +33,8 @@ type ProxyServer struct {
 func NewProxyServer(services service.Services) Proxy {
 	proxy := ProxyServer{}
 	proxy.Router = gin.Default()
-	setUpRoutes(proxy)
 	proxy.Services = services
+	setUpRoutes(proxy)
 	return &proxy
 }
 
@@ -66,19 +67,34 @@ func (ps *ProxyServer) Login(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, TTLErr)
 		return
 	}
-	c.JSON(http.StatusOK, resp)
+	http.SetCookie(c.Writer, &http.Cookie{
+		Name:     "access_token",
+		Value:    resp.Tokens.AccessToken,
+		Expires:  time.Now().Add(accessTTL),
+		HttpOnly: true,
+		Path:     "/",
+	})
+	http.SetCookie(c.Writer, &http.Cookie{
+		Name:     "refresh_token",
+		Value:    resp.Tokens.RefreshToken,
+		Expires:  time.Now().Add(refreshTTL),
+		HttpOnly: true,
+		Path:     "/",
+	})
+	c.JSON(http.StatusOK, LogInOk)
 }
 
 func (ps *ProxyServer) SignUp(c *gin.Context) {
-	var signUpRequest proto.SignUpRequest
+	signUpRequest := &proto.SignUpRequest{}
 	c.Header("Content-Type", "application/json")
-	if err := c.BindJSON(&signUpRequest); err != nil {
+
+	if err := c.BindJSON(signUpRequest); err != nil {
 		c.JSON(http.StatusBadRequest, reqBodyErr)
-		return
 	}
-	resp, err := ps.Services.AuthService.SignUp(&signUpRequest)
+
+	resp, err := ps.Services.AuthService.SignUp(signUpRequest)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, resp)
+		c.JSON(http.StatusInternalServerError, resp.Status)
 		return
 	}
 	c.JSON(http.StatusOK, resp)
