@@ -12,9 +12,6 @@ type User struct {
 	Username       string    `json:"username"`
 	Password       string    `json:"password"`
 	Role           Role      `json:"role"`
-	Country        string    `json:"country" `
-	FirstName      string    `json:"first_name"`
-	SecondName     string    `json:"second_name"`
 	ProfilePicture []byte    `json:"profile_picture,omitempty"`
 }
 
@@ -34,9 +31,6 @@ func NewUser(pr *proto.SignUpRequest) *User {
 		Username:       pr.Username,
 		Password:       password,
 		Role:           userRole,
-		Country:        pr.Country,
 		ProfilePicture: pr.Image,
-		FirstName:      pr.FirstName,
-		SecondName:     pr.SecondName,
 	}
 }
