@@ -33,6 +33,13 @@ services:
     container_name: auth_service
     ports:
       - "8081:8801"
+  artist_service:
+    build:
+      context: .
+      dockerfile: ./artist-service/Dockerfile
+    container_name: artist_service
+    ports:
+      - "8080:8801"
   gateway:
     build:
       context: .
