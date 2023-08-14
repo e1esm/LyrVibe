@@ -11,8 +11,12 @@ type Config struct {
 		Address string `yaml:"address"`
 	} `yaml:"server"`
 	ArtistStorage struct {
-		ContainerName string `yaml:"container_name"`
-		Port          int    `yaml:"port"`
+		ContainerName    string `yaml:"container_name"`
+		Port             int    `yaml:"port"`
+		DatabaseName     string `yaml:"database_name"`
+		DatabaseUser     string `yaml:"database_user"`
+		DatabasePassword string `yaml:"database_password"`
+		Database         string `yaml:"database"`
 	} `yaml:"artist_storage"`
 	MusicServiceServer struct {
 		ContainerName string `yaml:"container_name"`

@@ -3,6 +3,10 @@ server:
 artist_storage:
   container_name: "artist_storage"
   port: 5432
+  database_name: "artists"
+  database_user: "postgres"
+  database_password: "postgres"
+  database: "postgres"
 music_service:
   container_name: "music_service"
   port: 8801
