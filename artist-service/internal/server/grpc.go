@@ -1,11 +1,13 @@
 package server
 
-import "github.com/e1esm/LyrVibe/artist-service/api/v1/proto"
+import (
+	"github.com/e1esm/LyrVibe/artist-service/api/v1/proto"
+	"github.com/e1esm/LyrVibe/artist-service/internal/service"
+	"google.golang.org/grpc"
+)
 
 type Server struct {
-	Server proto.ArtistServiceServer
-}
-
-func NewServer() *Server {
-
+	Server   *grpc.Server
+	Services service.Services
+	proto.UnimplementedArtistServiceServer
 }

@@ -8,11 +8,14 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
+type Repository interface {
+}
+
 type ArtistRepository struct {
 	pool *pgxpool.Pool
 }
 
-func NewRepository(cfg *config.Config) *ArtistRepository {
+func NewRepository(cfg *config.Config) Repository {
 	dsn := fmt.Sprintf("%s://%s:%s@%s:%d/%s",
 		cfg.ArtistStorage.Database,
 		cfg.ArtistStorage.DatabaseUser,
