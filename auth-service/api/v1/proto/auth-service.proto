@@ -9,10 +9,7 @@ message SignUpRequest{
   string username = 1 [(validate.rules).string = {pattern: "(?i)^[A-Za-z0-9_]+$", min_len: 4, max_len: 10}];
   string password = 2 [(validate.rules).string.min_len = 5];
   string role = 3 [(validate.rules).string = {in: ["Admin", "Guest", "Artist"]}];
-  string country = 4 [(validate.rules).string = {pattern: "(?i)^[A-Za-z]+$"}];
   bytes image = 5;
-  string first_name = 6 [(validate.rules).string = {pattern: "(?i)^[A-Za-z]+$",min_len: 1, max_len: 12}];
-  string second_name = 7 [(validate.rules).string = {pattern: "(?i)^[A-Za-z]+$", min_len: 1, max_len: 24}];
 }
 
 message SignUpResponse{

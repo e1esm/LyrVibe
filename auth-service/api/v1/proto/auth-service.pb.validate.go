@@ -101,62 +101,7 @@ func (m *SignUpRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	if !_SignUpRequest_Country_Pattern.MatchString(m.GetCountry()) {
-		err := SignUpRequestValidationError{
-			field:  "Country",
-			reason: "value does not match regex pattern \"(?i)^[A-Za-z]+$\"",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
 	// no validation rules for Image
-
-	if l := utf8.RuneCountInString(m.GetFirstName()); l < 1 || l > 12 {
-		err := SignUpRequestValidationError{
-			field:  "FirstName",
-			reason: "value length must be between 1 and 12 runes, inclusive",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if !_SignUpRequest_FirstName_Pattern.MatchString(m.GetFirstName()) {
-		err := SignUpRequestValidationError{
-			field:  "FirstName",
-			reason: "value does not match regex pattern \"(?i)^[A-Za-z]+$\"",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if l := utf8.RuneCountInString(m.GetSecondName()); l < 1 || l > 24 {
-		err := SignUpRequestValidationError{
-			field:  "SecondName",
-			reason: "value length must be between 1 and 24 runes, inclusive",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
-
-	if !_SignUpRequest_SecondName_Pattern.MatchString(m.GetSecondName()) {
-		err := SignUpRequestValidationError{
-			field:  "SecondName",
-			reason: "value does not match regex pattern \"(?i)^[A-Za-z]+$\"",
-		}
-		if !all {
-			return err
-		}
-		errors = append(errors, err)
-	}
 
 	if len(errors) > 0 {
 		return SignUpRequestMultiError(errors)
@@ -243,12 +188,6 @@ var _SignUpRequest_Role_InLookup = map[string]struct{}{
 	"Guest":  {},
 	"Artist": {},
 }
-
-var _SignUpRequest_Country_Pattern = regexp.MustCompile("(?i)^[A-Za-z]+$")
-
-var _SignUpRequest_FirstName_Pattern = regexp.MustCompile("(?i)^[A-Za-z]+$")
-
-var _SignUpRequest_SecondName_Pattern = regexp.MustCompile("(?i)^[A-Za-z]+$")
 
 // Validate checks the field values on SignUpResponse with the rules defined in
 // the proto definition for this message. If any rules are violated, the first
