@@ -7,7 +7,7 @@ WORKDIR /app/auth-service
 
 RUN go mod tidy && go mod download
 
-RUN go build -o /auther ./cmd/auth-service/main.go
+RUN go build -o /auth-service ./cmd/auth-service/main.go
 
 FROM alpine
 
@@ -19,4 +19,4 @@ COPY --from=builder /app/auth-service/postgres.env /postgres.env
 COPY --from=builder /app/auth-service/redis.env /redis.env
 COPY --from=builder /app/auth-service/jwt.env /jwt.env
 
-CMD ["/auther"]
+CMD ["/auth-service"]

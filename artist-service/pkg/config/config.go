@@ -1,0 +1,36 @@
+package config
+
+import (
+	"github.com/e1esm/LyrVibe/artist-service/pkg/logger"
+	"gopkg.in/yaml.v3"
+	"os"
+)
+
+type Config struct {
+	Server struct {
+		Address string `yaml:"address"`
+	} `yaml:"server"`
+	ArtistStorage struct {
+		ContainerName string `yaml:"container_name"`
+		Port          int    `yaml:"port"`
+	} `yaml:"artist_storage"`
+	MusicServiceServer struct {
+		ContainerName string `yaml:"container_name"`
+		Port          int    `yaml:"port"`
+	} `yaml:"music_service"`
+}
+
+func NewConfig() *Config {
+	var config *Config
+	content, err := os.ReadFile("config.yml")
+	if err != nil {
+		logger.Logger.Error(err.Error())
+		return nil
+	}
+	err = yaml.Unmarshal(content, config)
+	if err != nil {
+		logger.Logger.Error(err.Error())
+		return nil
+	}
+	return config
+}
