@@ -17,6 +17,7 @@ type Config struct {
 		DatabaseUser     string `yaml:"database_user"`
 		DatabasePassword string `yaml:"database_password"`
 		Database         string `yaml:"database"`
+		MaxConnections   int    `yaml:"max_connections"`
 	} `yaml:"artist_storage"`
 	MusicServiceServer struct {
 		ContainerName string `yaml:"container_name"`

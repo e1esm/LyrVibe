@@ -16,13 +16,14 @@ type ArtistRepository struct {
 }
 
 func NewRepository(cfg *config.Config) Repository {
-	dsn := fmt.Sprintf("%s://%s:%s@%s:%d/%s",
+	dsn := fmt.Sprintf("%s://%s:%s@%s:%d/%s?pool_max_conns=%d",
 		cfg.ArtistStorage.Database,
 		cfg.ArtistStorage.DatabaseUser,
 		cfg.ArtistStorage.DatabasePassword,
 		cfg.ArtistStorage.ContainerName,
 		cfg.ArtistStorage.Port,
-		cfg.ArtistStorage.DatabaseName)
+		cfg.ArtistStorage.DatabaseName,
+		cfg.ArtistStorage.MaxConnections)
 	pool, err := pgxpool.New(context.Background(), dsn)
 	if err != nil {
 		logger.Logger.Error(err.Error())

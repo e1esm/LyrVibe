@@ -7,6 +7,7 @@ artist_storage:
   database_user: "postgres"
   database_password: "postgres"
   database: "postgres"
+  max_connections: 100
 music_service:
   container_name: "music_service"
   port: 8801
