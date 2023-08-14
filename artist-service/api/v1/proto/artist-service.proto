@@ -1,0 +1,26 @@
+syntax = "proto3";
+package api.v1.proto;
+import "validate/validate.proto";
+option go_package = "github.com/e1esm/LyrVibe/artist-service/api/v1/proto";
+
+message VerificationRequest{
+  string username = 1 [(validate.rules).string = {pattern: "(?i)^[A-Za-z0-9_]+$",min_len: 4, max_len: 10}];
+  string country = 2 [(validate.rules).string ={pattern: "(?i)^[A-Z-a-z]+$", min_len: 2}];
+  string first_name = 3 [(validate.rules).string = {pattern: "(?i)^[A-Za-z]+$", min_len: 1, max_len: 10}];
+  string second_name = 4 [(validate.rules).string = {pattern: "(?i)^[A-Za-z]+$", min_len: 1, max_len: 20}];;
+}
+
+message VerificationResponse{
+  bool isVerified = 1;
+  RequestStatus requestStatus = 2;
+}
+
+message RequestStatus{
+  string requestStatus = 1;
+  string errorMessage = 2;
+}
+
+service ArtistService{
+  rpc Verify(VerificationRequest) returns (VerificationResponse) {};
+
+}
