@@ -9,6 +9,7 @@ import (
 	"github.com/e1esm/LyrVibe/auth-service/internal/models"
 	"github.com/e1esm/LyrVibe/auth-service/internal/service"
 	"github.com/e1esm/LyrVibe/auth-service/pkg/logger"
+	"github.com/google/uuid"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -126,7 +127,19 @@ func (s *Server) SignIn(ctx context.Context, request *proto.SignInRequest) (*pro
 func (s *Server) Logout(ctx context.Context, request *proto.LogoutRequest) (*emptypb.Empty, error) {
 	err := s.AuthService.Logout(ctx, request.AccessToken)
 	if err != nil {
-		return &emptypb.Empty{}, status.Errorf(codes.Internal, LogoutErr)
+		return &emptypb.Empty{}, status.Error(codes.Internal, LogoutErr)
 	}
-	return &emptypb.Empty{}, status.Errorf(codes.OK, "")
+	return &emptypb.Empty{}, nil
+}
+
+func (s *Server) UpdateRole(ctx context.Context, request *proto.UpdatingRoleRequest) (*proto.UpdatingRoleResponse, error) {
+	id, err := uuid.FromBytes([]byte(request.UserId))
+	if err != nil {
+		return &proto.UpdatingRoleResponse{Status: BadRequestError}, status.Error(codes.InvalidArgument, BadRequestError)
+	}
+	err = s.AuthService.UpdateRole(ctx, id, models.Role(request.RequestedRole))
+	if err != nil {
+		return &proto.UpdatingRoleResponse{Status: InternalError}, status.Error(codes.Internal, InternalError)
+	}
+	return &proto.UpdatingRoleResponse{Status: "OK"}, nil
 }

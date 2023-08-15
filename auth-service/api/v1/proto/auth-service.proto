@@ -8,7 +8,7 @@ option go_package = "github.com/e1esm/LyrVibe/auth-service/api/v1/proto";
 message SignUpRequest{
   string username = 1 [(validate.rules).string = {pattern: "(?i)^[A-Za-z0-9_]+$", min_len: 4, max_len: 10}];
   string password = 2 [(validate.rules).string.min_len = 5];
-  string role = 3 [(validate.rules).string = {in: ["Admin", "Guest", "Artist"]}];
+  string role = 3 [(validate.rules).string = {in: ["Guest"]}];
   bytes image = 5;
 }
 
@@ -51,8 +51,18 @@ message IdentifyResponse{
   string role = 2;
 }
 
+message UpdatingRoleRequest{
+  string user_id = 1;
+  string requestedRole = 2;
+}
+
+message UpdatingRoleResponse{
+  string status = 2;
+}
+
 service AuthService{
   rpc SignUp(SignUpRequest) returns (SignUpResponse){};
   rpc SignIn(SignInRequest) returns (SignInResponse) {};
   rpc Logout(LogoutRequest) returns (google.protobuf.Empty){};
+  rpc UpdateRole(UpdatingRoleRequest) returns (UpdatingRoleResponse){};
 }

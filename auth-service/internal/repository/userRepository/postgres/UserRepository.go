@@ -7,6 +7,7 @@ import (
 	"github.com/e1esm/LyrVibe/auth-service/pkg/config"
 	"github.com/e1esm/LyrVibe/auth-service/pkg/hash"
 	"github.com/e1esm/LyrVibe/auth-service/pkg/logger"
+	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/joho/godotenv"
 	"go.uber.org/zap"
@@ -21,6 +22,7 @@ const (
 type UserStorage interface {
 	Add(context.Context, *models.User) error
 	GetOne(context.Context, string, string) *models.User
+	UpdateRole(context.Context, uuid.UUID, models.Role) error
 }
 
 type UserRepository struct {
@@ -89,4 +91,14 @@ func (ur *UserRepository) GetOne(ctx context.Context, username, password string)
 		return nil
 	}
 	return &user
+}
+
+func (ur *UserRepository) UpdateRole(ctx context.Context, id uuid.UUID, role models.Role) error {
+	ctx, cancel := context.WithTimeout(ctx, timeoutTime)
+	defer cancel()
+	_, err := ur.pool.Exec(ctx, "UPDATE users SET role = $1 WHERE id = $2", role, id)
+	if err != nil {
+		return err
+	}
+	return nil
 }

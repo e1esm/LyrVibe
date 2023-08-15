@@ -27,6 +27,7 @@ type Service interface {
 	CreateSession(context.Context, *models.User) (models.CachedTokens, error)
 	GetSessionCredentials(context.Context, uuid.UUID) (models.CachedTokens, error)
 	Logout(context.Context, string) error
+	UpdateRole(context.Context, uuid.UUID, models.Role) error
 }
 
 type AuthService struct {
@@ -109,4 +110,8 @@ func (as *AuthService) Logout(ctx context.Context, accessToken string) error {
 	}
 	err = as.Repositories.SessionRepository.Delete(ctx, id)
 	return err
+}
+
+func (as *AuthService) UpdateRole(ctx context.Context, id uuid.UUID, role models.Role) error {
+	return as.Repositories.MainRepository.UpdateRole(ctx, id, role)
 }
