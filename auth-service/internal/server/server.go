@@ -143,3 +143,11 @@ func (s *Server) UpdateRole(ctx context.Context, request *proto.UpdatingRoleRequ
 	}
 	return &proto.UpdatingRoleResponse{Status: "OK"}, nil
 }
+
+func (s *Server) Verification(ctx context.Context, request *proto.VerificationRequest) (*proto.VerificationResponse, error) {
+	id, role, err := s.AuthService.GetRole(request.AccessToken)
+	if err != nil {
+		return &proto.VerificationResponse{Role: "", Id: ""}, status.Error(codes.Internal, InternalError)
+	}
+	return &proto.VerificationResponse{Role: string(role), Id: id.String()}, nil
+}

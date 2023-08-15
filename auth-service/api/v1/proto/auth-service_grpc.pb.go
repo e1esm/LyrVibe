@@ -20,10 +20,11 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	AuthService_SignUp_FullMethodName     = "/api.v1.proto.AuthService/SignUp"
-	AuthService_SignIn_FullMethodName     = "/api.v1.proto.AuthService/SignIn"
-	AuthService_Logout_FullMethodName     = "/api.v1.proto.AuthService/Logout"
-	AuthService_UpdateRole_FullMethodName = "/api.v1.proto.AuthService/UpdateRole"
+	AuthService_SignUp_FullMethodName       = "/api.v1.proto.AuthService/SignUp"
+	AuthService_SignIn_FullMethodName       = "/api.v1.proto.AuthService/SignIn"
+	AuthService_Logout_FullMethodName       = "/api.v1.proto.AuthService/Logout"
+	AuthService_UpdateRole_FullMethodName   = "/api.v1.proto.AuthService/UpdateRole"
+	AuthService_Verification_FullMethodName = "/api.v1.proto.AuthService/Verification"
 )
 
 // AuthServiceClient is the client API for AuthService service.
@@ -34,6 +35,7 @@ type AuthServiceClient interface {
 	SignIn(ctx context.Context, in *SignInRequest, opts ...grpc.CallOption) (*SignInResponse, error)
 	Logout(ctx context.Context, in *LogoutRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	UpdateRole(ctx context.Context, in *UpdatingRoleRequest, opts ...grpc.CallOption) (*UpdatingRoleResponse, error)
+	Verification(ctx context.Context, in *VerificationRequest, opts ...grpc.CallOption) (*VerificationResponse, error)
 }
 
 type authServiceClient struct {
@@ -80,6 +82,15 @@ func (c *authServiceClient) UpdateRole(ctx context.Context, in *UpdatingRoleRequ
 	return out, nil
 }
 
+func (c *authServiceClient) Verification(ctx context.Context, in *VerificationRequest, opts ...grpc.CallOption) (*VerificationResponse, error) {
+	out := new(VerificationResponse)
+	err := c.cc.Invoke(ctx, AuthService_Verification_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AuthServiceServer is the server API for AuthService service.
 // All implementations must embed UnimplementedAuthServiceServer
 // for forward compatibility
@@ -88,6 +99,7 @@ type AuthServiceServer interface {
 	SignIn(context.Context, *SignInRequest) (*SignInResponse, error)
 	Logout(context.Context, *LogoutRequest) (*emptypb.Empty, error)
 	UpdateRole(context.Context, *UpdatingRoleRequest) (*UpdatingRoleResponse, error)
+	Verification(context.Context, *VerificationRequest) (*VerificationResponse, error)
 	mustEmbedUnimplementedAuthServiceServer()
 }
 
@@ -106,6 +118,9 @@ func (UnimplementedAuthServiceServer) Logout(context.Context, *LogoutRequest) (*
 }
 func (UnimplementedAuthServiceServer) UpdateRole(context.Context, *UpdatingRoleRequest) (*UpdatingRoleResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateRole not implemented")
+}
+func (UnimplementedAuthServiceServer) Verification(context.Context, *VerificationRequest) (*VerificationResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Verification not implemented")
 }
 func (UnimplementedAuthServiceServer) mustEmbedUnimplementedAuthServiceServer() {}
 
@@ -192,6 +207,24 @@ func _AuthService_UpdateRole_Handler(srv interface{}, ctx context.Context, dec f
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AuthService_Verification_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(VerificationRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServiceServer).Verification(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AuthService_Verification_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServiceServer).Verification(ctx, req.(*VerificationRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // AuthService_ServiceDesc is the grpc.ServiceDesc for AuthService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -214,6 +247,10 @@ var AuthService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UpdateRole",
 			Handler:    _AuthService_UpdateRole_Handler,
+		},
+		{
+			MethodName: "Verification",
+			Handler:    _AuthService_Verification_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

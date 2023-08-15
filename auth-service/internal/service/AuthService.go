@@ -22,12 +22,21 @@ var (
 )
 
 type Service interface {
-	SaveUser(context.Context, *models.User) error
-	GetUser(context.Context, string, string) (*models.User, error)
-	CreateSession(context.Context, *models.User) (models.CachedTokens, error)
-	GetSessionCredentials(context.Context, uuid.UUID) (models.CachedTokens, error)
 	Logout(context.Context, string) error
 	UpdateRole(context.Context, uuid.UUID, models.Role) error
+	SessionManager
+	UserManager
+}
+
+type UserManager interface {
+	SaveUser(context.Context, *models.User) error
+	GetUser(context.Context, string, string) (*models.User, error)
+	GetRole(string) (uuid.UUID, models.Role, error)
+}
+
+type SessionManager interface {
+	CreateSession(context.Context, *models.User) (models.CachedTokens, error)
+	GetSessionCredentials(context.Context, uuid.UUID) (models.CachedTokens, error)
 }
 
 type AuthService struct {
@@ -114,4 +123,8 @@ func (as *AuthService) Logout(ctx context.Context, accessToken string) error {
 
 func (as *AuthService) UpdateRole(ctx context.Context, id uuid.UUID, role models.Role) error {
 	return as.Repositories.MainRepository.UpdateRole(ctx, id, role)
+}
+
+func (as *AuthService) GetRole(accessToken string) (uuid.UUID, models.Role, error) {
+	return as.TokenService.ParseToken(accessToken)
 }

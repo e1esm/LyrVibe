@@ -60,9 +60,19 @@ message UpdatingRoleResponse{
   string status = 2;
 }
 
+message VerificationRequest{
+  string accessToken = 1;
+}
+
+message VerificationResponse{
+  string role = 1;
+  string id = 2;
+}
+
 service AuthService{
   rpc SignUp(SignUpRequest) returns (SignUpResponse){};
   rpc SignIn(SignInRequest) returns (SignInResponse) {};
   rpc Logout(LogoutRequest) returns (google.protobuf.Empty){};
   rpc UpdateRole(UpdatingRoleRequest) returns (UpdatingRoleResponse){};
+  rpc Verification(VerificationRequest) returns(VerificationResponse){};
 }
