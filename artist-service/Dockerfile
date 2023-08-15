@@ -14,7 +14,8 @@ FROM alpine
 
 WORKDIR /
 
-COPY --from=builder /config.yml /config.yml
+COPY --from=builder /app/artist-service/config.yml /config.yml
+COPY --from=builder /artist-service /artist-service
 
 
 CMD ["/artist-service"]

@@ -2,6 +2,7 @@ package server
 
 import (
 	"errors"
+	"fmt"
 	"github.com/e1esm/LyrVibe/auth-service/api/v1/proto"
 	"github.com/e1esm/LyrVibe/gateway/internal/service"
 	"github.com/e1esm/LyrVibe/gateway/pkg/logger"
@@ -49,7 +50,6 @@ func (ps *ProxyServer) Run(address string) {
 
 func (ps *ProxyServer) Login(c *gin.Context) {
 	var signInRequest proto.SignInRequest
-	c.Header("Content-Type", "application/json")
 	if err := c.BindJSON(&signInRequest); err != nil {
 		c.JSON(http.StatusBadRequest, reqBodyErr)
 		return
@@ -88,23 +88,27 @@ func (ps *ProxyServer) Login(c *gin.Context) {
 }
 
 func (ps *ProxyServer) SignUp(c *gin.Context) {
-	signUpRequest := &proto.SignUpRequest{}
-	c.Header("Content-Type", "application/json")
-
-	if err := c.BindJSON(signUpRequest); err != nil {
+	signUpRequest := proto.SignUpRequest{}
+	if err := c.BindJSON(&signUpRequest); err != nil {
+		logger.Logger.Error(err.Error())
 		c.JSON(http.StatusBadRequest, reqBodyErr)
+		return
 	}
 
-	resp, err := ps.Services.AuthService.SignUp(signUpRequest)
+	resp, err := ps.Services.AuthService.SignUp(&signUpRequest)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, resp.Status)
+		logger.Logger.Info(fmt.Sprintf("Password: %v", signUpRequest.Password))
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"username": signUpRequest.Username,
+			"error":    err.Error(),
+		})
 		return
 	}
 	c.JSON(http.StatusOK, resp)
 }
 
 func (ps *ProxyServer) Logout(c *gin.Context) {
-	token, err := c.Cookie("access-token")
+	token, err := c.Cookie("access_token")
 	if err != nil {
 		c.JSON(http.StatusBadRequest, cookieRetrievingErr)
 	}
@@ -119,7 +123,7 @@ func (ps *ProxyServer) Logout(c *gin.Context) {
 
 func (ps *ProxyServer) AuthMiddleware(c *gin.Context) {
 	if strings.Contains(c.Request.RequestURI, "logout") {
-		if token, err := c.Cookie("access-token"); err != nil || token == "" {
+		if token, err := c.Cookie("access_token"); err != nil || token == "" {
 			c.JSON(http.StatusUnauthorized, "Unauthorized")
 			return
 		}

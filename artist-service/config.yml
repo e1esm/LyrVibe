@@ -1,5 +1,5 @@
 server:
-  0.0.0.0:8801
+  address: 0.0.0.0:8801
 artist_storage:
   container_name: "artist_storage"
   port: 5432

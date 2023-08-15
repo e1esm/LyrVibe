@@ -24,12 +24,10 @@ const (
 )
 
 const (
-	CreatingModelError = "User with nickname of %s cannot be created"
-	BadRequestError    = "bad request"
-	SaveError          = "Error while saving %s"
-	InternalError      = "internal error occurred while operating on the provided input"
-	NoUserFound        = "User with username of %s wasn't found in the database or password was incorrect: %s"
-	LogoutErr          = "Couldn't have logged out"
+	BadRequestError = "bad request"
+	InternalError   = "internal error occurred while operating on the provided input"
+	NoUserFound     = "User with username of %s wasn't found in the database or password was incorrect: %s"
+	LogoutErr       = "Couldn't have logged out"
 )
 
 type Server struct {
@@ -41,33 +39,17 @@ type Server struct {
 func (s *Server) SignUp(ctx context.Context, request *proto.SignUpRequest) (*proto.SignUpResponse, error) {
 	err := request.ValidateAll()
 	if err != nil {
-		return &proto.SignUpResponse{
-			Username: request.Username,
-			Status: &proto.RequestStatus{
-				RequestStatus: string(Fail),
-				ErrorMessage:  err.Error(),
-			},
-		}, err
+		return nil, err
 	}
 	user := models.NewUser(request)
 	if user == nil {
-		return &proto.SignUpResponse{
-			Username: request.Username,
-			Status: &proto.RequestStatus{
-				RequestStatus: string(Fail),
-				ErrorMessage:  fmt.Sprintf(CreatingModelError, request.Username),
-			},
-		}, errors.New(BadRequestError)
+		return nil, status.Error(codes.InvalidArgument, BadRequestError)
 	}
 
 	err = s.AuthService.SaveUser(ctx, user)
 	if err != nil {
 		logger.Logger.Error(err.Error())
-		return &proto.SignUpResponse{Username: request.Username,
-			Status: &proto.RequestStatus{
-				RequestStatus: string(Fail),
-				ErrorMessage:  fmt.Sprintf(SaveError, request.Username)},
-		}, errors.New(InternalError)
+		return nil, status.Error(codes.Internal, InternalError)
 	}
 
 	return &proto.SignUpResponse{
@@ -81,34 +63,16 @@ func (s *Server) SignUp(ctx context.Context, request *proto.SignUpRequest) (*pro
 func (s *Server) SignIn(ctx context.Context, request *proto.SignInRequest) (*proto.SignInResponse, error) {
 	err := request.ValidateAll()
 	if err != nil {
-		return &proto.SignInResponse{
-			Tokens: &proto.CachedTokens{},
-			Status: &proto.RequestStatus{
-				RequestStatus: string(Fail),
-				ErrorMessage:  err.Error(),
-			},
-		}, err
+		return nil, err
 	}
 	user, err := s.AuthService.GetUser(ctx, request.Username, request.Password)
-	if err == sql.ErrNoRows {
-		return &proto.SignInResponse{
-			Tokens: &proto.CachedTokens{},
-			Status: &proto.RequestStatus{
-				RequestStatus: string(Fail),
-				ErrorMessage:  fmt.Sprintf(NoUserFound, request.Username, request.Password),
-			},
-		}, err
+	if errors.Is(err, sql.ErrNoRows) {
+		return nil, status.Error(codes.NotFound, NoUserFound)
 	}
 
 	cachedTokens, err := s.AuthService.CreateSession(ctx, user)
 	if err != nil {
-		return &proto.SignInResponse{
-			Tokens: &proto.CachedTokens{},
-			Status: &proto.RequestStatus{
-				RequestStatus: string(Fail),
-				ErrorMessage:  err.Error(),
-			},
-		}, err
+		return nil, err
 	}
 
 	return &proto.SignInResponse{
@@ -127,7 +91,7 @@ func (s *Server) SignIn(ctx context.Context, request *proto.SignInRequest) (*pro
 func (s *Server) Logout(ctx context.Context, request *proto.LogoutRequest) (*emptypb.Empty, error) {
 	err := s.AuthService.Logout(ctx, request.AccessToken)
 	if err != nil {
-		return &emptypb.Empty{}, status.Error(codes.Internal, LogoutErr)
+		return nil, status.Error(codes.Internal, LogoutErr)
 	}
 	return &emptypb.Empty{}, nil
 }
@@ -135,11 +99,11 @@ func (s *Server) Logout(ctx context.Context, request *proto.LogoutRequest) (*emp
 func (s *Server) UpdateRole(ctx context.Context, request *proto.UpdatingRoleRequest) (*proto.UpdatingRoleResponse, error) {
 	id, err := uuid.FromBytes([]byte(request.UserId))
 	if err != nil {
-		return &proto.UpdatingRoleResponse{Status: BadRequestError}, status.Error(codes.InvalidArgument, BadRequestError)
+		return nil, status.Error(codes.InvalidArgument, BadRequestError)
 	}
 	err = s.AuthService.UpdateRole(ctx, id, models.Role(request.RequestedRole))
 	if err != nil {
-		return &proto.UpdatingRoleResponse{Status: InternalError}, status.Error(codes.Internal, InternalError)
+		return nil, status.Error(codes.Internal, InternalError)
 	}
 	return &proto.UpdatingRoleResponse{Status: "OK"}, nil
 }
@@ -147,7 +111,7 @@ func (s *Server) UpdateRole(ctx context.Context, request *proto.UpdatingRoleRequ
 func (s *Server) Verification(ctx context.Context, request *proto.VerificationRequest) (*proto.VerificationResponse, error) {
 	id, role, err := s.AuthService.GetRole(request.AccessToken)
 	if err != nil {
-		return &proto.VerificationResponse{Role: "", Id: ""}, status.Error(codes.Internal, InternalError)
+		return nil, status.Error(codes.Internal, InternalError)
 	}
 	return &proto.VerificationResponse{Role: string(role), Id: id.String()}, nil
 }

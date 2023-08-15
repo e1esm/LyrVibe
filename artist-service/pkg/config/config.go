@@ -26,7 +26,7 @@ type Config struct {
 }
 
 func NewConfig() *Config {
-	var config *Config
+	config := &Config{}
 	content, err := os.ReadFile("config.yml")
 	if err != nil {
 		logger.Logger.Error(err.Error())
