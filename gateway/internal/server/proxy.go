@@ -8,14 +8,16 @@ import (
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 	"net/http"
+	"strings"
 	"time"
 )
 
 var (
-	LogInOk       = "Successfully logged in"
-	TTLErr        = errors.New("error while setting TTL to the cookie")
-	successLogOut = "Successfully logged out of the service"
-	reqBodyErr    = errors.New("body of the request doesn't fullfil server requirements")
+	LogInOk             = "Successfully logged in"
+	TTLErr              = errors.New("error while setting TTL to the cookie")
+	successLogOut       = "Successfully logged out of the service"
+	reqBodyErr          = errors.New("body of the request doesn't fulfill server requirements")
+	cookieRetrievingErr = errors.New("couldn't have retrieved cookie")
 )
 
 type Proxy interface {
@@ -102,15 +104,25 @@ func (ps *ProxyServer) SignUp(c *gin.Context) {
 }
 
 func (ps *ProxyServer) Logout(c *gin.Context) {
-	var logoutRequest proto.LogoutRequest
-	if err := c.BindJSON(&logoutRequest); err != nil {
-		c.JSON(http.StatusBadRequest, reqBodyErr)
+	token, err := c.Cookie("access-token")
+	if err != nil {
+		c.JSON(http.StatusBadRequest, cookieRetrievingErr)
 	}
-	err := ps.Services.AuthService.Logout(&logoutRequest)
+	err = ps.Services.AuthService.Logout(&proto.LogoutRequest{AccessToken: token})
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, err)
 		return
 	}
 	c.JSON(http.StatusOK, successLogOut)
 
+}
+
+func (ps *ProxyServer) AuthMiddleware(c *gin.Context) {
+	if strings.Contains(c.Request.RequestURI, "logout") {
+		if token, err := c.Cookie("access-token"); err != nil || token == "" {
+			c.JSON(http.StatusUnauthorized, "Unauthorized")
+			return
+		}
+	}
+	c.Next()
 }

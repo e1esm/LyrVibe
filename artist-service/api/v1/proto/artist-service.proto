@@ -22,5 +22,4 @@ message RequestStatus{
 
 service ArtistService{
   rpc Verify(VerificationRequest) returns (VerificationResponse) {};
-
 }
