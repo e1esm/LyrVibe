@@ -109,7 +109,7 @@ func (s *Server) UpdateRole(ctx context.Context, request *proto.UpdatingRoleRequ
 }
 
 func (s *Server) Verification(ctx context.Context, request *proto.VerificationRequest) (*proto.VerificationResponse, error) {
-	payload, err := s.AuthService.GetRole(request.AccessToken)
+	payload, err := s.AuthService.GetCredentials(request.AccessToken)
 	if err != nil {
 		return nil, status.Error(codes.Internal, InternalError)
 	}

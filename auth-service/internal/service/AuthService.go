@@ -31,7 +31,7 @@ type Service interface {
 type UserManager interface {
 	SaveUser(context.Context, *models.User) error
 	GetUser(context.Context, string, string) (*models.User, error)
-	GetRole(string) (TokenPayload, error)
+	GetCredentials(string) (TokenPayload, error)
 }
 
 type SessionManager interface {
@@ -125,6 +125,6 @@ func (as *AuthService) UpdateRole(ctx context.Context, id uuid.UUID, role models
 	return as.Repositories.MainRepository.UpdateRole(ctx, id, role)
 }
 
-func (as *AuthService) GetRole(accessToken string) (TokenPayload, error) {
+func (as *AuthService) GetCredentials(accessToken string) (TokenPayload, error) {
 	return as.TokenService.ParseToken(accessToken)
 }
