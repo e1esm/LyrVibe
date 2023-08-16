@@ -15,6 +15,7 @@ var (
 
 func (ps *ProxyServer) NewArtist(c *gin.Context) {
 	verificationRequest := proto.VerificationRequest{}
+	verificationRequest.Username = c.GetString("username")
 	if err := c.BindJSON(&verificationRequest); err != nil {
 		c.JSON(http.StatusBadRequest, fmt.Sprintf(badRequest, err.Error()))
 		return

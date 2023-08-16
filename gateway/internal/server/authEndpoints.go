@@ -6,7 +6,6 @@ import (
 	"github.com/e1esm/LyrVibe/gateway/pkg/logger"
 	"github.com/gin-gonic/gin"
 	"net/http"
-	"strings"
 	"time"
 )
 
@@ -84,11 +83,19 @@ func (ps *ProxyServer) Logout(c *gin.Context) {
 }
 
 func (ps *ProxyServer) AuthMiddleware(c *gin.Context) {
-	if strings.Contains(c.Request.RequestURI, "logout") {
-		if token, err := c.Cookie("access_token"); err != nil || token == "" {
-			c.JSON(http.StatusUnauthorized, "Unauthorized")
-			return
-		}
+	token, err := c.Cookie("access_token")
+	if err != nil || token == "" {
+		c.JSON(http.StatusUnauthorized, "Unauthorized")
+		return
 	}
+	resp, err := ps.Services.AuthService.Verify(&proto.VerificationRequest{
+		AccessToken: token,
+	})
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, "")
+	}
+	c.Set("username", resp.Username)
+	c.Set("role", resp.Role)
+	c.Set("id", resp.Id)
 	c.Next()
 }
