@@ -1470,6 +1470,8 @@ func (m *VerificationResponse) validate(all bool) error {
 
 	// no validation rules for Id
 
+	// no validation rules for Username
+
 	if len(errors) > 0 {
 		return VerificationResponseMultiError(errors)
 	}

@@ -67,6 +67,7 @@ message VerificationRequest{
 message VerificationResponse{
   string role = 1;
   string id = 2;
+  string username = 3;
 }
 
 service AuthService{

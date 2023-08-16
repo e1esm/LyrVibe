@@ -12,14 +12,21 @@ import (
 )
 
 var (
-	parseError     = errors.New("couldn't have extracted token")
-	methodError    = errors.New("invalid signing method")
-	wrongTypeError = errors.New("token claims are of the wrong type")
+	parseError       = errors.New("couldn't have extracted token")
+	methodError      = errors.New("invalid signing method")
+	wrongTypeError   = errors.New("token claims are of the wrong type")
+	uuidParsingError = errors.New("error while parsing UUID")
 )
+
+type TokenPayload struct {
+	ID       uuid.UUID   `json:"id"`
+	Username string      `json:"username"`
+	Role     models.Role `json:"role"`
+}
 
 type TokenManager interface {
 	NewJWT(user *models.User) (string, error)
-	ParseToken(string) (uuid.UUID, models.Role, error)
+	ParseToken(string) (TokenPayload, error)
 	NewRefreshToken() (string, error)
 }
 
@@ -63,7 +70,7 @@ func (ts *TokenService) NewJWT(user *models.User) (string, error) {
 	return token.SignedString([]byte(ts.signingKey))
 }
 
-func (ts *TokenService) ParseToken(accessToken string) (uuid.UUID, models.Role, error) {
+func (ts *TokenService) ParseToken(accessToken string) (TokenPayload, error) {
 	receivedToken, err := jwt.ParseWithClaims(accessToken, &models.JWTCustomClaims{}, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, methodError
@@ -71,13 +78,17 @@ func (ts *TokenService) ParseToken(accessToken string) (uuid.UUID, models.Role, 
 		return []byte(ts.signingKey), nil
 	})
 	if err != nil {
-		return uuid.UUID{}, "", parseError
+		return TokenPayload{}, parseError
 	}
 	claims, ok := receivedToken.Claims.(*models.JWTCustomClaims)
 	if !ok {
-		return uuid.UUID{}, "", wrongTypeError
+		return TokenPayload{}, wrongTypeError
 	}
-	return claims.UserID, claims.UserRole, nil
+	ID, err := uuid.Parse(claims.Id)
+	if err != nil {
+		return TokenPayload{}, uuidParsingError
+	}
+	return TokenPayload{Username: claims.Username, Role: claims.UserRole, ID: ID}, nil
 }
 
 func (ts *TokenService) NewRefreshToken() (string, error) {
