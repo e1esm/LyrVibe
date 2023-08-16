@@ -1,6 +1,9 @@
 auth_service:
   addr: auth_service
   port: 12201
+artist_service:
+  addr: artist_service
+  port: 12201
 server:
   addr: 0.0.0.0
   port: 8080

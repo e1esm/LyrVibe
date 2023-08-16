@@ -10,7 +10,7 @@ import (
 )
 
 func RegisterAuthService(cfg config.Config) proto.AuthServiceClient {
-	conn, err := grpc.Dial(fmt.Sprintf("%s:%s", cfg.AuthService.Address,
+	conn, err := grpc.Dial(fmt.Sprintf("%s:%d", cfg.AuthService.Address,
 		cfg.AuthService.Port), grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		logger.Logger.Error(err.Error())

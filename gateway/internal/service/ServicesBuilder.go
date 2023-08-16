@@ -9,6 +9,11 @@ func (sb *ServicesBuilder) WithAuthProvider(provider AuthenticationProvider) *Se
 	return sb
 }
 
+func (sb *ServicesBuilder) WithArtistsProvider(provider ArtistServiceProvider) *ServicesBuilder {
+	sb.Services.ArtistService = provider
+	return sb
+}
+
 func (sb *ServicesBuilder) Build() Services {
 	return sb.Services
 }

@@ -8,13 +8,17 @@ import (
 )
 
 type Config struct {
+	ArtistService struct {
+		Address string `yaml:"addr"`
+		Port    int    `yaml:"port"`
+	} `yaml:"artist_service"`
 	AuthService struct {
 		Address string `yaml:"addr"`
-		Port    string `yaml:"port"`
+		Port    int    `yaml:"port"`
 	} `yaml:"auth_service"`
 	Server struct {
 		Address string `yaml:"address"`
-		Port    string `yaml:"port"`
+		Port    int    `yaml:"port"`
 	} `yaml:"server"`
 }
 

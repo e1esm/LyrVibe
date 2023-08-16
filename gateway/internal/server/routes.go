@@ -2,9 +2,18 @@ package server
 
 func setUpRoutes(server ProxyServer) {
 	server.Router.HandleMethodNotAllowed = true
+	setupAuthRoutes(server)
+}
+
+func setupAuthRoutes(server ProxyServer) {
 	authGroup := server.Router.Group("/v1/auth/")
 	authGroup.Use(server.AuthMiddleware)
 	authGroup.POST("signup", server.SignUp)
 	authGroup.POST("login", server.Login)
 	authGroup.POST("logout", server.Logout)
+}
+
+func setupArtistRoutes(server ProxyServer) {
+	artistGroup := server.Router.Group("/v1/artist")
+	artistGroup.POST("/new")
 }

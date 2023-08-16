@@ -1,5 +1,6 @@
 package service
 
 type Services struct {
-	AuthService AuthenticationProvider
+	AuthService   AuthenticationProvider
+	ArtistService ArtistServiceProvider
 }
