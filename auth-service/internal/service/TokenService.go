@@ -53,6 +53,7 @@ func (tsb *TokenServiceBuilder) Build() TokenManager {
 func (ts *TokenService) NewJWT(user *models.User) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, models.JWTCustomClaims{
 		UserID:   user.ID,
+		Username: user.Username,
 		UserRole: user.Role,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: time.Now().Add(ts.accessTTL).Unix(),
