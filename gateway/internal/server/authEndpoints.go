@@ -92,7 +92,9 @@ func (ps *ProxyServer) AuthMiddleware(c *gin.Context) {
 		AccessToken: token,
 	})
 	if err != nil {
+		logger.Logger.Error(err.Error())
 		c.JSON(http.StatusUnauthorized, "")
+		return
 	}
 	c.Set("username", resp.Username)
 	c.Set("role", resp.Role)

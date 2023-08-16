@@ -113,5 +113,6 @@ func (s *Server) Verification(ctx context.Context, request *proto.VerificationRe
 	if err != nil {
 		return nil, status.Error(codes.Internal, InternalError)
 	}
+	logger.Logger.Info(fmt.Sprintf("payload: %v", payload))
 	return &proto.VerificationResponse{Role: string(payload.Role), Id: payload.ID.String(), Username: payload.Username}, nil
 }

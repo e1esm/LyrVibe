@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/e1esm/LyrVibe/artist-service/api/v1/proto"
 	"github.com/e1esm/LyrVibe/artist-service/internal/service"
+	"github.com/e1esm/LyrVibe/artist-service/pkg/logger"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -24,10 +25,12 @@ type Server struct {
 
 func (s *Server) Verify(ctx context.Context, request *proto.VerificationRequest) (*proto.VerificationResponse, error) {
 	if err := request.ValidateAll(); err != nil {
+		logger.Logger.Error(err.Error())
 		return nil, status.Error(codes.InvalidArgument, fmt.Sprintf(validationError, err.Error()))
 	}
 	artist, err := s.Services.ArtistService.AddArtist(ctx, request)
 	if err != nil {
+		logger.Logger.Error(err.Error())
 		return nil, status.Error(codes.Internal, fmt.Sprintf(verifyingError, request.Username))
 	}
 	return &proto.VerificationResponse{

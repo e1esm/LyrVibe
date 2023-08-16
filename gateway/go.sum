@@ -10,12 +10,16 @@ github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/e1esm/LyrVibe/artist-service v0.0.0-20230816130957-cd90af06a48f h1:ms0I8tzHBL6Bxgb7Ob8v0n6q/0smPFFGS4ITl6flG60=
 github.com/e1esm/LyrVibe/artist-service v0.0.0-20230816130957-cd90af06a48f/go.mod h1:wHWDhjKgk83Ro3GUr90haOH8gxPowJHfp9kGnRsfkVE=
+github.com/e1esm/LyrVibe/artist-service v0.0.0-20230816145829-2ac47cd1435f h1:UUqGOndfAQ+kr2zawABhRNV6YWupYqpvpDZMSvb8d7s=
+github.com/e1esm/LyrVibe/artist-service v0.0.0-20230816145829-2ac47cd1435f/go.mod h1:wHWDhjKgk83Ro3GUr90haOH8gxPowJHfp9kGnRsfkVE=
 github.com/e1esm/LyrVibe/auth-service v0.0.0-20230809113021-672d3a5bbd25 h1:vFCoN4t2c3gHsWAoX5bJSbkQVQGdxAADxl1NJn6XYwQ=
 github.com/e1esm/LyrVibe/auth-service v0.0.0-20230809113021-672d3a5bbd25/go.mod h1:gAquTi714sT1OzEEwYCfBLx7f9P+h/Ia10nV8yBpolo=
 github.com/e1esm/LyrVibe/auth-service v0.0.0-20230816140509-85e6ace393d1 h1:rmd+WhB5EhN98Diwgw6CTyyoYZLk7qPHbuny7wEwChw=
 github.com/e1esm/LyrVibe/auth-service v0.0.0-20230816140509-85e6ace393d1/go.mod h1:vRJWKdT+XqW+cEWAK4QNckyp3yaCiG2LZM74kz08XVw=
 github.com/e1esm/LyrVibe/auth-service v0.0.0-20230816143316-b05b213f3991 h1:yagj5/HvarcJJaoKlSBy72fu9au/L1PWErbfeAUqWag=
 github.com/e1esm/LyrVibe/auth-service v0.0.0-20230816143316-b05b213f3991/go.mod h1:vRJWKdT+XqW+cEWAK4QNckyp3yaCiG2LZM74kz08XVw=
+github.com/e1esm/LyrVibe/auth-service v0.0.0-20230816145829-2ac47cd1435f h1:7cLDEF6XG5C7dmS56j4jrTLAq2kWevy0Q5SWDcJOhds=
+github.com/e1esm/LyrVibe/auth-service v0.0.0-20230816145829-2ac47cd1435f/go.mod h1:vRJWKdT+XqW+cEWAK4QNckyp3yaCiG2LZM74kz08XVw=
 github.com/envoyproxy/protoc-gen-validate v1.0.2 h1:QkIBuU5k+x7/QXPvPPnWXWlCdaBFApVqftFV6k087DA=
 github.com/envoyproxy/protoc-gen-validate v1.0.2/go.mod h1:GpiZQP3dDbg4JouG/NNS7QWXpgx6x8QiMKdmN72jogE=
 github.com/gabriel-vasile/mimetype v1.4.2 h1:w5qFW6JKBz9Y393Y4q372O9A7cUSequkh1Q7OhCmWKU=

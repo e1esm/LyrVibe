@@ -22,7 +22,7 @@ func Run() {
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
-		proxy.Run(fmt.Sprintf("%s:%s", cfg.Server.Address, cfg.Server.Port))
+		proxy.Run(fmt.Sprintf("%s:%d", cfg.Server.Address, cfg.Server.Port))
 	}()
 	wg.Wait()
 }
