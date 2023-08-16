@@ -19,7 +19,7 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	ArtistService_Verify_FullMethodName = "/api.v1.proto.ArtistService/Verify"
+	ArtistService_Verify_FullMethodName = "/artist.api.v1.proto.ArtistService/Verify"
 )
 
 // ArtistServiceClient is the client API for ArtistService service.
@@ -96,7 +96,7 @@ func _ArtistService_Verify_Handler(srv interface{}, ctx context.Context, dec fun
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var ArtistService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "api.v1.proto.ArtistService",
+	ServiceName: "artist.api.v1.proto.ArtistService",
 	HandlerType: (*ArtistServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{

@@ -3,6 +3,8 @@ package service
 import (
 	"context"
 	"github.com/e1esm/LyrVibe/artist-service/api/v1/proto"
+	"github.com/e1esm/LyrVibe/gateway/internal/registrator"
+	"github.com/e1esm/LyrVibe/gateway/pkg/config"
 )
 
 type ArtistServiceProvider interface {
@@ -13,8 +15,8 @@ type ArtistService struct {
 	client proto.ArtistServiceClient
 }
 
-func NewArtistService(client proto.ArtistServiceClient) ArtistServiceProvider {
-	return &ArtistService{client: client}
+func NewArtistService(cfg config.Config) ArtistServiceProvider {
+	return &ArtistService{client: registrator.RegisterArtistService(&cfg)}
 }
 
 func (as *ArtistService) New(req *proto.VerificationRequest) (*proto.VerificationResponse, error) {

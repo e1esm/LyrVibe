@@ -20,11 +20,11 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	AuthService_SignUp_FullMethodName       = "/api.v1.proto.AuthService/SignUp"
-	AuthService_SignIn_FullMethodName       = "/api.v1.proto.AuthService/SignIn"
-	AuthService_Logout_FullMethodName       = "/api.v1.proto.AuthService/Logout"
-	AuthService_UpdateRole_FullMethodName   = "/api.v1.proto.AuthService/UpdateRole"
-	AuthService_Verification_FullMethodName = "/api.v1.proto.AuthService/Verification"
+	AuthService_SignUp_FullMethodName       = "/auth.api.v1.proto.AuthService/SignUp"
+	AuthService_SignIn_FullMethodName       = "/auth.api.v1.proto.AuthService/SignIn"
+	AuthService_Logout_FullMethodName       = "/auth.api.v1.proto.AuthService/Logout"
+	AuthService_UpdateRole_FullMethodName   = "/auth.api.v1.proto.AuthService/UpdateRole"
+	AuthService_Verification_FullMethodName = "/auth.api.v1.proto.AuthService/Verification"
 )
 
 // AuthServiceClient is the client API for AuthService service.
@@ -229,7 +229,7 @@ func _AuthService_Verification_Handler(srv interface{}, ctx context.Context, dec
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var AuthService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "api.v1.proto.AuthService",
+	ServiceName: "auth.api.v1.proto.AuthService",
 	HandlerType: (*AuthServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{

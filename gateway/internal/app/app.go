@@ -30,6 +30,7 @@ func Run() {
 func configureServices(cfg config.Config) service.Services {
 	return service.NewServiceBuilder().
 		WithAuthProvider(setUpAuthService(cfg)).
+		WithArtistsProvider(setUpArtistService(cfg)).
 		Build()
 }
 
@@ -39,4 +40,8 @@ func setUpServer(services service.Services) server.Proxy {
 
 func setUpAuthService(cfg config.Config) service.AuthenticationProvider {
 	return service.NewAuthenticationService(cfg)
+}
+
+func setUpArtistService(cfg config.Config) service.ArtistServiceProvider {
+	return service.NewArtistService(cfg)
 }

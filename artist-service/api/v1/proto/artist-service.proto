@@ -1,5 +1,5 @@
 syntax = "proto3";
-package api.v1.proto;
+package artist.api.v1.proto;
 import "validate/validate.proto";
 option go_package = "github.com/e1esm/LyrVibe/artist-service/api/v1/proto";
 

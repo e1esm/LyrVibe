@@ -1,5 +1,5 @@
 syntax = "proto3";
-package api.v1.proto;
+package auth.api.v1.proto;
 import "google/protobuf/empty.proto";
 import "validate/validate.proto";
 option go_package = "github.com/e1esm/LyrVibe/auth-service/api/v1/proto";
