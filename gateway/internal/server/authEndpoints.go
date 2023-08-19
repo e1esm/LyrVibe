@@ -93,7 +93,7 @@ func (ps *ProxyServer) AuthMiddleware(c *gin.Context) {
 	})
 	if err != nil {
 		logger.Logger.Error(err.Error())
-		c.JSON(http.StatusUnauthorized, "")
+		c.JSON(http.StatusUnauthorized, nil)
 		return
 	}
 	c.Set("username", resp.Username)

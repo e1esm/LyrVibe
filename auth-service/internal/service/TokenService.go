@@ -6,7 +6,6 @@ import (
 	"github.com/e1esm/LyrVibe/auth-service/internal/models"
 
 	"github.com/golang-jwt/jwt"
-	"github.com/google/uuid"
 	"math/rand"
 	"time"
 )
@@ -19,7 +18,7 @@ var (
 )
 
 type TokenPayload struct {
-	ID       uuid.UUID   `json:"id"`
+	ID       string      `json:"id"`
 	Username string      `json:"username"`
 	Role     models.Role `json:"role"`
 }
@@ -84,11 +83,7 @@ func (ts *TokenService) ParseToken(accessToken string) (TokenPayload, error) {
 	if !ok {
 		return TokenPayload{}, wrongTypeError
 	}
-	ID, err := uuid.Parse(claims.Id)
-	if err != nil {
-		return TokenPayload{}, uuidParsingError
-	}
-	return TokenPayload{Username: claims.Username, Role: claims.UserRole, ID: ID}, nil
+	return TokenPayload{Username: claims.Username, Role: claims.UserRole, ID: claims.UserID.String()}, nil
 }
 
 func (ts *TokenService) NewRefreshToken() (string, error) {
