@@ -4,7 +4,7 @@ go 1.20
 
 require (
 	github.com/e1esm/LyrVibe/artist-service v0.0.0-20230816145829-2ac47cd1435f
-	github.com/e1esm/LyrVibe/auth-service v0.0.0-20230816145829-2ac47cd1435f
+	github.com/e1esm/LyrVibe/auth-service v0.0.0-20230819124215-561e83278d54
 	github.com/gin-gonic/gin v1.9.1
 	github.com/joho/godotenv v1.5.1
 	go.uber.org/zap v1.25.0
@@ -15,6 +15,7 @@ require (
 require (
 	github.com/bytedance/sonic v1.9.1 // indirect
 	github.com/chenzhuoyu/base64x v0.0.0-20221115062448-fe3a3abad311 // indirect
+	github.com/e1esm/LyrVibe v0.0.0-20230819124215-561e83278d54 // indirect
 	github.com/envoyproxy/protoc-gen-validate v1.0.2 // indirect
 	github.com/gabriel-vasile/mimetype v1.4.2 // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
