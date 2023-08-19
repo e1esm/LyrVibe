@@ -12,10 +12,13 @@ github.com/e1esm/LyrVibe v0.0.0-20230819124215-561e83278d54 h1:imDD3Oot9KK7yo1iE
 github.com/e1esm/LyrVibe v0.0.0-20230819124215-561e83278d54/go.mod h1:ji6lapC3q7iVKBj3egMIWnLa/JWnDg49ndwGTjgD5j0=
 github.com/e1esm/LyrVibe v0.0.0-20230819124824-53afda88d948 h1:Xue2/RItLNigSP8ZZKjZj3NGLcaqNcj5HjqGFAv9XSs=
 github.com/e1esm/LyrVibe v0.0.0-20230819124824-53afda88d948/go.mod h1:ji6lapC3q7iVKBj3egMIWnLa/JWnDg49ndwGTjgD5j0=
+github.com/e1esm/LyrVibe v0.0.0-20230819125852-bc271935dc6b/go.mod h1:ji6lapC3q7iVKBj3egMIWnLa/JWnDg49ndwGTjgD5j0=
 github.com/e1esm/LyrVibe/artist-service v0.0.0-20230816130957-cd90af06a48f h1:ms0I8tzHBL6Bxgb7Ob8v0n6q/0smPFFGS4ITl6flG60=
 github.com/e1esm/LyrVibe/artist-service v0.0.0-20230816130957-cd90af06a48f/go.mod h1:wHWDhjKgk83Ro3GUr90haOH8gxPowJHfp9kGnRsfkVE=
 github.com/e1esm/LyrVibe/artist-service v0.0.0-20230816145829-2ac47cd1435f h1:UUqGOndfAQ+kr2zawABhRNV6YWupYqpvpDZMSvb8d7s=
 github.com/e1esm/LyrVibe/artist-service v0.0.0-20230816145829-2ac47cd1435f/go.mod h1:wHWDhjKgk83Ro3GUr90haOH8gxPowJHfp9kGnRsfkVE=
+github.com/e1esm/LyrVibe/artist-service v0.0.0-20230819130816-ad82a390b7cb h1:QmxOWVzuhjl+05pjW5NM5z23SKgs9p18krJG83Tzols=
+github.com/e1esm/LyrVibe/artist-service v0.0.0-20230819130816-ad82a390b7cb/go.mod h1:wHWDhjKgk83Ro3GUr90haOH8gxPowJHfp9kGnRsfkVE=
 github.com/e1esm/LyrVibe/auth-service v0.0.0-20230809113021-672d3a5bbd25 h1:vFCoN4t2c3gHsWAoX5bJSbkQVQGdxAADxl1NJn6XYwQ=
 github.com/e1esm/LyrVibe/auth-service v0.0.0-20230809113021-672d3a5bbd25/go.mod h1:gAquTi714sT1OzEEwYCfBLx7f9P+h/Ia10nV8yBpolo=
 github.com/e1esm/LyrVibe/auth-service v0.0.0-20230816140509-85e6ace393d1 h1:rmd+WhB5EhN98Diwgw6CTyyoYZLk7qPHbuny7wEwChw=
@@ -32,6 +35,8 @@ github.com/e1esm/LyrVibe/auth-service v0.0.0-20230819124938-b75ad990387c h1:n0Xf
 github.com/e1esm/LyrVibe/auth-service v0.0.0-20230819124938-b75ad990387c/go.mod h1:vRJWKdT+XqW+cEWAK4QNckyp3yaCiG2LZM74kz08XVw=
 github.com/e1esm/LyrVibe/auth-service v0.0.0-20230819125852-bc271935dc6b h1:WHrVmSHqKkvwpkTgI7WGhH9cUqruNdwesPnfyLwb6IY=
 github.com/e1esm/LyrVibe/auth-service v0.0.0-20230819125852-bc271935dc6b/go.mod h1:vRJWKdT+XqW+cEWAK4QNckyp3yaCiG2LZM74kz08XVw=
+github.com/e1esm/LyrVibe/auth-service v0.0.0-20230819130705-c28d6e2afa6b h1:PoNcUPJMTZU5jUC891EMKtSTGwJpmuCXeRUJQ49p5mU=
+github.com/e1esm/LyrVibe/auth-service v0.0.0-20230819130705-c28d6e2afa6b/go.mod h1:AEMGQH5FTVXkva+vmie78TqilZh97T0LE8VKkK1pHCs=
 github.com/envoyproxy/protoc-gen-validate v1.0.2 h1:QkIBuU5k+x7/QXPvPPnWXWlCdaBFApVqftFV6k087DA=
 github.com/envoyproxy/protoc-gen-validate v1.0.2/go.mod h1:GpiZQP3dDbg4JouG/NNS7QWXpgx6x8QiMKdmN72jogE=
 github.com/gabriel-vasile/mimetype v1.4.2 h1:w5qFW6JKBz9Y393Y4q372O9A7cUSequkh1Q7OhCmWKU=

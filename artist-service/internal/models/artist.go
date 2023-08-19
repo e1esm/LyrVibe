@@ -2,6 +2,7 @@ package models
 
 import (
 	"github.com/e1esm/LyrVibe/artist-service/api/v1/proto"
+	"github.com/e1esm/LyrVibe/artist-service/pkg/logger"
 	"github.com/google/uuid"
 )
 
@@ -15,8 +16,13 @@ type Artist struct {
 }
 
 func NewArtist(request *proto.VerificationRequest) *Artist {
+	id, err := uuid.Parse(request.Id)
+	if err != nil {
+		logger.Logger.Error(err.Error())
+		return nil
+	}
 	return &Artist{
-		ID:         uuid.New(),
+		ID:         id,
 		Username:   request.Username,
 		Country:    request.Country,
 		FirstName:  request.FirstName,

@@ -29,6 +29,8 @@ const (
 	InternalError   = "internal error occurred while operating on the provided input"
 	NoUserFound     = "User with username of %s wasn't found in the database or password was incorrect: %s"
 	LogoutErr       = "Couldn't have logged out"
+	SessionErr      = "No session found"
+	UpdatingErr     = "Error while updating session"
 )
 
 type Server struct {
@@ -121,4 +123,20 @@ func (s *Server) Verification(ctx context.Context, request *proto.VerificationRe
 	}
 	logger.Logger.Info(fmt.Sprintf("payload: %v", payload))
 	return &proto.VerificationResponse{Role: string(payload.Role), Id: payload.ID, Username: payload.Username}, nil
+}
+
+func (s *Server) RefreshToken(ctx context.Context, request *proto.RefreshRequest) (*proto.RefreshResponse, error) {
+	tokens, err := s.AuthService.GetSessionCredentials(ctx, request.RefreshToken)
+	if err != nil {
+		return nil, status.Error(codes.Internal, SessionErr)
+	}
+	_, err = s.AuthService.UpdateSession(ctx, tokens)
+	if err != nil {
+		return nil, status.Error(codes.Internal, UpdatingErr)
+	}
+
+	return &proto.RefreshResponse{
+		AccessToken: tokens.AccessToken,
+		Ttl:         fmt.Sprintf("%v", tokens.AccessTTL),
+	}, nil
 }

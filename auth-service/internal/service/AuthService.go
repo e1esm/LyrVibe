@@ -37,6 +37,7 @@ type UserManager interface {
 type SessionManager interface {
 	CreateSession(context.Context, *models.User) (models.CachedTokens, error)
 	GetSessionCredentials(context.Context, string) (models.CachedTokens, error)
+	UpdateSession(context.Context, models.CachedTokens) (bool, error)
 }
 
 type AuthService struct {
@@ -127,4 +128,8 @@ func (as *AuthService) UpdateRole(ctx context.Context, id uuid.UUID, role models
 
 func (as *AuthService) GetCredentials(accessToken string) (TokenPayload, error) {
 	return as.TokenService.ParseToken(accessToken)
+}
+
+func (as *AuthService) UpdateSession(ctx context.Context, tokens models.CachedTokens) (bool, error) {
+	return as.Repositories.SessionRepository.Add(ctx, tokens)
 }
