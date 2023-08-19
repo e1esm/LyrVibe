@@ -92,7 +92,26 @@ func (ps *ProxyServer) AuthMiddleware(c *gin.Context) {
 			c.JSON(http.StatusUnauthorized, "Unauthorized")
 			return
 		}
-
+		resp, err := ps.Services.AuthService.Refresh(&proto.RefreshRequest{RefreshToken: refreshToken})
+		if err != nil {
+			logger.Logger.Error(err.Error())
+			c.JSON(http.StatusInternalServerError, "Refresh error")
+			return
+		}
+		ttl, err := time.ParseDuration(resp.Ttl)
+		if err != nil {
+			logger.Logger.Error(err.Error())
+			c.JSON(http.StatusInternalServerError, "Refresh error")
+			return
+		}
+		http.SetCookie(c.Writer, &http.Cookie{
+			Name:     "access_token",
+			Value:    resp.AccessToken,
+			Expires:  time.Now().Add(ttl),
+			HttpOnly: true,
+			Path:     "/",
+		})
+		accessToken = resp.AccessToken
 	}
 	resp, err := ps.Services.AuthService.Verify(&proto.VerificationRequest{
 		AccessToken: accessToken,
