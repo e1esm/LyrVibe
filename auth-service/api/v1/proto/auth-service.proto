@@ -76,7 +76,8 @@ message RefreshRequest{
 
 message RefreshResponse{
   string access_token = 1;
-  RequestStatus request_status = 2;
+  string ttl = 2;
+  RequestStatus request_status = 3;
 
 }
 

@@ -1678,6 +1678,8 @@ func (m *RefreshResponse) validate(all bool) error {
 
 	// no validation rules for AccessToken
 
+	// no validation rules for Ttl
+
 	if all {
 		switch v := interface{}(m.GetRequestStatus()).(type) {
 		case interface{ ValidateAll() error }:
