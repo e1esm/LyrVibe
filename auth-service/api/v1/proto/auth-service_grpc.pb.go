@@ -37,7 +37,7 @@ type AuthServiceClient interface {
 	Logout(ctx context.Context, in *LogoutRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	UpdateRole(ctx context.Context, in *UpdatingRoleRequest, opts ...grpc.CallOption) (*UpdatingRoleResponse, error)
 	Verification(ctx context.Context, in *VerificationRequest, opts ...grpc.CallOption) (*VerificationResponse, error)
-	RefreshToken(ctx context.Context, in *RefreshRequest, opts ...grpc.CallOption) (*VerificationResponse, error)
+	RefreshToken(ctx context.Context, in *RefreshRequest, opts ...grpc.CallOption) (*RefreshResponse, error)
 }
 
 type authServiceClient struct {
@@ -93,8 +93,8 @@ func (c *authServiceClient) Verification(ctx context.Context, in *VerificationRe
 	return out, nil
 }
 
-func (c *authServiceClient) RefreshToken(ctx context.Context, in *RefreshRequest, opts ...grpc.CallOption) (*VerificationResponse, error) {
-	out := new(VerificationResponse)
+func (c *authServiceClient) RefreshToken(ctx context.Context, in *RefreshRequest, opts ...grpc.CallOption) (*RefreshResponse, error) {
+	out := new(RefreshResponse)
 	err := c.cc.Invoke(ctx, AuthService_RefreshToken_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -111,7 +111,7 @@ type AuthServiceServer interface {
 	Logout(context.Context, *LogoutRequest) (*emptypb.Empty, error)
 	UpdateRole(context.Context, *UpdatingRoleRequest) (*UpdatingRoleResponse, error)
 	Verification(context.Context, *VerificationRequest) (*VerificationResponse, error)
-	RefreshToken(context.Context, *RefreshRequest) (*VerificationResponse, error)
+	RefreshToken(context.Context, *RefreshRequest) (*RefreshResponse, error)
 	mustEmbedUnimplementedAuthServiceServer()
 }
 
@@ -134,7 +134,7 @@ func (UnimplementedAuthServiceServer) UpdateRole(context.Context, *UpdatingRoleR
 func (UnimplementedAuthServiceServer) Verification(context.Context, *VerificationRequest) (*VerificationResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Verification not implemented")
 }
-func (UnimplementedAuthServiceServer) RefreshToken(context.Context, *RefreshRequest) (*VerificationResponse, error) {
+func (UnimplementedAuthServiceServer) RefreshToken(context.Context, *RefreshRequest) (*RefreshResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RefreshToken not implemented")
 }
 func (UnimplementedAuthServiceServer) mustEmbedUnimplementedAuthServiceServer() {}
