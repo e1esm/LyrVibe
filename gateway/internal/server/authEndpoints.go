@@ -1,6 +1,7 @@
 package server
 
 import (
+	"errors"
 	"fmt"
 	"github.com/e1esm/LyrVibe/auth-service/api/v1/proto"
 	"github.com/e1esm/LyrVibe/gateway/pkg/logger"
@@ -8,6 +9,16 @@ import (
 	"go.uber.org/zap"
 	"net/http"
 	"time"
+)
+
+var (
+	refreshError = errors.New("refresh error")
+	unauthorized = errors.New("unauthorized")
+)
+
+const (
+	accessToken  = "access_token"
+	refreshToken = "refresh_token"
 )
 
 func (ps *ProxyServer) Login(c *gin.Context) {
@@ -33,14 +44,14 @@ func (ps *ProxyServer) Login(c *gin.Context) {
 		return
 	}
 	http.SetCookie(c.Writer, &http.Cookie{
-		Name:     "access_token",
+		Name:     accessToken,
 		Value:    resp.Tokens.AccessToken,
 		Expires:  time.Now().Add(accessTTL),
 		HttpOnly: true,
 		Path:     "/",
 	})
 	http.SetCookie(c.Writer, &http.Cookie{
-		Name:     "refresh_token",
+		Name:     refreshToken,
 		Value:    resp.Tokens.RefreshToken,
 		Expires:  time.Now().Add(refreshTTL),
 		HttpOnly: true,
@@ -70,7 +81,7 @@ func (ps *ProxyServer) SignUp(c *gin.Context) {
 }
 
 func (ps *ProxyServer) Logout(c *gin.Context) {
-	token, err := c.Cookie("access_token")
+	token, err := c.Cookie(accessToken)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, cookieRetrievingErr)
 	}
@@ -84,28 +95,28 @@ func (ps *ProxyServer) Logout(c *gin.Context) {
 }
 
 func (ps *ProxyServer) AuthMiddleware(c *gin.Context) {
-	accessToken, err := c.Cookie("access_token")
+	accessToken, err := c.Cookie(accessToken)
 	if err != nil || accessToken == "" {
-		refreshToken, _ := c.Cookie("refresh_token")
+		refreshToken, _ := c.Cookie(refreshToken)
 		if refreshToken == "" {
 			logger.Logger.Error("No required tokens", zap.String("err", err.Error()))
-			c.JSON(http.StatusUnauthorized, "Unauthorized")
+			c.JSON(http.StatusUnauthorized, unauthorized)
 			return
 		}
 		resp, err := ps.Services.AuthService.Refresh(&proto.RefreshRequest{RefreshToken: refreshToken})
 		if err != nil {
 			logger.Logger.Error(err.Error())
-			c.JSON(http.StatusInternalServerError, "Refresh error")
+			c.JSON(http.StatusInternalServerError, refreshError)
 			return
 		}
 		ttl, err := time.ParseDuration(resp.Ttl)
 		if err != nil {
 			logger.Logger.Error(err.Error(), zap.String("ttl", fmt.Sprintf("%v", ttl)))
-			c.JSON(http.StatusInternalServerError, "Refresh error")
+			c.JSON(http.StatusInternalServerError, refreshError)
 			return
 		}
 		http.SetCookie(c.Writer, &http.Cookie{
-			Name:     "access_token",
+			Name:     accessToken,
 			Value:    resp.AccessToken,
 			Expires:  time.Now().Add(ttl),
 			HttpOnly: true,

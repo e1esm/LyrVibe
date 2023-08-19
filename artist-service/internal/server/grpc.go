@@ -26,7 +26,6 @@ type Server struct {
 }
 
 func (s *Server) Verify(ctx context.Context, request *proto.VerificationRequest) (*proto.VerificationResponse, error) {
-	logger.Logger.Info(fmt.Sprintf("%v", *request))
 	if err := request.ValidateAll(); err != nil {
 		logger.Logger.Error(err.Error())
 		return nil, status.Error(codes.InvalidArgument, fmt.Sprintf(validationError, err.Error()))
