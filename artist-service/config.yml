@@ -1,13 +1,13 @@
 server:
   address: :12201
 artist_storage:
-  container_name: "artist_storage"
+  container_name: postgres_artists
   port: 5432
-  database_name: "artists"
-  database_user: "postgres"
-  database_password: "postgres"
-  database: "postgres"
+  database_name: artists
+  database_user: postgres
+  database_password: postgres
+  database: postgres
   max_connections: 100
 music_service:
-  container_name: "music_service"
+  container_name: music_service
   port: 12201

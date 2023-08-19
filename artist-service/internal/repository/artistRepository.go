@@ -43,7 +43,7 @@ func NewRepository(cfg *config.Config) Repository {
 func (ar *ArtistRepository) Add(ctx context.Context, artist *models.Artist) error {
 	ctx, cancel := context.WithTimeout(ctx, timeForReq)
 	defer cancel()
-	_, err := ar.pool.Exec(ctx, "INSERT INTO artists VALUES ($1, $2, $3, $4, $5)",
+	_, err := ar.pool.Exec(ctx, "INSERT INTO artists VALUES ($1, $2, $3, $4, $5, $6)",
 		artist.ID,
 		artist.Username,
 		artist.Country,
