@@ -54,7 +54,7 @@ func NewSessionsStorage(config config.Config) SessionStorage {
 }
 
 func (sr *SessionsRepository) Get(ctx context.Context, refreshToken string) (models.CachedTokens, error) {
-	cmd := sr.redis.Get(ctx, fmt.Sprintf("%x", refreshToken))
+	cmd := sr.redis.Get(ctx, fmt.Sprintf("%v", refreshToken))
 	var cachedTokens models.CachedTokens
 	if err := cmd.Scan(&cachedTokens); err != nil {
 		return models.CachedTokens{}, expiredErr

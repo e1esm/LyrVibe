@@ -100,7 +100,7 @@ func (ps *ProxyServer) AuthMiddleware(c *gin.Context) {
 		}
 		ttl, err := time.ParseDuration(resp.Ttl)
 		if err != nil {
-			logger.Logger.Error(err.Error())
+			logger.Logger.Error(err.Error(), zap.String("ttl", fmt.Sprintf("%v", ttl)))
 			c.JSON(http.StatusInternalServerError, "Refresh error")
 			return
 		}

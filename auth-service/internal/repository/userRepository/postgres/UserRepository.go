@@ -98,6 +98,7 @@ func (ur *UserRepository) UpdateRole(ctx context.Context, id uuid.UUID, role mod
 	defer cancel()
 	_, err := ur.pool.Exec(ctx, "UPDATE users SET role = $1 WHERE id = $2", role, id)
 	if err != nil {
+		logger.Logger.Error("UpdateRole:UserRepository", zap.String("", err.Error()))
 		return err
 	}
 	return nil

@@ -104,11 +104,8 @@ func (s *Server) Logout(ctx context.Context, request *proto.LogoutRequest) (*emp
 }
 
 func (s *Server) UpdateRole(ctx context.Context, request *proto.UpdatingRoleRequest) (*proto.UpdatingRoleResponse, error) {
-	id, err := uuid.FromBytes([]byte(request.UserId))
-	if err != nil {
-		return nil, status.Error(codes.InvalidArgument, BadRequestError)
-	}
-	err = s.AuthService.UpdateRole(ctx, id, models.Role(request.RequestedRole))
+	id := uuid.MustParse(request.UserId)
+	err := s.AuthService.UpdateRole(ctx, id, models.Role(request.RequestedRole))
 	if err != nil {
 		return nil, status.Error(codes.Internal, InternalError)
 	}
@@ -130,6 +127,7 @@ func (s *Server) RefreshToken(ctx context.Context, request *proto.RefreshRequest
 	if err != nil {
 		return nil, status.Error(codes.Internal, SessionErr)
 	}
+	logger.Logger.Info("Refresh Token", zap.String("", tokens.RefreshToken))
 	_, err = s.AuthService.UpdateSession(ctx, tokens)
 	if err != nil {
 		return nil, status.Error(codes.Internal, UpdatingErr)

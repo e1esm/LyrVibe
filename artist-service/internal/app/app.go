@@ -2,6 +2,7 @@ package app
 
 import (
 	"github.com/e1esm/LyrVibe/artist-service/api/v1/proto"
+	"github.com/e1esm/LyrVibe/artist-service/internal/registrator"
 	"github.com/e1esm/LyrVibe/artist-service/internal/repository"
 	"github.com/e1esm/LyrVibe/artist-service/internal/server"
 	"github.com/e1esm/LyrVibe/artist-service/internal/service"
@@ -18,7 +19,7 @@ func Run() {
 	if err != nil {
 		logger.Logger.Fatal(err.Error())
 	}
-	artistServer := setupServer(setupServices(setupRepository(cfg)))
+	artistServer := setupServer(setupServices(setupRepository(cfg), cfg))
 	var wg sync.WaitGroup
 	wg.Add(1)
 	go func() {
@@ -38,9 +39,10 @@ func setupServer(services service.Services) *server.Server {
 	return &artistServer
 }
 
-func setupServices(repo repository.Repository) service.Services {
+func setupServices(repo repository.Repository, cfg *config.Config) service.Services {
 	return service.NewServiceBuilder().
 		WithArtistService(service.NewArtistService(repo)).
+		WithRoleService(service.NewRolesService(registrator.RegisterRoleService(*cfg))).
 		Build()
 }
 

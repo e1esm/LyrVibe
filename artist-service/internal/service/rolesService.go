@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/e1esm/LyrVibe/artist-service/pkg/logger"
 	"github.com/e1esm/LyrVibe/auth-service/api/v1/proto"
+	"go.uber.org/zap"
 )
 
 type RolesProvider interface {
@@ -14,7 +15,7 @@ type RoleService struct {
 	conn proto.AuthServiceClient
 }
 
-func NewService(conn proto.AuthServiceClient) RolesProvider {
+func NewRolesService(conn proto.AuthServiceClient) RolesProvider {
 	return &RoleService{conn: conn}
 }
 
@@ -24,7 +25,7 @@ func (rs *RoleService) UpdateRole(ctx context.Context, userID string, role strin
 		RequestedRole: role,
 	})
 	if err != nil {
-		logger.Logger.Error(err.Error())
+		logger.Logger.Error("RoleService:UpdateRole", zap.String("", err.Error()))
 		return nil, err
 	}
 	return resp, nil
