@@ -23,6 +23,10 @@ type Config struct {
 		ContainerName string `yaml:"container_name"`
 		Port          int    `yaml:"port"`
 	} `yaml:"music_service"`
+	AuthService struct {
+		ContainerName string `yaml:"container_name"`
+		Port          int    `yaml:"port"`
+	} `yaml:"auth_service"`
 }
 
 func NewConfig() *Config {

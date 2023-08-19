@@ -17,6 +17,8 @@ var (
 	verifiedUser    = "user with nickname: %s is successfully verified"
 )
 
+var artistRole = "Artist"
+
 type Server struct {
 	Server   *grpc.Server
 	Services service.Services
@@ -32,6 +34,10 @@ func (s *Server) Verify(ctx context.Context, request *proto.VerificationRequest)
 	if err != nil {
 		logger.Logger.Error(err.Error())
 		return nil, status.Error(codes.Internal, fmt.Sprintf(verifyingError, request.Username))
+	}
+	_, err = s.Services.RoleService.UpdateRole(ctx, request.Id, artistRole)
+	if err != nil {
+		return nil, err
 	}
 	return &proto.VerificationResponse{
 		IsVerified: true,

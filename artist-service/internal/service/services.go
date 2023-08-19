@@ -2,6 +2,7 @@ package service
 
 type Services struct {
 	ArtistService Service
+	RoleService   RolesProvider
 }
 
 type ServicesBuilder struct {
@@ -14,6 +15,11 @@ func NewServiceBuilder() *ServicesBuilder {
 
 func (s *ServicesBuilder) WithArtistService(service Service) *ServicesBuilder {
 	s.Services.ArtistService = service
+	return s
+}
+
+func (s *ServicesBuilder) WithRoleService(service RolesProvider) *ServicesBuilder {
+	s.Services.RoleService = service
 	return s
 }
 

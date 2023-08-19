@@ -11,3 +11,6 @@ artist_storage:
 music_service:
   container_name: music_service
   port: 12201
+auth_service:
+  container_name: auth_service
+  port: 12201
