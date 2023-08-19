@@ -52,7 +52,7 @@ message IdentifyResponse{
 }
 
 message UpdatingRoleRequest{
-  string user_name = 1;
+  string user_id = 1;
   string requestedRole = 2;
 }
 

@@ -1152,7 +1152,7 @@ func (m *UpdatingRoleRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for UserName
+	// no validation rules for UserId
 
 	// no validation rules for RequestedRole
 
