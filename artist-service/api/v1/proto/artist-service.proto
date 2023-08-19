@@ -7,7 +7,8 @@ message VerificationRequest{
   string username = 1 [(validate.rules).string = {pattern: "(?i)^[A-Za-z0-9_]+$",min_len: 4, max_len: 10}];
   string country = 2 [(validate.rules).string ={pattern: "(?i)^[A-Z-a-z]+$", min_len: 2}];
   string first_name = 3 [(validate.rules).string = {pattern: "(?i)^[A-Za-z]+$", min_len: 1, max_len: 10}];
-  string second_name = 4 [(validate.rules).string = {pattern: "(?i)^[A-Za-z]+$", min_len: 1, max_len: 20}];;
+  string second_name = 4 [(validate.rules).string = {pattern: "(?i)^[A-Za-z]+$", min_len: 1, max_len: 20}];
+  string id = 5;
 }
 
 message VerificationResponse{

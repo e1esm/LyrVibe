@@ -145,6 +145,8 @@ func (m *VerificationRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
+	// no validation rules for Id
+
 	if len(errors) > 0 {
 		return VerificationRequestMultiError(errors)
 	}
