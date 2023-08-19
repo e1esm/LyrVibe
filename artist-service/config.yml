@@ -1,5 +1,5 @@
 server:
-  address: 0.0.0.0:8801
+  address: :12201
 artist_storage:
   container_name: "artist_storage"
   port: 5432
@@ -10,4 +10,4 @@ artist_storage:
   max_connections: 100
 music_service:
   container_name: "music_service"
-  port: 8801
+  port: 12201

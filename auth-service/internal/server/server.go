@@ -116,7 +116,7 @@ func (s *Server) UpdateRole(ctx context.Context, request *proto.UpdatingRoleRequ
 func (s *Server) Verification(ctx context.Context, request *proto.VerificationRequest) (*proto.VerificationResponse, error) {
 	payload, err := s.AuthService.GetCredentials(request.AccessToken)
 	if err != nil {
-		logger.Logger.Error(err.Error())
+		logger.Logger.Error("Couldn't have gotten credentials", zap.String("err", err.Error()))
 		return nil, status.Error(codes.Internal, InternalError)
 	}
 	logger.Logger.Info(fmt.Sprintf("payload: %v", payload))

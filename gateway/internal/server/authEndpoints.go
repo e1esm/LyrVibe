@@ -5,6 +5,7 @@ import (
 	"github.com/e1esm/LyrVibe/auth-service/api/v1/proto"
 	"github.com/e1esm/LyrVibe/gateway/pkg/logger"
 	"github.com/gin-gonic/gin"
+	"go.uber.org/zap"
 	"net/http"
 	"time"
 )
@@ -85,6 +86,7 @@ func (ps *ProxyServer) Logout(c *gin.Context) {
 func (ps *ProxyServer) AuthMiddleware(c *gin.Context) {
 	token, err := c.Cookie("access_token")
 	if err != nil || token == "" {
+		logger.Logger.Error("No required tokens", zap.String("err", err.Error()))
 		c.JSON(http.StatusUnauthorized, "Unauthorized")
 		return
 	}

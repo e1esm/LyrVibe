@@ -9,6 +9,7 @@ import (
 	"github.com/e1esm/LyrVibe/artist-service/pkg/logger"
 	"google.golang.org/grpc"
 	"net"
+	"sync"
 )
 
 func Run() {
@@ -18,14 +19,21 @@ func Run() {
 		logger.Logger.Fatal(err.Error())
 	}
 	artistServer := setupServer(setupServices(setupRepository(cfg)))
-	if err = artistServer.Server.Serve(listener); err != nil {
-		logger.Logger.Fatal(err.Error())
-	}
+	var wg sync.WaitGroup
+	wg.Add(1)
+	go func() {
+		if err = artistServer.Server.Serve(listener); err != nil {
+			logger.Logger.Fatal(err.Error())
+		}
+	}()
+	logger.Logger.Info("Server's started")
+	wg.Wait()
 }
 
 func setupServer(services service.Services) *server.Server {
 	artistServer := server.Server{}
 	artistServer.Server = grpc.NewServer(grpc.EmptyServerOption{})
+	artistServer.Services = services
 	proto.RegisterArtistServiceServer(artistServer.Server, &artistServer)
 	return &artistServer
 }

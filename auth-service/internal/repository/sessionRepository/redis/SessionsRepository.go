@@ -65,7 +65,7 @@ func (sr *SessionsRepository) Get(ctx context.Context, userID uuid.UUID) (models
 
 func (sr *SessionsRepository) Add(ctx context.Context, user *models.User, tokens models.CachedTokens) (bool, error) {
 	logger.Logger.Info("Tokens", zap.String("session", fmt.Sprintf("%v", tokens)))
-	isOk, err := sr.redis.SetNX(ctx, fmt.Sprintf("%v", user.ID), tokens, tokens.RefreshTTL).Result()
+	isOk, err := sr.redis.SetNX(ctx, fmt.Sprintf("%v", user.ID), tokens, tokens.AccessTTL).Result()
 	return isOk, err
 }
 

@@ -3,6 +3,7 @@ package server
 import (
 	"fmt"
 	"github.com/e1esm/LyrVibe/artist-service/api/v1/proto"
+	"github.com/e1esm/LyrVibe/gateway/pkg/logger"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
@@ -22,6 +23,7 @@ func (ps *ProxyServer) NewArtist(c *gin.Context) {
 	}
 	resp, err := ps.Services.ArtistService.New(&verificationRequest)
 	if err != nil {
+		logger.Logger.Error(err.Error())
 		c.JSON(http.StatusInternalServerError, fmt.Sprintf(verificationFailed, verificationRequest.Username))
 		return
 	}
