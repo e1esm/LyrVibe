@@ -19,7 +19,8 @@ func init() {
 	config := zap.NewProductionEncoderConfig()
 	fileEncoder := zapcore.NewJSONEncoder(config)
 	config.EncodeTime = zapcore.ISO8601TimeEncoder
+
 	core := zapcore.NewTee(
 		zapcore.NewCore(fileEncoder, zapcore.AddSync(file), zapcore.InfoLevel))
-	Logger = zap.New(core)
+	Logger = zap.New(core, zap.AddCaller(), zap.AddStacktrace(zapcore.ErrorLevel))
 }

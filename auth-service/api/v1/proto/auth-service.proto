@@ -52,7 +52,7 @@ message IdentifyResponse{
 }
 
 message UpdatingRoleRequest{
-  string user_id = 1;
+  string user_name = 1;
   string requestedRole = 2;
 }
 
@@ -70,10 +70,21 @@ message VerificationResponse{
   string username = 3;
 }
 
+message RefreshRequest{
+  string refresh_token = 1;
+}
+
+message RefreshResponse{
+  string access_token = 1;
+  RequestStatus request_status = 2;
+
+}
+
 service AuthService{
   rpc SignUp(SignUpRequest) returns (SignUpResponse){};
   rpc SignIn(SignInRequest) returns (SignInResponse) {};
   rpc Logout(LogoutRequest) returns (google.protobuf.Empty){};
   rpc UpdateRole(UpdatingRoleRequest) returns (UpdatingRoleResponse){};
   rpc Verification(VerificationRequest) returns(VerificationResponse){};
+  rpc RefreshToken(RefreshRequest) returns (VerificationResponse){};
 }

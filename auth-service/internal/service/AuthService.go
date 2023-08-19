@@ -36,7 +36,7 @@ type UserManager interface {
 
 type SessionManager interface {
 	CreateSession(context.Context, *models.User) (models.CachedTokens, error)
-	GetSessionCredentials(context.Context, uuid.UUID) (models.CachedTokens, error)
+	GetSessionCredentials(context.Context, string) (models.CachedTokens, error)
 }
 
 type AuthService struct {
@@ -64,8 +64,8 @@ func NewAuthService(repositories repository.Repositories, serviceBuilder TokenSe
 	return &AuthService{repositories, manager, accessTTL, refreshTTL}
 }
 
-func (as *AuthService) GetSessionCredentials(ctx context.Context, id uuid.UUID) (models.CachedTokens, error) {
-	tokens, err := as.Repositories.SessionRepository.Get(ctx, id)
+func (as *AuthService) GetSessionCredentials(ctx context.Context, refreshToken string) (models.CachedTokens, error) {
+	tokens, err := as.Repositories.SessionRepository.Get(ctx, refreshToken)
 	if err != nil {
 		return models.CachedTokens{}, err
 	}
@@ -105,7 +105,7 @@ func (as *AuthService) CreateSession(ctx context.Context, user *models.User) (mo
 		RefreshToken: refreshToken,
 	}
 
-	wasAdded, err := as.Repositories.SessionRepository.Add(ctx, user, tokens)
+	wasAdded, err := as.Repositories.SessionRepository.Add(ctx, tokens)
 	if !wasAdded {
 		return models.CachedTokens{}, wasAlreadyCached
 	}

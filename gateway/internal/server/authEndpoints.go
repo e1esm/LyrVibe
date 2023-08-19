@@ -84,14 +84,18 @@ func (ps *ProxyServer) Logout(c *gin.Context) {
 }
 
 func (ps *ProxyServer) AuthMiddleware(c *gin.Context) {
-	token, err := c.Cookie("access_token")
-	if err != nil || token == "" {
-		logger.Logger.Error("No required tokens", zap.String("err", err.Error()))
-		c.JSON(http.StatusUnauthorized, "Unauthorized")
-		return
+	accessToken, err := c.Cookie("access_token")
+	if err != nil || accessToken == "" {
+		refreshToken, _ := c.Cookie("refresh_token")
+		if refreshToken == "" {
+			logger.Logger.Error("No required tokens", zap.String("err", err.Error()))
+			c.JSON(http.StatusUnauthorized, "Unauthorized")
+			return
+		}
+
 	}
 	resp, err := ps.Services.AuthService.Verify(&proto.VerificationRequest{
-		AccessToken: token,
+		AccessToken: accessToken,
 	})
 	if err != nil {
 		logger.Logger.Error(err.Error())

@@ -25,6 +25,7 @@ const (
 	AuthService_Logout_FullMethodName       = "/auth.api.v1.proto.AuthService/Logout"
 	AuthService_UpdateRole_FullMethodName   = "/auth.api.v1.proto.AuthService/UpdateRole"
 	AuthService_Verification_FullMethodName = "/auth.api.v1.proto.AuthService/Verification"
+	AuthService_RefreshToken_FullMethodName = "/auth.api.v1.proto.AuthService/RefreshToken"
 )
 
 // AuthServiceClient is the client API for AuthService service.
@@ -36,6 +37,7 @@ type AuthServiceClient interface {
 	Logout(ctx context.Context, in *LogoutRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	UpdateRole(ctx context.Context, in *UpdatingRoleRequest, opts ...grpc.CallOption) (*UpdatingRoleResponse, error)
 	Verification(ctx context.Context, in *VerificationRequest, opts ...grpc.CallOption) (*VerificationResponse, error)
+	RefreshToken(ctx context.Context, in *RefreshRequest, opts ...grpc.CallOption) (*VerificationResponse, error)
 }
 
 type authServiceClient struct {
@@ -91,6 +93,15 @@ func (c *authServiceClient) Verification(ctx context.Context, in *VerificationRe
 	return out, nil
 }
 
+func (c *authServiceClient) RefreshToken(ctx context.Context, in *RefreshRequest, opts ...grpc.CallOption) (*VerificationResponse, error) {
+	out := new(VerificationResponse)
+	err := c.cc.Invoke(ctx, AuthService_RefreshToken_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AuthServiceServer is the server API for AuthService service.
 // All implementations must embed UnimplementedAuthServiceServer
 // for forward compatibility
@@ -100,6 +111,7 @@ type AuthServiceServer interface {
 	Logout(context.Context, *LogoutRequest) (*emptypb.Empty, error)
 	UpdateRole(context.Context, *UpdatingRoleRequest) (*UpdatingRoleResponse, error)
 	Verification(context.Context, *VerificationRequest) (*VerificationResponse, error)
+	RefreshToken(context.Context, *RefreshRequest) (*VerificationResponse, error)
 	mustEmbedUnimplementedAuthServiceServer()
 }
 
@@ -121,6 +133,9 @@ func (UnimplementedAuthServiceServer) UpdateRole(context.Context, *UpdatingRoleR
 }
 func (UnimplementedAuthServiceServer) Verification(context.Context, *VerificationRequest) (*VerificationResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Verification not implemented")
+}
+func (UnimplementedAuthServiceServer) RefreshToken(context.Context, *RefreshRequest) (*VerificationResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RefreshToken not implemented")
 }
 func (UnimplementedAuthServiceServer) mustEmbedUnimplementedAuthServiceServer() {}
 
@@ -225,6 +240,24 @@ func _AuthService_Verification_Handler(srv interface{}, ctx context.Context, dec
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AuthService_RefreshToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RefreshRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AuthServiceServer).RefreshToken(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AuthService_RefreshToken_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AuthServiceServer).RefreshToken(ctx, req.(*RefreshRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // AuthService_ServiceDesc is the grpc.ServiceDesc for AuthService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -251,6 +284,10 @@ var AuthService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Verification",
 			Handler:    _AuthService_Verification_Handler,
+		},
+		{
+			MethodName: "RefreshToken",
+			Handler:    _AuthService_RefreshToken_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

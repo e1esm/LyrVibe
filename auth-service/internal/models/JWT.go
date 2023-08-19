@@ -2,6 +2,7 @@ package models
 
 import (
 	"encoding/json"
+	"github.com/e1esm/LyrVibe/auth-service/pkg/logger"
 	"github.com/golang-jwt/jwt"
 	"github.com/google/uuid"
 	"time"
@@ -24,4 +25,14 @@ type CachedTokens struct {
 func (ct CachedTokens) MarshalBinary() (data []byte, err error) {
 	data, err = json.Marshal(&ct)
 	return
+}
+
+func (ct CachedTokens) UnmarshalBinary(data []byte) *CachedTokens {
+	tokens := &CachedTokens{}
+	err := json.Unmarshal(data, tokens)
+	if err != nil {
+		logger.Logger.Error(err.Error())
+		return nil
+	}
+	return tokens
 }

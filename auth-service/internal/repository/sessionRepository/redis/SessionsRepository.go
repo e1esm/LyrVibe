@@ -7,7 +7,6 @@ import (
 	"github.com/e1esm/LyrVibe/auth-service/internal/models"
 	"github.com/e1esm/LyrVibe/auth-service/pkg/config"
 	"github.com/e1esm/LyrVibe/auth-service/pkg/logger"
-	"github.com/google/uuid"
 	"github.com/joho/godotenv"
 	"github.com/redis/go-redis/v9"
 	"go.uber.org/zap"
@@ -19,8 +18,8 @@ var (
 )
 
 type SessionStorage interface {
-	Add(context.Context, *models.User, models.CachedTokens) (bool, error)
-	Get(context.Context, uuid.UUID) (models.CachedTokens, error)
+	Add(context.Context, models.CachedTokens) (bool, error)
+	Get(context.Context, string) (models.CachedTokens, error)
 	Delete(context.Context, string) error
 }
 
@@ -54,8 +53,8 @@ func NewSessionsStorage(config config.Config) SessionStorage {
 
 }
 
-func (sr *SessionsRepository) Get(ctx context.Context, userID uuid.UUID) (models.CachedTokens, error) {
-	cmd := sr.redis.Get(ctx, fmt.Sprintf("%x", userID))
+func (sr *SessionsRepository) Get(ctx context.Context, refreshToken string) (models.CachedTokens, error) {
+	cmd := sr.redis.Get(ctx, fmt.Sprintf("%x", refreshToken))
 	var cachedTokens models.CachedTokens
 	if err := cmd.Scan(&cachedTokens); err != nil {
 		return models.CachedTokens{}, expiredErr
@@ -63,9 +62,9 @@ func (sr *SessionsRepository) Get(ctx context.Context, userID uuid.UUID) (models
 	return cachedTokens, nil
 }
 
-func (sr *SessionsRepository) Add(ctx context.Context, user *models.User, tokens models.CachedTokens) (bool, error) {
+func (sr *SessionsRepository) Add(ctx context.Context, tokens models.CachedTokens) (bool, error) {
 	logger.Logger.Info("Tokens", zap.String("session", fmt.Sprintf("%v", tokens)))
-	isOk, err := sr.redis.SetNX(ctx, fmt.Sprintf("%v", user.ID), tokens, tokens.AccessTTL).Result()
+	isOk, err := sr.redis.SetNX(ctx, fmt.Sprintf("%v", tokens.RefreshToken), tokens, tokens.RefreshTTL).Result()
 	return isOk, err
 }
 
