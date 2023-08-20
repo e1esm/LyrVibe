@@ -30,7 +30,7 @@ func (s *Server) Verify(ctx context.Context, request *proto.VerificationRequest)
 		logger.Logger.Error(err.Error())
 		return nil, status.Error(codes.InvalidArgument, fmt.Sprintf(validationError, err.Error()))
 	}
-	artist, err := s.Services.ArtistService.AddArtist(ctx, request)
+	_, err := s.Services.ArtistService.AddArtist(ctx, request)
 	if err != nil {
 		logger.Logger.Error(err.Error())
 		return nil, status.Error(codes.Internal, fmt.Sprintf(verifyingError, request.Username))
@@ -40,10 +40,7 @@ func (s *Server) Verify(ctx context.Context, request *proto.VerificationRequest)
 		return nil, err
 	}
 	return &proto.VerificationResponse{
-		IsVerified: true,
-		RequestStatus: &proto.RequestStatus{
-			RequestStatus: fmt.Sprintf(verifiedUser, artist.Username),
-			ErrorMessage:  "",
-		},
+		IsVerified:    true,
+		RequestStatus: proto.RequestStatus_OK,
 	}, nil
 }
