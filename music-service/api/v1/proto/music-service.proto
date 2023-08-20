@@ -27,13 +27,15 @@ message NewTrackRequest{
   repeated string lyrics = 1;
   bytes cover = 2 [(validate.rules).bytes.min_len = 1];
   string title = 3 [(validate.rules).string = {pattern: "(?i)^[A-Za-z0-9]+$", min_len: 1, max_len: 50}];
-  uint64 release_year = 4;
+  string release_date = 4;
   Genre genre = 5 [(validate.rules).enum.defined_only = true];
   string duration = 6 [(validate.rules).string = {pattern: "^([0-9]+[mM])?([0-9]+[sS])?$"}];
   string country = 7 [(validate.rules).string = {pattern: "(?i)^[A-Za-z]+$", min_len: 1, max_len: 50}];
   string video_link = 8;
   repeated string feature = 9;
   uint64 views = 10;
+  string id = 11;
+  string album_id = 12;
 }
 
 message NewTrackResponse{
