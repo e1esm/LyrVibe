@@ -12,7 +12,7 @@ type Song struct {
 	Cover    string        `json:"cover"`
 	Lyrics   string        `json:"lyrics"`
 	Duration time.Duration `json:"duration"`
-	Feature  []Artist      `json:"feature"`
+	Feature  []string      `json:"feature"`
 	Country  string        `json:"country"`
 	YTLink   string        `json:"youtube_link,omitempty"`
 	Views    int           `json:"views,omitempty"`
