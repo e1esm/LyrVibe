@@ -17,7 +17,8 @@ CREATE TABLE tracks(
     country varchar(30),
     video_link text,
     feature text[],
-    views int default 0
+    views int default 0,
+    rating float4 default 0
 );
 
 CREATE TABLE lyrics(
