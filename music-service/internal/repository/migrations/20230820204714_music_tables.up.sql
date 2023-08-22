@@ -18,7 +18,8 @@ CREATE TABLE tracks(
     video_link text,
     feature text[],
     views int default 0,
-    rating float4 default 0
+    rating float4 default 0,
+    created_at timestamp
 );
 
 CREATE TABLE lyrics(

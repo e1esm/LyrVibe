@@ -3,12 +3,14 @@ package repository
 import (
 	"context"
 	"fmt"
+	"github.com/e1esm/LyrVibe/music-service/internal/entity"
 	"github.com/e1esm/LyrVibe/music-service/pkg/config"
 	"github.com/e1esm/LyrVibe/music-service/pkg/logger"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
 type Repository interface {
+	NewTrack(entity.TrackEntity) (entity.TrackEntity, error)
 }
 
 type MusicRepository struct {
@@ -32,4 +34,9 @@ func NewMusicRepository(cfg *config.Config) Repository {
 		return nil
 	}
 	return &repo
+}
+
+func (mr *MusicRepository) NewTrack(track entity.TrackEntity) (entity.TrackEntity, error) {
+
+	return track, nil
 }
