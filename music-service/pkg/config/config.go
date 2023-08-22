@@ -8,12 +8,16 @@ import (
 
 type Config struct {
 	GRPC struct {
-		address string `yaml:"addr"`
+		Address string `yaml:"addr"`
 	} `yaml:"grpc"`
 	MusicStorage struct {
-		address        string `yaml:"addr"`
-		port           int    `yaml:"port"`
+		Address        string `yaml:"addr"`
+		Port           int    `yaml:"port"`
 		MaxConnections int    `yaml:"max_conn"`
+		Database       string `yaml:"database"`
+		User           string `yaml:"database_user"`
+		Password       string `yaml:"database_password"`
+		Name           string `yaml:"database_name"`
 	} `yaml:"music_storage"`
 }
 

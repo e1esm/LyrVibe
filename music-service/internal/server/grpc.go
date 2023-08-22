@@ -7,14 +7,14 @@ import (
 )
 
 type Server struct {
-	server *grpc.Server
+	Server *grpc.Server
 	proto.UnimplementedMusicServiceServer
 	Services service.Services
 }
 
 func NewServer(server *grpc.Server, services service.Services) *Server {
 	return &Server{
-		server:   server,
+		Server:   server,
 		Services: services,
 	}
 }

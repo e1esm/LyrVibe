@@ -4,3 +4,7 @@ music_storage:
   addr: postgres_music
   port: 5432
   max_conn: 100
+  database: postgres
+  database_name: music
+  database_user: postgres
+  database_password: postgres
