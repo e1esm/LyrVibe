@@ -19,5 +19,5 @@ func init() {
 	config.EncodeTime = zapcore.ISO8601TimeEncoder
 	core := zapcore.NewTee(
 		zapcore.NewCore(fileEncoder, zapcore.AddSync(file), zapcore.InfoLevel))
-	Logger = zap.New(core)
+	Logger = zap.New(core, zap.WithCaller(true), zap.AddStacktrace(zapcore.ErrorLevel))
 }

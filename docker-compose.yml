@@ -43,20 +43,38 @@ services:
       interval: 10s
       timeout: 5s
       retries: 3
+  postgres_music:
+    container_name: postgres_music
+    image: postgres
+    build:
+      context: .
+      dockerfile: ./music-service/postgres.Dockerfile
+    env_file:
+      - ./music-service/postgres.env
+    volumes:
+      - postgres_music_data:/var/lib/postgresql/data
+    ports:
+      - "5434:5432"
+    healthcheck:
+      test: ["CMD", "pg_isready"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+  music_service:
+    build:
+      context: .
+      dockerfile: music-service/Dockerfile
+    container_name: music_service
   auth_service:
     build:
       context: .
       dockerfile: ./auth-service/Dockerfile
     container_name: auth_service
-    ports:
-      - "8081:8801"
   artist_service:
     build:
       context: .
       dockerfile: ./artist-service/Dockerfile
     container_name: artist_service
-    ports:
-      - "8080:8801"
   gateway:
     build:
       context: .
@@ -70,4 +88,5 @@ volumes:
   cache:
   postgres_auth_data:
   postgres_artist_data:
+  postgres_music_data:
 
