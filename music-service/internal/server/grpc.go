@@ -2,11 +2,19 @@ package server
 
 import (
 	"github.com/e1esm/LyrVibe/music-service/api/v1/proto"
+	"github.com/e1esm/LyrVibe/music-service/internal/service"
 	"google.golang.org/grpc"
 )
 
 type Server struct {
 	server *grpc.Server
 	proto.UnimplementedMusicServiceServer
-	Services Services
+	Services service.Services
+}
+
+func NewServer(server *grpc.Server, services service.Services) *Server {
+	return &Server{
+		server:   server,
+		Services: services,
+	}
 }

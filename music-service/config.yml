@@ -1,0 +1,6 @@
+grpc:
+  addr: :12201
+music_storage:
+  addr: postgres_music
+  port: 5432
+  max_conn: 100
