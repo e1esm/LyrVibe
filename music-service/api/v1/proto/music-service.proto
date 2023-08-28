@@ -34,8 +34,6 @@ message NewTrackRequest{
   string video_link = 8;
   repeated string feature = 9;
   uint64 views = 10;
-  string id = 11;
-  string album_id = 12;
 }
 
 message NewTrackResponse{

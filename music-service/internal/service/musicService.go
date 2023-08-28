@@ -21,6 +21,5 @@ func NewMusicService(repo repository.Repository) MusicServiceProvider {
 
 func (ms *MusicService) AddNew(ctx context.Context, request *proto.NewTrackRequest) (entity.TrackEntity, error) {
 	track := entity.NewTrackEntity(request)
-
-	return *track, nil
+	return ms.Repository.NewTrack(ctx, *track)
 }

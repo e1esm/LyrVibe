@@ -40,11 +40,15 @@ func setUpServer(cfg *config.Config) *server.Server {
 func setUpServices(cfg *config.Config) service.Services {
 	return service.NewServicesBuilder().
 		WithMusicService(service.NewMusicService(
-			repository.NewMusicRepository(cfg),
+			setUpRepositories(cfg, repository.NewTransactionRepository()),
 		),
 		).Build()
 }
 
 func setUpGRPCConnection(cfg *config.Config) *grpc.Server {
 	return grpc.NewServer(grpc.EmptyServerOption{})
+}
+
+func setUpRepositories(cfg *config.Config, manager repository.TransactionManager) repository.Repository {
+	return repository.NewMusicRepository(cfg, manager)
 }

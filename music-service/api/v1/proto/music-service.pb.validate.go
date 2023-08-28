@@ -140,10 +140,6 @@ func (m *NewTrackRequest) validate(all bool) error {
 
 	// no validation rules for Views
 
-	// no validation rules for Id
-
-	// no validation rules for AlbumId
-
 	if len(errors) > 0 {
 		return NewTrackRequestMultiError(errors)
 	}
