@@ -6,7 +6,6 @@ import (
 	"github.com/e1esm/LyrVibe/music-service/internal/entity"
 	"github.com/e1esm/LyrVibe/music-service/pkg/config"
 	"github.com/e1esm/LyrVibe/music-service/pkg/logger"
-	"github.com/golang-migrate/migrate/v4"
 	_ "github.com/golang-migrate/migrate/v4/database/postgres"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
 	"github.com/jackc/pgx/v5"
@@ -16,7 +15,10 @@ import (
 )
 
 const (
-	timeout = 5 * time.Second
+	timeout             = 5 * time.Second
+	maxConnParameterKey = "pool_max_conns"
+	migrationsDir       = "file://db/migrations"
+	sslmodeParameter    = "sslmode=disable"
 )
 
 type Repository interface {
@@ -38,21 +40,17 @@ func NewMusicRepository(cfg *config.Config, tManager TransactionManager) Reposit
 		cfg.MusicStorage.Address,
 		cfg.MusicStorage.Port,
 		cfg.MusicStorage.Name)
-	repo.pool, err = pgxpool.New(context.Background(),
-		basicDBUrl+fmt.Sprintf("?pool_max_conns=%d", cfg.MusicStorage.MaxConnections))
+
+	repo.pool, err = connect(context.Background(),
+		fmt.Sprintf("%s?%s=%d",
+			basicDBUrl,
+			maxConnParameterKey,
+			cfg.MusicStorage.MaxConnections,
+		))
 	if err != nil {
-		logger.GetLogger().Error(err.Error())
-		return nil
+		panic(err)
 	}
-	m, err := migrate.New("file://db/migrations", basicDBUrl+"?sslmode=disable")
-	if err != nil {
-		logger.GetLogger().Error("Couldn't have created migration",
-			zap.String("err", err.Error()))
-	}
-	if err = m.Up(); err != nil {
-		logger.GetLogger().Error("Couldn't have performed migration",
-			zap.String("err", err.Error()))
-	}
+	runMigrations(fmt.Sprintf("%s?%s", basicDBUrl, sslmodeParameter), migrationsDir, UP)
 	return &repo
 }
 
