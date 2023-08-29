@@ -11,10 +11,7 @@ services:
       - cache:/data
   postgres_auth:
     container_name: postgres_auth
-    image: postgres
-    build:
-      context: .
-      dockerfile: ./postgres.Dockerfile
+    image: postgres:latest
     ports:
       - "5432:5432"
     volumes:
@@ -28,10 +25,7 @@ services:
       retries: 3
   postgres_artists:
     container_name: postgres_artists
-    image: postgres
-    build:
-      context: .
-      dockerfile: ./postgres.Dockerfile
+    image: postgres:latest
     env_file:
       - ./artist-service/postgres.env
     volumes:
@@ -45,10 +39,7 @@ services:
       retries: 3
   postgres_music:
     container_name: postgres_music
-    image: postgres
-    build:
-      context: .
-      dockerfile: ./postgres.Dockerfile
+    image: postgres:latest
     env_file:
       - ./music-service/postgres.env
     volumes:
