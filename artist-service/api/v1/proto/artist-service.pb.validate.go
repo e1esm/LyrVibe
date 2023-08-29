@@ -396,7 +396,7 @@ func (m *NewTrackRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
-	// no validation rules for ReleaseYear
+	// no validation rules for ReleaseDate
 
 	if _, ok := Genre_name[int32(m.GetGenre())]; !ok {
 		err := NewTrackRequestValidationError{
@@ -443,8 +443,6 @@ func (m *NewTrackRequest) validate(all bool) error {
 	}
 
 	// no validation rules for VideoLink
-
-	// no validation rules for Views
 
 	if len(errors) > 0 {
 		return NewTrackRequestMultiError(errors)

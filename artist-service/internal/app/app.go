@@ -42,7 +42,8 @@ func setupServer(services service.Services) *server.Server {
 func setupServices(repo repository.Repository, cfg *config.Config) service.Services {
 	return service.NewServiceBuilder().
 		WithArtistService(service.NewArtistService(repo)).
-		WithRoleService(service.NewRolesService(registrator.RegisterRoleService(*cfg))).
+		WithRoleService(service.NewRolesService(registrator.RegisterRoleService(cfg))).
+		WithMusicService(service.NewMusicService(registrator.RegisterMusicService(cfg))).
 		Build()
 }
 

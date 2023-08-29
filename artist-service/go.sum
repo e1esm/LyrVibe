@@ -3,6 +3,8 @@ github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSs
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/e1esm/LyrVibe/auth-service v0.0.0-20230819130816-ad82a390b7cb h1:kL9AdZAfVvtrkPXnCP6IwKVYBEFUR9R04tKEh+bH7ZA=
 github.com/e1esm/LyrVibe/auth-service v0.0.0-20230819130816-ad82a390b7cb/go.mod h1:AEMGQH5FTVXkva+vmie78TqilZh97T0LE8VKkK1pHCs=
+github.com/e1esm/LyrVibe/music-service v0.0.0-20230829131002-c28d5c899285 h1:iP1g19qwJ7PKaj2cMH9PEn0rTqyntimo66sPtsBzN4k=
+github.com/e1esm/LyrVibe/music-service v0.0.0-20230829131002-c28d5c899285/go.mod h1:Izx7wwaBuWLbrzKMOBxfGmPGjvhmDqg39s0rKLit2s8=
 github.com/envoyproxy/protoc-gen-validate v1.0.2 h1:QkIBuU5k+x7/QXPvPPnWXWlCdaBFApVqftFV6k087DA=
 github.com/envoyproxy/protoc-gen-validate v1.0.2/go.mod h1:GpiZQP3dDbg4JouG/NNS7QWXpgx6x8QiMKdmN72jogE=
 github.com/golang/protobuf v1.5.0/go.mod h1:FsONVRAS9T7sI+LIUmWTfcYkHO4aIWwzhcaSAoJOfIk=

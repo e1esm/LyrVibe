@@ -3,7 +3,8 @@ package server
 import (
 	"context"
 	"fmt"
-	"github.com/e1esm/LyrVibe/artist-service/api/v1/proto"
+	artist "github.com/e1esm/LyrVibe/artist-service/api/v1/proto"
+	"github.com/e1esm/LyrVibe/artist-service/internal/models"
 	"github.com/e1esm/LyrVibe/artist-service/internal/service"
 	"github.com/e1esm/LyrVibe/artist-service/pkg/logger"
 	"google.golang.org/grpc"
@@ -22,10 +23,10 @@ var artistRole = "Artist"
 type Server struct {
 	Server   *grpc.Server
 	Services service.Services
-	proto.UnimplementedArtistServiceServer
+	artist.UnimplementedArtistServiceServer
 }
 
-func (s *Server) Verify(ctx context.Context, request *proto.VerificationRequest) (*proto.VerificationResponse, error) {
+func (s *Server) Verify(ctx context.Context, request *artist.VerificationRequest) (*artist.VerificationResponse, error) {
 	if err := request.ValidateAll(); err != nil {
 		logger.GetLogger().Error(err.Error())
 		return nil, status.Error(codes.InvalidArgument, fmt.Sprintf(validationError, err.Error()))
@@ -39,8 +40,19 @@ func (s *Server) Verify(ctx context.Context, request *proto.VerificationRequest)
 	if err != nil {
 		return nil, err
 	}
-	return &proto.VerificationResponse{
+	return &artist.VerificationResponse{
 		IsVerified:    true,
-		RequestStatus: proto.RequestStatus_OK,
+		RequestStatus: artist.RequestStatus_OK,
+	}, nil
+}
+
+func (s *Server) AddTrack(ctx context.Context, request *artist.NewTrackRequest) (*artist.NewTrackResponse, error) {
+	resp, err := s.Services.MusicService.Release(ctx, models.NewSong(request))
+	if err != nil {
+		return nil, fmt.Errorf("can't release track: %v", err)
+	}
+	return &artist.NewTrackResponse{
+		Title:         resp.Title,
+		RequestStatus: artist.RequestStatus_OK,
 	}, nil
 }
