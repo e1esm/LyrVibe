@@ -35,6 +35,6 @@ func (s *Server) AddNewTrack(ctx context.Context, request *proto.NewTrackRequest
 	}
 	return &proto.NewTrackResponse{
 		Status: proto.Status_OK,
-		Title:  track.Title,
+		Title:  track.Data.Title,
 	}, nil
 }

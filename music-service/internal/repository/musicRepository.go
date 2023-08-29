@@ -6,6 +6,9 @@ import (
 	"github.com/e1esm/LyrVibe/music-service/internal/entity"
 	"github.com/e1esm/LyrVibe/music-service/pkg/config"
 	"github.com/e1esm/LyrVibe/music-service/pkg/logger"
+	"github.com/golang-migrate/migrate/v4"
+	_ "github.com/golang-migrate/migrate/v4/database/postgres"
+	_ "github.com/golang-migrate/migrate/v4/source/file"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"go.uber.org/zap"
@@ -28,18 +31,27 @@ type MusicRepository struct {
 func NewMusicRepository(cfg *config.Config, tManager TransactionManager) Repository {
 	repo := MusicRepository{transactionRepo: tManager}
 	var err error
+	basicDBUrl := fmt.Sprintf("%s://%s:%s@%s:%d/%s",
+		cfg.MusicStorage.Database,
+		cfg.MusicStorage.User,
+		cfg.MusicStorage.Password,
+		cfg.MusicStorage.Address,
+		cfg.MusicStorage.Port,
+		cfg.MusicStorage.Name)
 	repo.pool, err = pgxpool.New(context.Background(),
-		fmt.Sprintf("%s://%s:%s@%s:%d/%s?pool_max_conns=%d",
-			cfg.MusicStorage.Database,
-			cfg.MusicStorage.User,
-			cfg.MusicStorage.Password,
-			cfg.MusicStorage.Address,
-			cfg.MusicStorage.Port,
-			cfg.MusicStorage.Database,
-			cfg.MusicStorage.MaxConnections))
+		basicDBUrl+fmt.Sprintf("?pool_max_conns=%d", cfg.MusicStorage.MaxConnections))
 	if err != nil {
 		logger.GetLogger().Error(err.Error())
 		return nil
+	}
+	m, err := migrate.New("file://db/migrations", basicDBUrl+"?sslmode=disable")
+	if err != nil {
+		logger.GetLogger().Error("Couldn't have created migration",
+			zap.String("err", err.Error()))
+	}
+	if err = m.Up(); err != nil {
+		logger.GetLogger().Error("Couldn't have performed migration",
+			zap.String("err", err.Error()))
 	}
 	return &repo
 }

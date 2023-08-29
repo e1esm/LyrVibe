@@ -16,5 +16,6 @@ WORKDIR /
 
 COPY --from=builder /app/music-service/config.yml /config.yml
 COPY --from=builder /music-service /music-service
+COPY --from=builder /app/music-service/internal/repository/migrations/ /db/migrations
 
 CMD ["/music-service"]
