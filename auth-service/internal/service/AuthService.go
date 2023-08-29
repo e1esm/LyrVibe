@@ -50,7 +50,7 @@ type AuthService struct {
 func init() {
 	err := godotenv.Load("jwt.env")
 	if err != nil {
-		logger.Logger.Error("Couldn't have loaded file with jwt env variables")
+		logger.GetLogger().Error("Couldn't have loaded file with jwt env variables")
 	}
 }
 
@@ -58,7 +58,7 @@ func NewAuthService(repositories repository.Repositories, serviceBuilder TokenSe
 	accessTTL, err := time.ParseDuration(os.Getenv("ACCESS_TTL"))
 	refreshTTL, err := time.ParseDuration(os.Getenv("REFRESH_TTL"))
 	if err != nil {
-		logger.Logger.Info(err.Error())
+		logger.GetLogger().Info(err.Error())
 		accessTTL = defaultTTL
 	}
 	manager := serviceBuilder.WithSigningKey(os.Getenv("SIGNING_KEY")).WithTTL(accessTTL).Build()

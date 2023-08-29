@@ -24,7 +24,7 @@ func (ps *ProxyServer) NewArtist(c *gin.Context) {
 	verificationRequest.Id = c.GetString("id")
 	resp, err := ps.Services.ArtistService.New(&verificationRequest)
 	if err != nil {
-		logger.Logger.Error(err.Error())
+		logger.GetLogger().Error(err.Error())
 		c.JSON(http.StatusInternalServerError, fmt.Sprintf(verificationFailed, verificationRequest.Username))
 		return
 	}

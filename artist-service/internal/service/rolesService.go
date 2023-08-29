@@ -25,7 +25,7 @@ func (rs *RoleService) UpdateRole(ctx context.Context, userID string, role strin
 		RequestedRole: role,
 	})
 	if err != nil {
-		logger.Logger.Error("RoleService:UpdateRole", zap.String("", err.Error()))
+		logger.GetLogger().Error("RoleService:UpdateRole", zap.String("", err.Error()))
 		return nil, err
 	}
 	return resp, nil

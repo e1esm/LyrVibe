@@ -31,7 +31,7 @@ func (ct CachedTokens) UnmarshalBinary(data []byte) *CachedTokens {
 	tokens := &CachedTokens{}
 	err := json.Unmarshal(data, tokens)
 	if err != nil {
-		logger.Logger.Error(err.Error())
+		logger.GetLogger().Error(err.Error())
 		return nil
 	}
 	return tokens

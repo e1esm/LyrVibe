@@ -32,7 +32,7 @@ type UserRepository struct {
 func NewUserRepository(config config.Config) UserStorage {
 
 	if err := godotenv.Load("postgres.env"); err != nil {
-		logger.Logger.Error(err.Error())
+		logger.GetLogger().Error(err.Error())
 		return nil
 	}
 	pgUser := os.Getenv("POSTGRES_USER")
@@ -49,7 +49,7 @@ func NewUserRepository(config config.Config) UserStorage {
 		config.UsersStorage.MaxConnectionPool)
 	pool, err := pgxpool.New(context.Background(), databaseUrl)
 	if err != nil {
-		logger.Logger.Error(err.Error(), zap.String("url", databaseUrl))
+		logger.GetLogger().Error(err.Error(), zap.String("url", databaseUrl))
 		return nil
 	}
 
@@ -83,7 +83,7 @@ func (ur *UserRepository) GetOne(ctx context.Context, username, password string)
 		&user.Password,
 		&user.Role,
 		&user.ProfilePicture); err != nil {
-		logger.Logger.Error(err.Error())
+		logger.GetLogger().Error(err.Error())
 		return nil
 	}
 
@@ -98,7 +98,7 @@ func (ur *UserRepository) UpdateRole(ctx context.Context, id uuid.UUID, role mod
 	defer cancel()
 	_, err := ur.pool.Exec(ctx, "UPDATE users SET role = $1 WHERE id = $2", role, id)
 	if err != nil {
-		logger.Logger.Error("UpdateRole:UserRepository", zap.String("", err.Error()))
+		logger.GetLogger().Error("UpdateRole:UserRepository", zap.String("", err.Error()))
 		return err
 	}
 	return nil

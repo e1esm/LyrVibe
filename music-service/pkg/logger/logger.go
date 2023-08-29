@@ -4,14 +4,19 @@ import (
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 	"os"
+	"sync"
 )
 
-var logger *zap.Logger
+var (
+	logger         *zap.Logger
+	once           sync.Once
+	loggerFilePath = "log.json"
+)
 
-func newLogger() *zap.Logger {
-	file, err := os.Create("log.json")
+func newLogger() {
+	file, err := os.Create(loggerFilePath)
 	if err != nil {
-		return nil
+		panic(err)
 	}
 	config := zap.NewProductionEncoderConfig()
 	fileEncoder := zapcore.NewJSONEncoder(config)
@@ -19,12 +24,12 @@ func newLogger() *zap.Logger {
 	core := zapcore.NewTee(
 		zapcore.NewCore(fileEncoder, zapcore.AddSync(file), zapcore.InfoLevel),
 	)
-	return zap.New(core, zap.WithCaller(true), zap.AddStacktrace(zapcore.ErrorLevel))
+	logger = zap.New(core, zap.WithCaller(true), zap.AddStacktrace(zapcore.ErrorLevel))
 }
 
 func GetLogger() *zap.Logger {
-	if logger == nil {
-		logger = newLogger()
-	}
+	once.Do(func() {
+		newLogger()
+	})
 	return logger
 }

@@ -40,7 +40,7 @@ func (as *AuthenticationService) Logout(request *proto.LogoutRequest) error {
 func (as *AuthenticationService) Verify(request *proto.VerificationRequest) (*proto.VerificationResponse, error) {
 	resp, err := as.client.Verification(context.Background(), request)
 	if err != nil {
-		logger.Logger.Error(err.Error())
+		logger.GetLogger().Error(err.Error())
 		return nil, err
 	}
 	return resp, nil
@@ -49,7 +49,7 @@ func (as *AuthenticationService) Verify(request *proto.VerificationRequest) (*pr
 func (as *AuthenticationService) Refresh(request *proto.RefreshRequest) (*proto.RefreshResponse, error) {
 	resp, err := as.client.RefreshToken(context.Background(), request)
 	if err != nil {
-		logger.Logger.Error(err.Error())
+		logger.GetLogger().Error(err.Error())
 		return nil, err
 	}
 	return resp, nil

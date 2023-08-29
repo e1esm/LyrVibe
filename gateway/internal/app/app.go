@@ -13,7 +13,7 @@ import (
 
 func Run() {
 	if err := godotenv.Load("config.yml"); err != nil {
-		logger.Logger.Fatal("Couldn't have loaded config file",
+		logger.GetLogger().Fatal("Couldn't have loaded config file",
 			zap.String("err", err.Error()))
 	}
 	cfg := *config.NewConfig()

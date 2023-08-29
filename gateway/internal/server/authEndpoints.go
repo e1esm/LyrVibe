@@ -39,7 +39,7 @@ func (ps *ProxyServer) Login(c *gin.Context) {
 	}
 	refreshTTL, err := time.ParseDuration(resp.Tokens.RefreshTTL)
 	if err != nil {
-		logger.Logger.Info(err.Error())
+		logger.GetLogger().Info(err.Error())
 		c.JSON(http.StatusInternalServerError, TTLErr)
 		return
 	}
@@ -63,14 +63,14 @@ func (ps *ProxyServer) Login(c *gin.Context) {
 func (ps *ProxyServer) SignUp(c *gin.Context) {
 	signUpRequest := proto.SignUpRequest{}
 	if err := c.BindJSON(&signUpRequest); err != nil {
-		logger.Logger.Error(err.Error())
+		logger.GetLogger().Error(err.Error())
 		c.JSON(http.StatusBadRequest, reqBodyErr)
 		return
 	}
 
 	resp, err := ps.Services.AuthService.SignUp(&signUpRequest)
 	if err != nil {
-		logger.Logger.Info(fmt.Sprintf("Password: %v", signUpRequest.Password))
+		logger.GetLogger().Info(fmt.Sprintf("Password: %v", signUpRequest.Password))
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"username": signUpRequest.Username,
 			"error":    err.Error(),
@@ -99,19 +99,19 @@ func (ps *ProxyServer) AuthMiddleware(c *gin.Context) {
 	if err != nil || accessToken == "" {
 		refreshToken, _ := c.Cookie(refreshToken)
 		if refreshToken == "" {
-			logger.Logger.Error("No required tokens", zap.String("err", err.Error()))
+			logger.GetLogger().Error("No required tokens", zap.String("err", err.Error()))
 			c.JSON(http.StatusUnauthorized, unauthorized)
 			return
 		}
 		resp, err := ps.Services.AuthService.Refresh(&proto.RefreshRequest{RefreshToken: refreshToken})
 		if err != nil {
-			logger.Logger.Error(err.Error())
+			logger.GetLogger().Error(err.Error())
 			c.JSON(http.StatusInternalServerError, refreshError)
 			return
 		}
 		ttl, err := time.ParseDuration(resp.Ttl)
 		if err != nil {
-			logger.Logger.Error(err.Error(), zap.String("ttl", fmt.Sprintf("%v", ttl)))
+			logger.GetLogger().Error(err.Error(), zap.String("ttl", fmt.Sprintf("%v", ttl)))
 			c.JSON(http.StatusInternalServerError, refreshError)
 			return
 		}
@@ -128,7 +128,7 @@ func (ps *ProxyServer) AuthMiddleware(c *gin.Context) {
 		AccessToken: accessToken,
 	})
 	if err != nil {
-		logger.Logger.Error(err.Error())
+		logger.GetLogger().Error(err.Error())
 		c.JSON(http.StatusUnauthorized, nil)
 		return
 	}

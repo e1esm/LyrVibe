@@ -30,13 +30,13 @@ type SessionsRepository struct {
 func NewSessionsStorage(config config.Config) SessionStorage {
 
 	if err := godotenv.Load("redis.env"); err != nil {
-		logger.Logger.Error(err.Error())
+		logger.GetLogger().Error(err.Error())
 		return nil
 	}
 
 	password := os.Getenv("REDIS_PASSWORD")
 	if password == "" {
-		logger.Logger.Error("Password is not set")
+		logger.GetLogger().Error("Password is not set")
 		return nil
 	}
 
@@ -47,7 +47,7 @@ func NewSessionsStorage(config config.Config) SessionStorage {
 		DB:       0,
 	})
 	if cli == nil {
-		logger.Logger.Error("Error")
+		logger.GetLogger().Error("Error")
 	}
 	return &SessionsRepository{redis: cli}
 
@@ -63,7 +63,7 @@ func (sr *SessionsRepository) Get(ctx context.Context, refreshToken string) (mod
 }
 
 func (sr *SessionsRepository) Add(ctx context.Context, tokens models.CachedTokens) (bool, error) {
-	logger.Logger.Info("Tokens", zap.String("session", fmt.Sprintf("%v", tokens)))
+	logger.GetLogger().Info("Tokens", zap.String("session", fmt.Sprintf("%v", tokens)))
 	isOk, err := sr.redis.SetNX(ctx, fmt.Sprintf("%v", tokens.RefreshToken), tokens, tokens.RefreshTTL).Result()
 	return isOk, err
 }

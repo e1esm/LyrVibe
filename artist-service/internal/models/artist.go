@@ -18,7 +18,7 @@ type Artist struct {
 func NewArtist(request *proto.VerificationRequest) *Artist {
 	id, err := uuid.Parse(request.Id)
 	if err != nil {
-		logger.Logger.Error(err.Error())
+		logger.GetLogger().Error(err.Error())
 		return nil
 	}
 	return &Artist{

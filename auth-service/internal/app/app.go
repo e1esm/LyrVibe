@@ -20,14 +20,14 @@ func Run() {
 
 	listener, err := net.Listen("tcp", cfg.GRPC.Address)
 	if err != nil {
-		logger.Logger.Error(err.Error())
+		logger.GetLogger().Error(err.Error())
 	}
 	var wg sync.WaitGroup
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
 		if err := authServer.Server.Serve(listener); err != nil {
-			logger.Logger.Error(err.Error())
+			logger.GetLogger().Error(err.Error())
 		}
 	}()
 

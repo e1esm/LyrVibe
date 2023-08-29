@@ -27,12 +27,12 @@ type Server struct {
 
 func (s *Server) Verify(ctx context.Context, request *proto.VerificationRequest) (*proto.VerificationResponse, error) {
 	if err := request.ValidateAll(); err != nil {
-		logger.Logger.Error(err.Error())
+		logger.GetLogger().Error(err.Error())
 		return nil, status.Error(codes.InvalidArgument, fmt.Sprintf(validationError, err.Error()))
 	}
 	_, err := s.Services.ArtistService.AddArtist(ctx, request)
 	if err != nil {
-		logger.Logger.Error(err.Error())
+		logger.GetLogger().Error(err.Error())
 		return nil, status.Error(codes.Internal, fmt.Sprintf(verifyingError, request.Username))
 	}
 	_, err = s.Services.RoleService.UpdateRole(ctx, request.Id, artistRole)

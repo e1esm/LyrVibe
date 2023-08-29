@@ -3,17 +3,31 @@ package logger
 import (
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
+	"io"
 	"log"
 	"os"
+	"sync"
 )
 
-var Logger *zap.Logger
+var (
+	logger         *zap.Logger
+	once           sync.Once
+	loggerFilePath = "log.json"
+)
 
-func init() {
-	file, err := os.Create("log.json")
-	if err != nil {
-		log.Fatalf(err.Error())
-	}
+func GetLogger() *zap.Logger {
+	once.Do(func() {
+		file, err := os.Create(loggerFilePath)
+		if err != nil {
+			log.Fatalf(err.Error())
+		}
+		setUpLogger(file)
+	})
+
+	return logger
+}
+
+func setUpLogger(file io.Writer) {
 	config := zap.NewProductionEncoderConfig()
 	fileEncoder := zapcore.NewJSONEncoder(config)
 	config.EncodeTime = zapcore.ISO8601TimeEncoder
@@ -21,5 +35,5 @@ func init() {
 	core := zapcore.NewTee(
 		zapcore.NewCore(consoleEncoder, zapcore.AddSync(os.Stdout), zapcore.InfoLevel),
 		zapcore.NewCore(fileEncoder, zapcore.AddSync(file), zapcore.InfoLevel))
-	Logger = zap.New(core)
+	logger = zap.New(core)
 }

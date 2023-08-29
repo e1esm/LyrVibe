@@ -1,10 +1,10 @@
-package repository
+package postgres
 
 import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/e1esm/LyrVibe/music-service/pkg/logger"
+	"github.com/e1esm/LyrVibe/auth-service/pkg/logger"
 	"github.com/golang-migrate/migrate/v4"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"go.uber.org/zap"

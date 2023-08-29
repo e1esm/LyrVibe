@@ -14,7 +14,7 @@ func RegisterRoleService(config config.Config) proto.AuthServiceClient {
 		config.AuthService.ContainerName,
 		config.AuthService.Port), grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
-		logger.Logger.Error(err.Error())
+		logger.GetLogger().Error(err.Error())
 		return nil
 	}
 	return proto.NewAuthServiceClient(conn)

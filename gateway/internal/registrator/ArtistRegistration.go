@@ -14,7 +14,7 @@ func RegisterArtistService(cfg *config.Config) proto.ArtistServiceClient {
 	conn, err := grpc.Dial(fmt.Sprintf("%s:%d", cfg.ArtistService.Address, cfg.ArtistService.Port),
 		grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
-		logger.Logger.Error("Error while establishing connection with ArtistService", zap.String("err", err.Error()))
+		logger.GetLogger().Error("Error while establishing connection with ArtistService", zap.String("err", err.Error()))
 		return nil
 	}
 	return proto.NewArtistServiceClient(conn)

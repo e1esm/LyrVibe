@@ -25,13 +25,13 @@ type Config struct {
 func NewConfig() *Config {
 	bytes, err := os.ReadFile("config.yml")
 	if err != nil {
-		logger.Logger.Fatal("Couldn't have read config file")
+		logger.GetLogger().Fatal("Couldn't have read config file")
 		return nil
 	}
 	var config Config
 	err = yaml.Unmarshal(bytes, &config)
 	if err != nil {
-		logger.Logger.Fatal("Couldn't have unmarshalled config file",
+		logger.GetLogger().Fatal("Couldn't have unmarshalled config file",
 			zap.String("err", err.Error()))
 		return nil
 	}

@@ -34,7 +34,7 @@ func NewRepository(cfg *config.Config) Repository {
 		cfg.ArtistStorage.MaxConnections)
 	pool, err := pgxpool.New(context.Background(), dsn)
 	if err != nil {
-		logger.Logger.Error(err.Error())
+		logger.GetLogger().Error(err.Error())
 		return nil
 	}
 	return &ArtistRepository{pool: pool}
@@ -51,7 +51,7 @@ func (ar *ArtistRepository) Add(ctx context.Context, artist *models.Artist) erro
 		artist.SecondName,
 		artist.Views)
 	if err != nil {
-		logger.Logger.Error("Error while operating over request", zap.String("err", err.Error()))
+		logger.GetLogger().Error("Error while operating over request", zap.String("err", err.Error()))
 		return err
 	}
 	return nil

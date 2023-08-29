@@ -33,12 +33,12 @@ func NewConfig() *Config {
 	config := &Config{}
 	content, err := os.ReadFile("config.yml")
 	if err != nil {
-		logger.Logger.Error(err.Error())
+		logger.GetLogger().Error(err.Error())
 		return nil
 	}
 	err = yaml.Unmarshal(content, config)
 	if err != nil {
-		logger.Logger.Error(err.Error())
+		logger.GetLogger().Error(err.Error())
 		return nil
 	}
 	return config

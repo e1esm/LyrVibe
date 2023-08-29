@@ -38,7 +38,7 @@ func NewProxyServer(services service.Services) Proxy {
 
 func (ps *ProxyServer) Run(address string) {
 	if err := ps.Router.Run(address); err != nil {
-		logger.Logger.Fatal("Couldn't have started the server",
+		logger.GetLogger().Fatal("Couldn't have started the server",
 			zap.String("err", err.Error()))
 	}
 }

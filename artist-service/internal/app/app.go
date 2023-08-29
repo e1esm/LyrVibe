@@ -17,17 +17,17 @@ func Run() {
 	cfg := config.NewConfig()
 	listener, err := net.Listen("tcp", cfg.Server.Address)
 	if err != nil {
-		logger.Logger.Fatal(err.Error())
+		logger.GetLogger().Fatal(err.Error())
 	}
 	artistServer := setupServer(setupServices(setupRepository(cfg), cfg))
 	var wg sync.WaitGroup
 	wg.Add(1)
 	go func() {
 		if err = artistServer.Server.Serve(listener); err != nil {
-			logger.Logger.Fatal(err.Error())
+			logger.GetLogger().Fatal(err.Error())
 		}
 	}()
-	logger.Logger.Info("Server's started")
+	logger.GetLogger().Info("Server's started")
 	wg.Wait()
 }
 
