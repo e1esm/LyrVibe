@@ -12,7 +12,10 @@ import (
 )
 
 const (
-	timeForReq = time.Second * 5
+	timeForReq     = time.Second * 5
+	sslOption      = "sslmode=disable"
+	migrationsDir  = "file://db/migrations"
+	maxConnOptions = "pool_max_conns=%d"
 )
 
 type Repository interface {
@@ -24,15 +27,15 @@ type ArtistRepository struct {
 }
 
 func NewRepository(cfg *config.Config) Repository {
-	dsn := fmt.Sprintf("%s://%s:%s@%s:%d/%s?pool_max_conns=%d",
+	dsn := fmt.Sprintf("%s://%s:%s@%s:%d/%s",
 		cfg.ArtistStorage.Database,
 		cfg.ArtistStorage.DatabaseUser,
 		cfg.ArtistStorage.DatabasePassword,
 		cfg.ArtistStorage.ContainerName,
 		cfg.ArtistStorage.Port,
-		cfg.ArtistStorage.DatabaseName,
-		cfg.ArtistStorage.MaxConnections)
-	pool, err := pgxpool.New(context.Background(), dsn)
+		cfg.ArtistStorage.DatabaseName)
+	pool, err := connect(context.Background(), fmt.Sprintf(dsn+"?"+maxConnOptions, cfg.ArtistStorage.MaxConnections))
+	runMigrations(fmt.Sprintf("%s?%s", dsn, sslOption), migrationsDir, UP)
 	if err != nil {
 		logger.GetLogger().Error(err.Error())
 		return nil

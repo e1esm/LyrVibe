@@ -16,6 +16,7 @@ WORKDIR /
 
 COPY --from=builder /app/artist-service/config.yml /config.yml
 COPY --from=builder /artist-service /artist-service
+COPY --from=builder /app/artist-service/internal/repository/migrations /db/migrations
 
 
 CMD ["/artist-service"]
