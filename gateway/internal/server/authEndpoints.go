@@ -12,8 +12,9 @@ import (
 )
 
 var (
-	refreshError = errors.New("refresh error")
-	unauthorized = errors.New("unauthorized")
+	refreshError  = errors.New("refresh error")
+	unauthorized  = errors.New("unauthorized")
+	verfification = errors.New("verification error")
 )
 
 const (
@@ -81,6 +82,7 @@ func (ps *ProxyServer) SignUp(c *gin.Context) {
 }
 
 func (ps *ProxyServer) Logout(c *gin.Context) {
+	logger.GetLogger().Info("Went further")
 	token, err := c.Cookie(accessToken)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, cookieRetrievingErr)
@@ -100,19 +102,19 @@ func (ps *ProxyServer) AuthMiddleware(c *gin.Context) {
 		refreshToken, _ := c.Cookie(refreshToken)
 		if refreshToken == "" {
 			logger.GetLogger().Error("No required tokens", zap.String("err", err.Error()))
-			c.JSON(http.StatusUnauthorized, unauthorized)
+			c.AbortWithStatusJSON(http.StatusUnauthorized, unauthorized.Error())
 			return
 		}
 		resp, err := ps.Services.AuthService.Refresh(&proto.RefreshRequest{RefreshToken: refreshToken})
 		if err != nil {
 			logger.GetLogger().Error(err.Error())
-			c.JSON(http.StatusInternalServerError, refreshError)
+			c.AbortWithStatusJSON(http.StatusInternalServerError, refreshError.Error())
 			return
 		}
 		ttl, err := time.ParseDuration(resp.Ttl)
 		if err != nil {
 			logger.GetLogger().Error(err.Error(), zap.String("ttl", fmt.Sprintf("%v", ttl)))
-			c.JSON(http.StatusInternalServerError, refreshError)
+			c.AbortWithStatusJSON(http.StatusInternalServerError, refreshError.Error())
 			return
 		}
 		http.SetCookie(c.Writer, &http.Cookie{
@@ -129,7 +131,7 @@ func (ps *ProxyServer) AuthMiddleware(c *gin.Context) {
 	})
 	if err != nil {
 		logger.GetLogger().Error(err.Error())
-		c.JSON(http.StatusUnauthorized, nil)
+		c.JSON(http.StatusUnauthorized, verfification.Error())
 		return
 	}
 	c.Set("username", resp.Username)

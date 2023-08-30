@@ -18,6 +18,6 @@ COPY --from=builder /app/auth-service/config.yml /config.yml
 COPY --from=builder /app/auth-service/postgres.env /postgres.env
 COPY --from=builder /app/auth-service/redis.env /redis.env
 COPY --from=builder /app/auth-service/jwt.env /jwt.env
-COPY --from=builder /app/artist-service/internal/repository/migrations /db/migrations
+COPY --from=builder /app/auth-service/internal/repository/userRepository/migrations /db/migrations
 
 CMD ["/auth-service"]

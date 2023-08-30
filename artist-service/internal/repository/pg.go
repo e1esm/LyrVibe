@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"github.com/e1esm/LyrVibe/artist-service/pkg/logger"
 	"github.com/golang-migrate/migrate/v4"
+	_ "github.com/golang-migrate/migrate/v4/database/postgres"
+	_ "github.com/golang-migrate/migrate/v4/source/file"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"go.uber.org/zap"
 	"time"
