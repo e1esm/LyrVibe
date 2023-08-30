@@ -6,6 +6,7 @@ import (
 	"github.com/e1esm/LyrVibe/music-service/internal/entity"
 	"github.com/e1esm/LyrVibe/music-service/pkg/config"
 	"github.com/e1esm/LyrVibe/music-service/pkg/logger"
+	"github.com/e1esm/LyrVibe/music-service/pkg/uuidParser"
 	_ "github.com/golang-migrate/migrate/v4/database/postgres"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
 	"github.com/jackc/pgx/v5"
@@ -81,9 +82,10 @@ func (mr *MusicRepository) addTrack(ctx context.Context, track entity.TrackEntit
 		return err
 	}
 	query := `INSERT INTO tracks
-VALUES($1, $2, $3, $4, $6, $7, $8, $9, $10, $11)`
+VALUES($1, $2, $3, $4, $6, $7, $8, $9, $10, $11, $12)`
 	_, err = tx.Exec(ctx, query,
 		track.ID,
+		uuidParser.ParseUUID(track.Data.ArtistId),
 		track.Data.Cover,
 		track.Data.Title,
 		track.Data.ReleaseDate,

@@ -42,6 +42,7 @@ func NewReleaseRequest(song *Song) *music.NewTrackRequest {
 		Country:     song.Country,
 		VideoLink:   song.VideoLink,
 		ReleaseDate: song.ReleaseDate.String(),
+		ArtistId:    song.ArtistID.String(),
 	}
 }
 

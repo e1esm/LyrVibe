@@ -9,6 +9,7 @@ import (
 
 type ArtistServiceProvider interface {
 	New(*proto.VerificationRequest) (*proto.VerificationResponse, error)
+	ReleaseTrack(req *proto.NewTrackRequest) (*proto.NewTrackResponse, error)
 }
 
 type ArtistService struct {
@@ -20,9 +21,9 @@ func NewArtistService(cfg config.Config) ArtistServiceProvider {
 }
 
 func (as *ArtistService) New(req *proto.VerificationRequest) (*proto.VerificationResponse, error) {
-	resp, err := as.client.Verify(context.Background(), req)
-	if err != nil {
-		return nil, err
-	}
-	return resp, nil
+	return as.client.Verify(context.Background(), req)
+}
+
+func (as *ArtistService) ReleaseTrack(req *proto.NewTrackRequest) (*proto.NewTrackResponse, error) {
+	return as.client.AddTrack(context.Background(), req)
 }

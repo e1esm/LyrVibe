@@ -7,6 +7,8 @@ github.com/e1esm/LyrVibe/music-service v0.0.0-20230829131002-c28d5c899285 h1:iP1
 github.com/e1esm/LyrVibe/music-service v0.0.0-20230829131002-c28d5c899285/go.mod h1:Izx7wwaBuWLbrzKMOBxfGmPGjvhmDqg39s0rKLit2s8=
 github.com/e1esm/LyrVibe/music-service v0.0.0-20230829140803-befcbfc4d7b7 h1:0O7y5EkGgNUK58lMvUfTbG5iORR4cyM7fufvEz52klM=
 github.com/e1esm/LyrVibe/music-service v0.0.0-20230829140803-befcbfc4d7b7/go.mod h1:Izx7wwaBuWLbrzKMOBxfGmPGjvhmDqg39s0rKLit2s8=
+github.com/e1esm/LyrVibe/music-service v0.0.0-20230830152710-f335dec24ea6 h1:NpzcSaM6kNrF24GqT/M38c7jBhoS5tEjj66rCYoszeo=
+github.com/e1esm/LyrVibe/music-service v0.0.0-20230830152710-f335dec24ea6/go.mod h1:Izx7wwaBuWLbrzKMOBxfGmPGjvhmDqg39s0rKLit2s8=
 github.com/envoyproxy/protoc-gen-validate v1.0.2 h1:QkIBuU5k+x7/QXPvPPnWXWlCdaBFApVqftFV6k087DA=
 github.com/envoyproxy/protoc-gen-validate v1.0.2/go.mod h1:GpiZQP3dDbg4JouG/NNS7QWXpgx6x8QiMKdmN72jogE=
 github.com/golang/protobuf v1.5.0/go.mod h1:FsONVRAS9T7sI+LIUmWTfcYkHO4aIWwzhcaSAoJOfIk=

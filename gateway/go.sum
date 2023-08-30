@@ -22,6 +22,8 @@ github.com/e1esm/LyrVibe/artist-service v0.0.0-20230819130816-ad82a390b7cb h1:Qm
 github.com/e1esm/LyrVibe/artist-service v0.0.0-20230819130816-ad82a390b7cb/go.mod h1:wHWDhjKgk83Ro3GUr90haOH8gxPowJHfp9kGnRsfkVE=
 github.com/e1esm/LyrVibe/artist-service v0.0.0-20230829140803-befcbfc4d7b7 h1:cN/5QY+by3f+M/lfRnfOorPTIErs3fCoVj1D/Nc89o0=
 github.com/e1esm/LyrVibe/artist-service v0.0.0-20230829140803-befcbfc4d7b7/go.mod h1:OmIb1BtTVcqDc+Bx3iD3wYbBhr3l6XHq6gG8DkKUt2A=
+github.com/e1esm/LyrVibe/artist-service v0.0.0-20230830152710-f335dec24ea6 h1:3E4snjP+LuYV9duVkT5oOX9BsKUWJUcaNPCjGjaz9fc=
+github.com/e1esm/LyrVibe/artist-service v0.0.0-20230830152710-f335dec24ea6/go.mod h1:aXlxtMdcCSuel+Abtbj91s2Vbl+MwBs6U/tAyBqBN14=
 github.com/e1esm/LyrVibe/auth-service v0.0.0-20230809113021-672d3a5bbd25 h1:vFCoN4t2c3gHsWAoX5bJSbkQVQGdxAADxl1NJn6XYwQ=
 github.com/e1esm/LyrVibe/auth-service v0.0.0-20230809113021-672d3a5bbd25/go.mod h1:gAquTi714sT1OzEEwYCfBLx7f9P+h/Ia10nV8yBpolo=
 github.com/e1esm/LyrVibe/auth-service v0.0.0-20230816140509-85e6ace393d1 h1:rmd+WhB5EhN98Diwgw6CTyyoYZLk7qPHbuny7wEwChw=

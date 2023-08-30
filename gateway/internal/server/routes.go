@@ -17,4 +17,5 @@ func setupArtistRoutes(server *ProxyServer) {
 	artistGroup := server.Router.Group("/v1/artist/")
 	artistGroup.Use(server.AuthMiddleware)
 	artistGroup.POST("new", server.NewArtist)
+	artistGroup.POST("release", server.ReleaseTrack)
 }
