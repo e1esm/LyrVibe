@@ -46,6 +46,7 @@ message NewTrackRequest{
   string country = 7 [(validate.rules).string = {pattern: "(?i)^[A-Za-z]+$", min_len: 1, max_len: 50}];
   string video_link = 8;
   repeated string feature = 9;
+  string artist_id = 10;
 }
 
 message NewTrackResponse{

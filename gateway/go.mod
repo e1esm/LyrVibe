@@ -3,8 +3,8 @@ module github.com/e1esm/LyrVibe/gateway
 go 1.20
 
 require (
-	github.com/e1esm/LyrVibe/artist-service v0.0.0-20230819130816-ad82a390b7cb
-	github.com/e1esm/LyrVibe/auth-service v0.0.0-20230819130705-c28d6e2afa6b
+	github.com/e1esm/LyrVibe/artist-service v0.0.0-20230829140803-befcbfc4d7b7
+	github.com/e1esm/LyrVibe/auth-service v0.0.0-20230819130816-ad82a390b7cb
 	github.com/gin-gonic/gin v1.9.1
 	github.com/joho/godotenv v1.5.1
 	go.uber.org/zap v1.25.0
@@ -43,6 +43,6 @@ require (
 	golang.org/x/text v0.12.0 // indirect
 	google.golang.org/genproto v0.0.0-20230807174057-1744710a1577 // indirect
 	google.golang.org/genproto/googleapis/api v0.0.0-20230807174057-1744710a1577 // indirect
-	google.golang.org/genproto/googleapis/rpc v0.0.0-20230815205213-6bfd019c3878 // indirect
+	google.golang.org/genproto/googleapis/rpc v0.0.0-20230822172742-b8732ec3820d // indirect
 	google.golang.org/protobuf v1.31.0 // indirect
 )

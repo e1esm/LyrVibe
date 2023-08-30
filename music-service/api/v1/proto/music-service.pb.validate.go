@@ -138,7 +138,7 @@ func (m *NewTrackRequest) validate(all bool) error {
 
 	// no validation rules for VideoLink
 
-	// no validation rules for Views
+	// no validation rules for ArtistId
 
 	if len(errors) > 0 {
 		return NewTrackRequestMultiError(errors)

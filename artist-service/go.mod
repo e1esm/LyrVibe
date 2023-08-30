@@ -4,7 +4,7 @@ go 1.20
 
 require (
 	github.com/e1esm/LyrVibe/auth-service v0.0.0-20230819130816-ad82a390b7cb
-	github.com/e1esm/LyrVibe/music-service v0.0.0-20230829131002-c28d5c899285
+	github.com/e1esm/LyrVibe/music-service v0.0.0-20230829140803-befcbfc4d7b7
 	github.com/envoyproxy/protoc-gen-validate v1.0.2
 	github.com/google/uuid v1.3.0
 	github.com/jackc/pgx/v5 v5.4.3

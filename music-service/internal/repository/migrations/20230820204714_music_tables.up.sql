@@ -8,6 +8,7 @@ CREATE TABLE albums(
 
 CREATE TABLE tracks(
     id uuid PRIMARY KEY,
+    artist_id uuid,
     album_id uuid references albums(id) ON DELETE CASCADE DEFAULT null,
     cover bytea,
     title varchar(50),

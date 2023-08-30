@@ -4,6 +4,7 @@ import (
 	artist "github.com/e1esm/LyrVibe/artist-service/api/v1/proto"
 	"github.com/e1esm/LyrVibe/artist-service/pkg/logger"
 	music "github.com/e1esm/LyrVibe/music-service/api/v1/proto"
+	"github.com/google/uuid"
 	"go.uber.org/zap"
 	"time"
 )
@@ -18,6 +19,7 @@ type Song struct {
 	Country     string        `json:"country"`
 	VideoLink   string        `json:"video_link,omitempty"`
 	ReleaseDate time.Time     `json:"release_date,omitempty"`
+	ArtistID    uuid.UUID     `json:"artist_id"`
 }
 
 func NewReleaseRequest(song *Song) *music.NewTrackRequest {
@@ -56,6 +58,13 @@ func NewSong(request *artist.NewTrackRequest) *Song {
 			zap.String("err", err.Error()))
 		return nil
 	}
+
+	artistID, err := uuid.Parse(request.ArtistId)
+	if err != nil {
+		logger.GetLogger().Error("Cant parse uuid",
+			zap.String("err", err.Error()))
+		return nil
+	}
 	return &Song{
 		Title:       request.Title,
 		Genre:       request.Genre.String(),
@@ -66,5 +75,6 @@ func NewSong(request *artist.NewTrackRequest) *Song {
 		Country:     request.Country,
 		VideoLink:   request.VideoLink,
 		ReleaseDate: release,
+		ArtistID:    artistID,
 	}
 }

@@ -29,7 +29,12 @@ func (ps *ProxyServer) NewArtist(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{
-		"status":       resp.RequestStatus.RequestStatus,
+		"status":       resp.RequestStatus,
 		"verification": fmt.Sprintf(verificationSucceed, verificationRequest.Username),
 	})
+}
+
+func (ps *ProxyServer) ReleaseTrack(c *gin.Context) {
+	releaseRequest := proto.NewTrackRequest{}
+
 }
