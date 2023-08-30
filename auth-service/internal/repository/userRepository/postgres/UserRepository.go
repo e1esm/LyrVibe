@@ -16,7 +16,10 @@ import (
 )
 
 const (
-	timeoutTime = 5 * time.Second
+	timeoutTime    = 5 * time.Second
+	sslOption      = "sslmode=disable"
+	migrationsDir  = "file://db/migrations"
+	maxConnOptions = "pool_max_conns=%d"
 )
 
 type UserStorage interface {
@@ -40,16 +43,16 @@ func NewUserRepository(config config.Config) UserStorage {
 	pgDB := os.Getenv("POSTGRES_DB")
 	pgPort := os.Getenv("POSTGRES_PORT")
 
-	databaseUrl := fmt.Sprintf("postgresql://%s:%s@%s:%s/%s?pool_max_conns=%d",
+	databaseUrl := fmt.Sprintf("postgresql://%s:%s@%s:%s/%s",
 		pgUser,
 		pgPassword,
 		config.UsersStorage.ContainerName,
 		pgPort,
-		pgDB,
-		config.UsersStorage.MaxConnectionPool)
-	pool, err := pgxpool.New(context.Background(), databaseUrl)
+		pgDB)
+	pool, err := connect(context.Background(), fmt.Sprintf(databaseUrl+"?"+maxConnOptions, config.UsersStorage.MaxConnectionPool))
+	runMigrations(fmt.Sprintf("%s?%s", databaseUrl, sslOption), migrationsDir, UP)
 	if err != nil {
-		logger.GetLogger().Error(err.Error(), zap.String("url", databaseUrl))
+		logger.GetLogger().Fatal(err.Error(), zap.String("url", databaseUrl))
 		return nil
 	}
 
