@@ -53,7 +53,7 @@ func NewSong(request *artist.NewTrackRequest) *Song {
 			zap.String("err", err.Error()))
 		return nil
 	}
-	release, err := time.Parse(time.UnixDate, request.ReleaseDate)
+	release, err := time.Parse(time.DateOnly, request.ReleaseDate)
 	if err != nil {
 		logger.GetLogger().Error("Can't convert string to time",
 			zap.String("err", err.Error()))

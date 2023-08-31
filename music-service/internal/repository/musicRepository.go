@@ -11,6 +11,7 @@ import (
 	_ "github.com/golang-migrate/migrate/v4/source/file"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/lib/pq"
 	"go.uber.org/zap"
 	"time"
 )
@@ -73,6 +74,10 @@ func (mr *MusicRepository) NewTrack(ctx context.Context, track entity.TrackEntit
 	if err != nil {
 		return entity.TrackEntity{}, err
 	}
+	err = tx.Commit(ctx)
+	if err != nil {
+		return entity.TrackEntity{}, err
+	}
 	return track, nil
 }
 
@@ -81,21 +86,22 @@ func (mr *MusicRepository) addTrack(ctx context.Context, track entity.TrackEntit
 	if err != nil {
 		return err
 	}
+
 	query := `INSERT INTO tracks
-VALUES($1, $2, $3, $4, $6, $7, $8, $9, $10, $11, $12)`
+VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)`
 	_, err = tx.Exec(ctx, query,
 		track.ID,
 		uuidParser.ParseUUID(track.Data.ArtistId),
+		track.AlbumID,
 		track.Data.Cover,
 		track.Data.Title,
 		track.Data.ReleaseDate,
-		track.Data.Genre,
-		track.Data.Genre,
+		track.Data.Genre.String(),
 		track.Data.Duration,
 		track.Data.Country,
 		track.Data.VideoLink,
-		track.Data.Feature,
-		track.CreatedAt,
+		pq.Array(track.Data.Feature),
+		pq.FormatTimestamp(track.CreatedAt),
 	)
 	if err != nil {
 		logger.GetLogger().Error("Error while inserting into tracks table",
@@ -129,6 +135,6 @@ func (mr *MusicRepository) addStatistics(ctx context.Context, track entity.Track
 	if err != nil {
 		return err
 	}
-	_, err = tx.Exec(ctx, "INSERT INTO track_statistics (song_id) VALUES ($1)", track.ID)
+	_, err = tx.Exec(ctx, "INSERT INTO track_statistics (track_id) VALUES ($1)", track.ID)
 	return err
 }

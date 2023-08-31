@@ -15,7 +15,7 @@ LyrVibe is an API made for songwriters and music lovers which lets the first to 
 
 
 ## Artist Service:
-- Post song information to the service - ❌
+- Post song information to the service - ✅
     - Lyrics
     - Cover of the song
     - Featuring information

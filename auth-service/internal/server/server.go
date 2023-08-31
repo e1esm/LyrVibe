@@ -125,11 +125,13 @@ func (s *Server) Verification(ctx context.Context, request *proto.VerificationRe
 func (s *Server) RefreshToken(ctx context.Context, request *proto.RefreshRequest) (*proto.RefreshResponse, error) {
 	tokens, err := s.AuthService.GetSessionCredentials(ctx, request.RefreshToken)
 	if err != nil {
+		logger.GetLogger().Error(err.Error())
 		return nil, status.Error(codes.Internal, SessionErr)
 	}
 	logger.GetLogger().Info("Refresh Token", zap.String("", tokens.RefreshToken))
 	_, err = s.AuthService.UpdateSession(ctx, tokens)
 	if err != nil {
+		logger.GetLogger().Error(err.Error())
 		return nil, status.Error(codes.Internal, UpdatingErr)
 	}
 
