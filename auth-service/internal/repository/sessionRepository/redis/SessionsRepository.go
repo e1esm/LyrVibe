@@ -57,6 +57,7 @@ func (sr *SessionsRepository) Get(ctx context.Context, refreshToken string) (mod
 	cmd := sr.redis.Get(ctx, fmt.Sprintf("%v", refreshToken))
 	var cachedTokens models.CachedTokens
 	if err := cmd.Scan(&cachedTokens); err != nil {
+		logger.GetLogger().Error(err.Error())
 		return models.CachedTokens{}, expiredErr
 	}
 	return cachedTokens, nil

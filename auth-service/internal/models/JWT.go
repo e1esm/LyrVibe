@@ -27,12 +27,16 @@ func (ct CachedTokens) MarshalBinary() (data []byte, err error) {
 	return
 }
 
-func (ct CachedTokens) UnmarshalBinary(data []byte) *CachedTokens {
+func (ct *CachedTokens) UnmarshalBinary(data []byte) error {
 	tokens := &CachedTokens{}
 	err := json.Unmarshal(data, tokens)
 	if err != nil {
 		logger.GetLogger().Error(err.Error())
-		return nil
+		return err
 	}
-	return tokens
+	ct.AccessTTL = tokens.AccessTTL
+	ct.RefreshToken = tokens.RefreshToken
+	ct.AccessToken = tokens.AccessToken
+	ct.RefreshTTL = tokens.RefreshTTL
+	return nil
 }

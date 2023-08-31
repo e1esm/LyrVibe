@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/e1esm/LyrVibe/auth-service/internal/models"
-
+	"github.com/e1esm/LyrVibe/auth-service/pkg/logger"
 	"github.com/golang-jwt/jwt"
 	"math/rand"
 	"time"
@@ -77,6 +77,7 @@ func (ts *TokenService) ParseToken(accessToken string) (TokenPayload, error) {
 		return []byte(ts.signingKey), nil
 	})
 	if err != nil {
+		logger.GetLogger().Error(err.Error())
 		return TokenPayload{}, parseError
 	}
 	claims, ok := receivedToken.Claims.(*models.JWTCustomClaims)
