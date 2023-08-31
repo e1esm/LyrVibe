@@ -31,7 +31,7 @@ func (ps *ProxyServer) NewArtist(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{
-		"status":       resp.RequestStatus,
+		"status":       resp.RequestStatus.String(),
 		"verification": fmt.Sprintf(verificationSucceed, verificationRequest.Username),
 	})
 }

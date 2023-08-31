@@ -10,7 +10,7 @@ func setupAuthRoutes(server *ProxyServer) {
 	authGroup := server.Router.Group("/v1/auth/")
 	authGroup.POST("signup", server.SignUp)
 	authGroup.POST("login", server.Login)
-	authGroup.Use(server.AuthMiddleware).POST("logout", server.Logout)
+	authGroup.POST("logout", server.AuthMiddleware, server.Logout)
 }
 
 func setupArtistRoutes(server *ProxyServer) {
