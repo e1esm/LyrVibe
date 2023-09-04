@@ -31,7 +31,7 @@ type Service interface {
 type UserManager interface {
 	SaveUser(context.Context, *models.User) error
 	GetUser(context.Context, string, string) (*models.User, error)
-	GetCredentials(string) (TokenPayload, error)
+	GetPayload(string) (TokenPayload, error)
 }
 
 type SessionManager interface {
@@ -113,20 +113,15 @@ func (as *AuthService) CreateSession(ctx context.Context, user *models.User) (mo
 	return tokens, nil
 }
 
-func (as *AuthService) Logout(ctx context.Context, accessToken string) error {
-	payload, err := as.TokenService.ParseToken(accessToken)
-	if err != nil {
-		return err
-	}
-	err = as.Repositories.SessionRepository.Delete(ctx, payload.ID)
-	return err
+func (as *AuthService) Logout(ctx context.Context, refreshToken string) error {
+	return as.Repositories.SessionRepository.Delete(ctx, refreshToken)
 }
 
 func (as *AuthService) UpdateRole(ctx context.Context, id uuid.UUID, role models.Role) error {
 	return as.Repositories.MainRepository.UpdateRole(ctx, id, role)
 }
 
-func (as *AuthService) GetCredentials(accessToken string) (TokenPayload, error) {
+func (as *AuthService) GetPayload(accessToken string) (TokenPayload, error) {
 	return as.TokenService.ParseToken(accessToken)
 }
 

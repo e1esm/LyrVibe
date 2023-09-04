@@ -1,12 +1,15 @@
 package service
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"github.com/e1esm/LyrVibe/auth-service/internal/models"
 	"github.com/e1esm/LyrVibe/auth-service/pkg/logger"
 	"github.com/golang-jwt/jwt"
+	"go.uber.org/zap"
 	"math/rand"
+	"strings"
 	"time"
 )
 
@@ -76,15 +79,20 @@ func (ts *TokenService) ParseToken(accessToken string) (TokenPayload, error) {
 		}
 		return []byte(ts.signingKey), nil
 	})
-	if err != nil {
-		logger.GetLogger().Error(err.Error())
+	switch {
+	case err != nil && (strings.Contains(err.Error(), "expired") || strings.Contains(err.Error(), "invalid")):
+		logger.GetLogger().Info("Problem AccessToken: ",
+			zap.String("AT", accessToken))
+		return ts.mustParse(accessToken)
+	case err != nil:
 		return TokenPayload{}, parseError
+	default:
+		claims, ok := receivedToken.Claims.(*models.JWTCustomClaims)
+		if !ok {
+			return TokenPayload{}, wrongTypeError
+		}
+		return TokenPayload{Username: claims.Username, Role: claims.UserRole, ID: claims.UserID.String()}, nil
 	}
-	claims, ok := receivedToken.Claims.(*models.JWTCustomClaims)
-	if !ok {
-		return TokenPayload{}, wrongTypeError
-	}
-	return TokenPayload{Username: claims.Username, Role: claims.UserRole, ID: claims.UserID.String()}, nil
 }
 
 func (ts *TokenService) NewRefreshToken() (string, error) {
@@ -96,4 +104,17 @@ func (ts *TokenService) NewRefreshToken() (string, error) {
 		return "", err
 	}
 	return fmt.Sprintf("%x", bytes), nil
+}
+
+func (ts *TokenService) mustParse(accessToken string) (TokenPayload, error) {
+	payload := TokenPayload{}
+	bytes, err := jwt.DecodeSegment(strings.SplitAfter(accessToken, ".")[1])
+	if err != nil {
+		return payload, fmt.Errorf("error while decoding payload segment: %v", err)
+	}
+	err = json.Unmarshal(bytes, &payload)
+	if err != nil {
+		return payload, fmt.Errorf("couldn't have unmarshalled received bytes: %v", err)
+	}
+	return payload, nil
 }

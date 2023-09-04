@@ -57,14 +57,14 @@ func (sr *SessionsRepository) Get(ctx context.Context, refreshToken string) (mod
 	cmd := sr.redis.Get(ctx, fmt.Sprintf("%v", refreshToken))
 	var cachedTokens models.CachedTokens
 	if err := cmd.Scan(&cachedTokens); err != nil {
-		logger.GetLogger().Error(err.Error())
+		logger.GetLogger().Error("Error while getting credentials from Redis",
+			zap.String("err", err.Error()))
 		return models.CachedTokens{}, expiredErr
 	}
 	return cachedTokens, nil
 }
 
 func (sr *SessionsRepository) Add(ctx context.Context, tokens models.CachedTokens) (bool, error) {
-	logger.GetLogger().Info("Tokens", zap.String("session", fmt.Sprintf("%v", tokens)))
 	isOk, err := sr.redis.SetNX(ctx, fmt.Sprintf("%v", tokens.RefreshToken), tokens, tokens.RefreshTTL).Result()
 	return isOk, err
 }

@@ -40,7 +40,7 @@ message RequestStatus{
 }
 
 message LogoutRequest{
-  string access_token = 1;
+  string refresh_token = 1;
 }
 
 message IdentifyRequest{

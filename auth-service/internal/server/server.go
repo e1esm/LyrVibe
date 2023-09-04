@@ -72,7 +72,7 @@ func (s *Server) SignIn(ctx context.Context, request *proto.SignInRequest) (*pro
 	user, err := s.AuthService.GetUser(ctx, request.Username, request.Password)
 	if errors.Is(err, sql.ErrNoRows) {
 		logger.GetLogger().Error("No found err", zap.String("err", err.Error()))
-		return nil, status.Error(codes.NotFound, NoUserFound)
+		return nil, status.Error(codes.NotFound, fmt.Sprintf(NoUserFound, request.Username, request.Password))
 	}
 
 	cachedTokens, err := s.AuthService.CreateSession(ctx, user)
@@ -95,7 +95,7 @@ func (s *Server) SignIn(ctx context.Context, request *proto.SignInRequest) (*pro
 }
 
 func (s *Server) Logout(ctx context.Context, request *proto.LogoutRequest) (*emptypb.Empty, error) {
-	err := s.AuthService.Logout(ctx, request.AccessToken)
+	err := s.AuthService.Logout(ctx, request.RefreshToken)
 	if err != nil {
 		logger.GetLogger().Error("Logout error", zap.String("err", err.Error()))
 		return nil, status.Error(codes.Internal, LogoutErr)
@@ -113,12 +113,11 @@ func (s *Server) UpdateRole(ctx context.Context, request *proto.UpdatingRoleRequ
 }
 
 func (s *Server) Verification(ctx context.Context, request *proto.VerificationRequest) (*proto.VerificationResponse, error) {
-	payload, err := s.AuthService.GetCredentials(request.AccessToken)
+	payload, err := s.AuthService.GetPayload(request.AccessToken)
 	if err != nil {
 		logger.GetLogger().Error("Couldn't have gotten credentials", zap.String("err", err.Error()))
 		return nil, status.Error(codes.Internal, InternalError)
 	}
-	logger.GetLogger().Info(fmt.Sprintf("payload: %v", payload))
 	return &proto.VerificationResponse{Role: string(payload.Role), Id: payload.ID, Username: payload.Username}, nil
 }
 
@@ -128,6 +127,14 @@ func (s *Server) RefreshToken(ctx context.Context, request *proto.RefreshRequest
 		logger.GetLogger().Error(err.Error())
 		return nil, status.Error(codes.Internal, SessionErr)
 	}
+
+	payload, err := s.AuthService.GetPayload(tokens.AccessToken)
+	id, err := uuid.Parse(payload.ID)
+	if err != nil {
+		logger.GetLogger().Error(err.Error())
+		return nil, status.Error(codes.Internal, "Failed to parse UUID")
+	}
+	tokens, err = s.AuthService.CreateSession(ctx, &models.User{Username: payload.Username, ID: id, Role: payload.Role})
 	logger.GetLogger().Info("Refresh Token", zap.String("", tokens.RefreshToken))
 	_, err = s.AuthService.UpdateSession(ctx, tokens)
 	if err != nil {
