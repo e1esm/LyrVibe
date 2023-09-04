@@ -2,6 +2,7 @@ package server
 
 func setUpRoutes(server ProxyServer) {
 	server.Router.HandleMethodNotAllowed = true
+	server.Router.Use(server.RoleMiddleware)
 	setupAuthRoutes(&server)
 	setupArtistRoutes(&server)
 }
