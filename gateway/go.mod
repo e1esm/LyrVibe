@@ -4,7 +4,7 @@ go 1.20
 
 require (
 	github.com/e1esm/LyrVibe/artist-service v0.0.0-20230830152710-f335dec24ea6
-	github.com/e1esm/LyrVibe/auth-service v0.0.0-20230819130816-ad82a390b7cb
+	github.com/e1esm/LyrVibe/auth-service v0.0.0-20230904202617-8d562ab8e46d
 	github.com/gin-gonic/gin v1.9.1
 	github.com/joho/godotenv v1.5.1
 	go.uber.org/zap v1.25.0
