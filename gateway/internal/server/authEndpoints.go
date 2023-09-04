@@ -18,8 +18,8 @@ var (
 )
 
 const (
-	accessToken  = "access_token"
-	refreshToken = "refresh_token"
+	accessTokenName  = "access_token"
+	refreshTokenName = "refresh_token"
 )
 
 func (ps *ProxyServer) Login(c *gin.Context) {
@@ -30,7 +30,7 @@ func (ps *ProxyServer) Login(c *gin.Context) {
 	}
 	resp, err := ps.Services.AuthService.Login(&signInRequest)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, err)
+		c.JSON(http.StatusInternalServerError, err.Error())
 		return
 	}
 	accessTTL, err := time.ParseDuration(resp.Tokens.AccessTTL)
@@ -45,14 +45,14 @@ func (ps *ProxyServer) Login(c *gin.Context) {
 		return
 	}
 	http.SetCookie(c.Writer, &http.Cookie{
-		Name:     accessToken,
+		Name:     accessTokenName,
 		Value:    resp.Tokens.AccessToken,
 		Expires:  time.Now().Add(accessTTL),
 		HttpOnly: true,
 		Path:     "/",
 	})
 	http.SetCookie(c.Writer, &http.Cookie{
-		Name:     refreshToken,
+		Name:     refreshTokenName,
 		Value:    resp.Tokens.RefreshToken,
 		Expires:  time.Now().Add(refreshTTL),
 		HttpOnly: true,
@@ -82,24 +82,39 @@ func (ps *ProxyServer) SignUp(c *gin.Context) {
 }
 
 func (ps *ProxyServer) Logout(c *gin.Context) {
-	logger.GetLogger().Info("Went further")
-	token, err := c.Cookie(accessToken)
+	token, err := c.Cookie(refreshTokenName)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, cookieRetrievingErr)
 	}
 	err = ps.Services.AuthService.Logout(&proto.LogoutRequest{AccessToken: token})
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, err)
+		c.AbortWithStatusJSON(http.StatusInternalServerError, err)
 		return
 	}
+
+	http.SetCookie(c.Writer, &http.Cookie{
+		Name:     accessTokenName,
+		Value:    "",
+		Expires:  time.Now(),
+		HttpOnly: true,
+		Path:     "/",
+	})
+	http.SetCookie(c.Writer, &http.Cookie{
+		Name:     refreshTokenName,
+		Value:    "",
+		Expires:  time.Now(),
+		HttpOnly: true,
+		Path:     "/",
+	})
+
 	c.JSON(http.StatusOK, successLogOut)
 
 }
 
 func (ps *ProxyServer) AuthMiddleware(c *gin.Context) {
-	accessToken, err := c.Cookie(accessToken)
+	accessToken, err := c.Cookie(accessTokenName)
 	if err != nil || accessToken == "" {
-		refreshToken, _ := c.Cookie(refreshToken)
+		refreshToken, _ := c.Cookie(refreshTokenName)
 		if refreshToken == "" {
 			logger.GetLogger().Error("No required tokens", zap.String("err", err.Error()))
 			c.AbortWithStatusJSON(http.StatusUnauthorized, unauthorized.Error())
@@ -117,8 +132,9 @@ func (ps *ProxyServer) AuthMiddleware(c *gin.Context) {
 			c.AbortWithStatusJSON(http.StatusInternalServerError, refreshError.Error())
 			return
 		}
+		logger.GetLogger().Info(resp.AccessToken)
 		http.SetCookie(c.Writer, &http.Cookie{
-			Name:     accessToken,
+			Name:     accessTokenName,
 			Value:    resp.AccessToken,
 			Expires:  time.Now().Add(ttl),
 			HttpOnly: true,
@@ -126,12 +142,14 @@ func (ps *ProxyServer) AuthMiddleware(c *gin.Context) {
 		})
 		accessToken = resp.AccessToken
 	}
+	logger.GetLogger().Info("",
+		zap.String("access_token", accessToken))
 	resp, err := ps.Services.AuthService.Verify(&proto.VerificationRequest{
 		AccessToken: accessToken,
 	})
 	if err != nil {
 		logger.GetLogger().Error(err.Error())
-		c.JSON(http.StatusUnauthorized, verfification.Error())
+		c.AbortWithStatusJSON(http.StatusUnauthorized, verfification.Error())
 		return
 	}
 	c.Set("username", resp.Username)

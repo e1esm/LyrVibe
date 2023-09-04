@@ -35,5 +35,5 @@ func setUpLogger(file io.Writer) {
 	core := zapcore.NewTee(
 		zapcore.NewCore(consoleEncoder, zapcore.AddSync(os.Stdout), zapcore.InfoLevel),
 		zapcore.NewCore(fileEncoder, zapcore.AddSync(file), zapcore.InfoLevel))
-	logger = zap.New(core)
+	logger = zap.New(core, zap.AddStacktrace(zapcore.InfoLevel), zap.AddCaller())
 }
