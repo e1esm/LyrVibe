@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"fmt"
 	"github.com/e1esm/LyrVibe/music-service/api/v1/proto"
 	"github.com/e1esm/LyrVibe/music-service/internal/entity"
 	"github.com/e1esm/LyrVibe/music-service/internal/repository"
@@ -26,5 +27,9 @@ func (ms *MusicService) AddNew(ctx context.Context, request *proto.NewTrackReque
 }
 
 func (ms *MusicService) Delete(ctx context.Context, request *proto.DeleteRequest) (*proto.DeleteResponse, error) {
-
+	resp, err := ms.Repository.DeleteTrack(ctx, request)
+	if err != nil {
+		return nil, fmt.Errorf("track wasn't deleted: %v", err)
+	}
+	return resp, nil
 }
