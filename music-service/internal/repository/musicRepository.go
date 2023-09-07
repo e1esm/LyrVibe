@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	"fmt"
+	"github.com/e1esm/LyrVibe/music-service/api/v1/proto"
 	"github.com/e1esm/LyrVibe/music-service/internal/entity"
 	"github.com/e1esm/LyrVibe/music-service/pkg/config"
 	"github.com/e1esm/LyrVibe/music-service/pkg/logger"
@@ -137,4 +138,33 @@ func (mr *MusicRepository) addStatistics(ctx context.Context, track entity.Track
 	}
 	_, err = tx.Exec(ctx, "INSERT INTO track_statistics (track_id) VALUES ($1)", track.ID)
 	return err
+}
+
+func (mr *MusicRepository) getViews(ctx context.Context, title string, authorID string) (uint64, error) {
+	query := `select ts.views from track_statistics ts
+inner join tracks tr ON ts.track_id = tr.id
+where tr.id = (select id from tracks where artist_id = $1 AND title = $2);`
+	row := mr.pool.QueryRow(ctx, query, authorID, title)
+	var views uint64
+	if err := row.Scan(&views); err != nil {
+		return 0, fmt.Errorf("No such track found: %v", err)
+	}
+	return views, nil
+}
+
+func (mr *MusicRepository) DeleteTrack(ctx context.Context, request *proto.DeleteRequest) (*proto.DeleteResponse, error) {
+	ctx, cancel := context.WithTimeout(ctx, timeout)
+	defer cancel()
+	views, err := mr.getViews(ctx, request.Title, request.AuthorId)
+	if err != nil {
+		return nil, err
+	}
+	_, err = mr.pool.Exec(ctx, "delete from tracks where artist_id = $1 AND title = $2;", request.AuthorId, request.Title)
+	if err != nil {
+		return nil, fmt.Errorf("error while deleting the entry: %v", err)
+	}
+	return &proto.DeleteResponse{
+		Title: request.Title,
+		Views: views,
+	}, nil
 }

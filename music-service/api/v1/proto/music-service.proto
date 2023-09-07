@@ -46,7 +46,19 @@ message RequestStatus{
   Status status = 1;
 }
 
+message DeleteResponse{
+  string title = 1;
+  uint64 views = 2;
+}
+
+message DeleteRequest{
+  string title = 1;
+  string author_id = 2;
+}
+
+
 service MusicService{
   rpc AddNewTrack(NewTrackRequest) returns (NewTrackResponse);
+  rpc DeleteTrack(DeleteRequest) returns (DeleteResponse);
 }
 

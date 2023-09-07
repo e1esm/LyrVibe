@@ -23,7 +23,7 @@ CREATE TABLE tracks(
 
 CREATE TABLE track_statistics(
     id SERIAL PRIMARY KEY,
-    track_id uuid REFERENCES tracks(id),
+    track_id uuid REFERENCES tracks(id) on delete cascade,
     views int default 0,
     rating float4 default 0
 );

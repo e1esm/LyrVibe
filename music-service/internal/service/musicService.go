@@ -9,6 +9,7 @@ import (
 
 type MusicServiceProvider interface {
 	AddNew(context.Context, *proto.NewTrackRequest) (entity.TrackEntity, error)
+	Delete(context.Context, *proto.DeleteRequest) (*proto.DeleteResponse, error)
 }
 
 type MusicService struct {
@@ -22,4 +23,8 @@ func NewMusicService(repo repository.Repository) MusicServiceProvider {
 func (ms *MusicService) AddNew(ctx context.Context, request *proto.NewTrackRequest) (entity.TrackEntity, error) {
 	track := entity.NewTrackEntity(request)
 	return ms.Repository.NewTrack(ctx, *track)
+}
+
+func (ms *MusicService) Delete(ctx context.Context, request *proto.DeleteRequest) (*proto.DeleteResponse, error) {
+
 }

@@ -38,3 +38,7 @@ func (s *Server) AddNewTrack(ctx context.Context, request *proto.NewTrackRequest
 		Title:  track.Data.Title,
 	}, nil
 }
+
+func (s *Server) DeleteTrack(context.Context, *proto.DeleteRequest) (*proto.DeleteResponse, error) {
+	return nil, nil
+}
