@@ -54,7 +54,18 @@ message NewTrackResponse{
   RequestStatus requestStatus = 2;
 }
 
+message DeleteTrackRequest{
+  string author_id = 1;
+  string track_title = 2;
+}
+
+message DeleteTrackResponse{
+  string title = 1;
+  RequestStatus requestStatus = 2;
+}
+
 service ArtistService{
   rpc Verify(VerificationRequest) returns (VerificationResponse) {};
   rpc AddTrack(NewTrackRequest) returns (NewTrackResponse) {};
+  rpc DeleteTrack(DeleteTrackRequest) returns (DeleteTrackResponse) {};
 }

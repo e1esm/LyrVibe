@@ -633,3 +633,215 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = NewTrackResponseValidationError{}
+
+// Validate checks the field values on DeleteTrackRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *DeleteTrackRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on DeleteTrackRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// DeleteTrackRequestMultiError, or nil if none found.
+func (m *DeleteTrackRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *DeleteTrackRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for AuthorId
+
+	// no validation rules for TrackTitle
+
+	if len(errors) > 0 {
+		return DeleteTrackRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// DeleteTrackRequestMultiError is an error wrapping multiple validation errors
+// returned by DeleteTrackRequest.ValidateAll() if the designated constraints
+// aren't met.
+type DeleteTrackRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m DeleteTrackRequestMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m DeleteTrackRequestMultiError) AllErrors() []error { return m }
+
+// DeleteTrackRequestValidationError is the validation error returned by
+// DeleteTrackRequest.Validate if the designated constraints aren't met.
+type DeleteTrackRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e DeleteTrackRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e DeleteTrackRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e DeleteTrackRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e DeleteTrackRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e DeleteTrackRequestValidationError) ErrorName() string {
+	return "DeleteTrackRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e DeleteTrackRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sDeleteTrackRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = DeleteTrackRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = DeleteTrackRequestValidationError{}
+
+// Validate checks the field values on DeleteTrackResponse with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *DeleteTrackResponse) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on DeleteTrackResponse with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// DeleteTrackResponseMultiError, or nil if none found.
+func (m *DeleteTrackResponse) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *DeleteTrackResponse) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Title
+
+	// no validation rules for RequestStatus
+
+	if len(errors) > 0 {
+		return DeleteTrackResponseMultiError(errors)
+	}
+
+	return nil
+}
+
+// DeleteTrackResponseMultiError is an error wrapping multiple validation
+// errors returned by DeleteTrackResponse.ValidateAll() if the designated
+// constraints aren't met.
+type DeleteTrackResponseMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m DeleteTrackResponseMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m DeleteTrackResponseMultiError) AllErrors() []error { return m }
+
+// DeleteTrackResponseValidationError is the validation error returned by
+// DeleteTrackResponse.Validate if the designated constraints aren't met.
+type DeleteTrackResponseValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e DeleteTrackResponseValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e DeleteTrackResponseValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e DeleteTrackResponseValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e DeleteTrackResponseValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e DeleteTrackResponseValidationError) ErrorName() string {
+	return "DeleteTrackResponseValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e DeleteTrackResponseValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sDeleteTrackResponse.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = DeleteTrackResponseValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = DeleteTrackResponseValidationError{}

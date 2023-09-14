@@ -56,3 +56,7 @@ func (s *Server) AddTrack(ctx context.Context, request *artist.NewTrackRequest) 
 		RequestStatus: artist.RequestStatus_OK,
 	}, nil
 }
+
+func (s *Server) DeleteTrack(context.Context, *artist.DeleteTrackRequest) (*artist.DeleteTrackResponse, error) {
+	return nil, nil
+}

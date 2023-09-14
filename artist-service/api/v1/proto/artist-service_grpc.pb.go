@@ -19,8 +19,9 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	ArtistService_Verify_FullMethodName   = "/artist.api.v1.proto.ArtistService/Verify"
-	ArtistService_AddTrack_FullMethodName = "/artist.api.v1.proto.ArtistService/AddTrack"
+	ArtistService_Verify_FullMethodName      = "/artist.api.v1.proto.ArtistService/Verify"
+	ArtistService_AddTrack_FullMethodName    = "/artist.api.v1.proto.ArtistService/AddTrack"
+	ArtistService_DeleteTrack_FullMethodName = "/artist.api.v1.proto.ArtistService/DeleteTrack"
 )
 
 // ArtistServiceClient is the client API for ArtistService service.
@@ -29,6 +30,7 @@ const (
 type ArtistServiceClient interface {
 	Verify(ctx context.Context, in *VerificationRequest, opts ...grpc.CallOption) (*VerificationResponse, error)
 	AddTrack(ctx context.Context, in *NewTrackRequest, opts ...grpc.CallOption) (*NewTrackResponse, error)
+	DeleteTrack(ctx context.Context, in *DeleteTrackRequest, opts ...grpc.CallOption) (*DeleteTrackResponse, error)
 }
 
 type artistServiceClient struct {
@@ -57,12 +59,22 @@ func (c *artistServiceClient) AddTrack(ctx context.Context, in *NewTrackRequest,
 	return out, nil
 }
 
+func (c *artistServiceClient) DeleteTrack(ctx context.Context, in *DeleteTrackRequest, opts ...grpc.CallOption) (*DeleteTrackResponse, error) {
+	out := new(DeleteTrackResponse)
+	err := c.cc.Invoke(ctx, ArtistService_DeleteTrack_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ArtistServiceServer is the server API for ArtistService service.
 // All implementations must embed UnimplementedArtistServiceServer
 // for forward compatibility
 type ArtistServiceServer interface {
 	Verify(context.Context, *VerificationRequest) (*VerificationResponse, error)
 	AddTrack(context.Context, *NewTrackRequest) (*NewTrackResponse, error)
+	DeleteTrack(context.Context, *DeleteTrackRequest) (*DeleteTrackResponse, error)
 	mustEmbedUnimplementedArtistServiceServer()
 }
 
@@ -75,6 +87,9 @@ func (UnimplementedArtistServiceServer) Verify(context.Context, *VerificationReq
 }
 func (UnimplementedArtistServiceServer) AddTrack(context.Context, *NewTrackRequest) (*NewTrackResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddTrack not implemented")
+}
+func (UnimplementedArtistServiceServer) DeleteTrack(context.Context, *DeleteTrackRequest) (*DeleteTrackResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteTrack not implemented")
 }
 func (UnimplementedArtistServiceServer) mustEmbedUnimplementedArtistServiceServer() {}
 
@@ -125,6 +140,24 @@ func _ArtistService_AddTrack_Handler(srv interface{}, ctx context.Context, dec f
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ArtistService_DeleteTrack_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteTrackRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ArtistServiceServer).DeleteTrack(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ArtistService_DeleteTrack_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ArtistServiceServer).DeleteTrack(ctx, req.(*DeleteTrackRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // ArtistService_ServiceDesc is the grpc.ServiceDesc for ArtistService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -139,6 +172,10 @@ var ArtistService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "AddTrack",
 			Handler:    _ArtistService_AddTrack_Handler,
+		},
+		{
+			MethodName: "DeleteTrack",
+			Handler:    _ArtistService_DeleteTrack_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
