@@ -42,6 +42,7 @@ func (s *Server) AddNewTrack(ctx context.Context, request *proto.NewTrackRequest
 func (s *Server) DeleteTrack(ctx context.Context, request *proto.DeleteRequest) (*proto.DeleteResponse, error) {
 	resp, err := s.Services.MusicService.Delete(ctx, request)
 	if err != nil {
+		logger.GetLogger().Error(err.Error())
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 	return resp, nil

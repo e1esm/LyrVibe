@@ -2,7 +2,6 @@ package server
 
 func setUpRoutes(server ProxyServer) {
 	server.Router.HandleMethodNotAllowed = true
-	server.Router.Use(server.RoleMiddleware)
 	setupAuthRoutes(&server)
 	setupArtistRoutes(&server)
 }
@@ -16,7 +15,7 @@ func setupAuthRoutes(server *ProxyServer) {
 
 func setupArtistRoutes(server *ProxyServer) {
 	artistGroup := server.Router.Group("/v1/artist/")
-	artistGroup.Use(server.AuthMiddleware)
+	artistGroup.Use(server.AuthMiddleware, server.RoleMiddleware)
 	artistGroup.POST("new", server.NewArtist)
 	artistGroup.POST("release", server.ReleaseTrack)
 }
