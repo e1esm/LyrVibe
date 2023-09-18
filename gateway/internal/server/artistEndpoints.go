@@ -7,6 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 	"net/http"
+	"time"
 )
 
 var (
@@ -14,6 +15,7 @@ var (
 	verificationFailed  = "Verification failed for user: %s"
 	verificationSucceed = "Verification succeed for user: %s"
 	releaseError        = "Track cannot be released: %s"
+	deleteError         = "Track cannot be deleted: %s"
 )
 
 func (ps *ProxyServer) NewArtist(c *gin.Context) {
@@ -30,6 +32,24 @@ func (ps *ProxyServer) NewArtist(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, fmt.Sprintf(verificationFailed, verificationRequest.Username))
 		return
 	}
+
+	accessCookie := &http.Cookie{
+		Name:     accessTokenName,
+		Value:    "",
+		HttpOnly: true,
+		Path:     "/",
+		Expires:  time.Unix(0, 0),
+	}
+	http.SetCookie(c.Writer, accessCookie)
+
+	refreshCookie := &http.Cookie{
+		Name:     refreshTokenName,
+		Value:    "",
+		HttpOnly: true,
+		Path:     "/",
+		Expires:  time.Unix(0, 0),
+	}
+	http.SetCookie(c.Writer, refreshCookie)
 	c.JSON(http.StatusOK, gin.H{
 		"status":       resp.RequestStatus.String(),
 		"verification": fmt.Sprintf(verificationSucceed, verificationRequest.Username),
@@ -49,6 +69,24 @@ func (ps *ProxyServer) ReleaseTrack(c *gin.Context) {
 	if err != nil {
 		logger.GetLogger().Error("Track cannot be released", zap.String("err", err.Error()))
 		c.JSON(http.StatusInternalServerError, fmt.Sprintf(releaseError, err.Error()))
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"title":  resp.Title,
+		"status": resp.RequestStatus.String(),
+	})
+}
+
+func (ps *ProxyServer) DeleteTrack(c *gin.Context) {
+	deleteRequest := proto.DeleteTrackRequest{}
+	if err := c.BindJSON(&deleteRequest); err != nil {
+		c.JSON(http.StatusBadRequest, fmt.Sprintf(badRequest, err.Error()))
+		return
+	}
+	deleteRequest.AuthorId = c.GetString("id")
+	resp, err := ps.Services.ArtistService.DeleteTrack(&deleteRequest)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, fmt.Sprintf(deleteError, err.Error()))
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{

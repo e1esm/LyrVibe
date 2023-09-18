@@ -15,7 +15,7 @@ import (
 var (
 	validationError = "validation's failed: %s"
 	verifyingError  = "couldn't validate artist with username: %s"
-	verifiedUser    = "user with nickname: %s is successfully verified"
+	deleteErr       = "can't delete the track: %v"
 )
 
 var artistRole = "Artist"
@@ -57,6 +57,10 @@ func (s *Server) AddTrack(ctx context.Context, request *artist.NewTrackRequest) 
 	}, nil
 }
 
-func (s *Server) DeleteTrack(context.Context, *artist.DeleteTrackRequest) (*artist.DeleteTrackResponse, error) {
-	return nil, nil
+func (s *Server) DeleteTrack(ctx context.Context, req *artist.DeleteTrackRequest) (*artist.DeleteTrackResponse, error) {
+	resp, err := s.Services.MusicService.DeleteTrack(ctx, req)
+	if err != nil {
+		return nil, fmt.Errorf(deleteErr, err.Error())
+	}
+	return resp, nil
 }

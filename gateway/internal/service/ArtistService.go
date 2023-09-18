@@ -9,7 +9,8 @@ import (
 
 type ArtistServiceProvider interface {
 	New(*proto.VerificationRequest) (*proto.VerificationResponse, error)
-	ReleaseTrack(req *proto.NewTrackRequest) (*proto.NewTrackResponse, error)
+	ReleaseTrack(*proto.NewTrackRequest) (*proto.NewTrackResponse, error)
+	DeleteTrack(*proto.DeleteTrackRequest) (*proto.DeleteTrackResponse, error)
 }
 
 type ArtistService struct {
@@ -26,4 +27,8 @@ func (as *ArtistService) New(req *proto.VerificationRequest) (*proto.Verificatio
 
 func (as *ArtistService) ReleaseTrack(req *proto.NewTrackRequest) (*proto.NewTrackResponse, error) {
 	return as.client.AddTrack(context.Background(), req)
+}
+
+func (as *ArtistService) DeleteTrack(req *proto.DeleteTrackRequest) (*proto.DeleteTrackResponse, error) {
+	return as.client.DeleteTrack(context.Background(), req)
 }

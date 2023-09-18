@@ -11,7 +11,7 @@ var noRightsErr = errors.New("no right to access resource")
 
 func (ps *ProxyServer) RoleMiddleware(c *gin.Context) {
 	switch {
-	case strings.Contains(c.Request.URL.String(), "artist"):
+	case strings.Contains(c.Request.URL.String(), "artist") && !strings.Contains(c.Request.URL.String(), "new"):
 		if c.GetString("role") == "Artist" {
 			c.Next()
 		} else {

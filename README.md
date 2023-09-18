@@ -30,7 +30,7 @@ LyrVibe is an API made for songwriters and music lovers which lets the first to 
         - Views on the platform
 - Add artist profile to the service - ✅
 - Summarize users' feedback on their songs based on the comments left - ❌
-- Delete song from the service - ❌
+- Delete song from the service - ✅
 - Update artist profile - ❌
 - Post whole album - ❌
 
