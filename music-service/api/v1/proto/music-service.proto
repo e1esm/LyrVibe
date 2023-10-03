@@ -36,10 +36,21 @@ message NewTrackRequest{
   string artist_id = 10;
 }
 
+
 message NewTrackResponse{
   string title = 1;
   Status status = 2;
+}
 
+message NewAlbumRequest{
+  string title = 1 [(validate.rules).string.min_len = 1];
+  repeated NewTrackRequest tracks = 2;
+}
+
+
+message NewAlbumResponse{
+  string title = 1;
+  Status status = 2;
 }
 
 message RequestStatus{

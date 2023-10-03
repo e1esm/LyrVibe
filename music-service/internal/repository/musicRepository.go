@@ -26,6 +26,7 @@ const (
 
 type Repository interface {
 	NewTrack(context.Context, entity.TrackEntity) (entity.TrackEntity, error)
+	NewAlbum(context.Context,)
 	DeleteTrack(context.Context, *proto.DeleteRequest) (*proto.DeleteResponse, error)
 }
 

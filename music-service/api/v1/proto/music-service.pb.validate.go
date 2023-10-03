@@ -328,6 +328,255 @@ var _ interface {
 	ErrorName() string
 } = NewTrackResponseValidationError{}
 
+// Validate checks the field values on NewAlbumRequest with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// first error encountered is returned, or nil if there are no violations.
+func (m *NewAlbumRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on NewAlbumRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// NewAlbumRequestMultiError, or nil if none found.
+func (m *NewAlbumRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *NewAlbumRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if utf8.RuneCountInString(m.GetTitle()) < 1 {
+		err := NewAlbumRequestValidationError{
+			field:  "Title",
+			reason: "value length must be at least 1 runes",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
+	for idx, item := range m.GetTracks() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, NewAlbumRequestValidationError{
+						field:  fmt.Sprintf("Tracks[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, NewAlbumRequestValidationError{
+						field:  fmt.Sprintf("Tracks[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return NewAlbumRequestValidationError{
+					field:  fmt.Sprintf("Tracks[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	if len(errors) > 0 {
+		return NewAlbumRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// NewAlbumRequestMultiError is an error wrapping multiple validation errors
+// returned by NewAlbumRequest.ValidateAll() if the designated constraints
+// aren't met.
+type NewAlbumRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m NewAlbumRequestMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m NewAlbumRequestMultiError) AllErrors() []error { return m }
+
+// NewAlbumRequestValidationError is the validation error returned by
+// NewAlbumRequest.Validate if the designated constraints aren't met.
+type NewAlbumRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e NewAlbumRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e NewAlbumRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e NewAlbumRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e NewAlbumRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e NewAlbumRequestValidationError) ErrorName() string { return "NewAlbumRequestValidationError" }
+
+// Error satisfies the builtin error interface
+func (e NewAlbumRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sNewAlbumRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = NewAlbumRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = NewAlbumRequestValidationError{}
+
+// Validate checks the field values on NewAlbumResponse with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// first error encountered is returned, or nil if there are no violations.
+func (m *NewAlbumResponse) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on NewAlbumResponse with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// NewAlbumResponseMultiError, or nil if none found.
+func (m *NewAlbumResponse) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *NewAlbumResponse) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for Title
+
+	// no validation rules for Status
+
+	if len(errors) > 0 {
+		return NewAlbumResponseMultiError(errors)
+	}
+
+	return nil
+}
+
+// NewAlbumResponseMultiError is an error wrapping multiple validation errors
+// returned by NewAlbumResponse.ValidateAll() if the designated constraints
+// aren't met.
+type NewAlbumResponseMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m NewAlbumResponseMultiError) Error() string {
+	var msgs []string
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m NewAlbumResponseMultiError) AllErrors() []error { return m }
+
+// NewAlbumResponseValidationError is the validation error returned by
+// NewAlbumResponse.Validate if the designated constraints aren't met.
+type NewAlbumResponseValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e NewAlbumResponseValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e NewAlbumResponseValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e NewAlbumResponseValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e NewAlbumResponseValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e NewAlbumResponseValidationError) ErrorName() string { return "NewAlbumResponseValidationError" }
+
+// Error satisfies the builtin error interface
+func (e NewAlbumResponseValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sNewAlbumResponse.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = NewAlbumResponseValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = NewAlbumResponseValidationError{}
+
 // Validate checks the field values on RequestStatus with the rules defined in
 // the proto definition for this message. If any rules are violated, the first
 // error encountered is returned, or nil if there are no violations.

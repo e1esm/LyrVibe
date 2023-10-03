@@ -23,3 +23,11 @@ func NewTrackEntity(track *proto.NewTrackRequest) *TrackEntity {
 		uuid.UUID{},
 	}
 }
+
+func getTracks(tracks []*proto.NewTrackRequest) []TrackEntity {
+	songs := make([]TrackEntity, 0)
+	for i := 0; i < len(tracks); i++ {
+		songs = append(songs, *NewTrackEntity(tracks[i]))
+	}
+	return songs
+}
