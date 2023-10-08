@@ -21,6 +21,7 @@ const _ = grpc.SupportPackageIsVersion7
 const (
 	MusicService_AddNewTrack_FullMethodName = "/music.api.v1.proto.MusicService/AddNewTrack"
 	MusicService_DeleteTrack_FullMethodName = "/music.api.v1.proto.MusicService/DeleteTrack"
+	MusicService_AddNewAlbum_FullMethodName = "/music.api.v1.proto.MusicService/AddNewAlbum"
 )
 
 // MusicServiceClient is the client API for MusicService service.
@@ -29,6 +30,7 @@ const (
 type MusicServiceClient interface {
 	AddNewTrack(ctx context.Context, in *NewTrackRequest, opts ...grpc.CallOption) (*NewTrackResponse, error)
 	DeleteTrack(ctx context.Context, in *DeleteRequest, opts ...grpc.CallOption) (*DeleteResponse, error)
+	AddNewAlbum(ctx context.Context, in *NewAlbumRequest, opts ...grpc.CallOption) (*NewAlbumResponse, error)
 }
 
 type musicServiceClient struct {
@@ -57,12 +59,22 @@ func (c *musicServiceClient) DeleteTrack(ctx context.Context, in *DeleteRequest,
 	return out, nil
 }
 
+func (c *musicServiceClient) AddNewAlbum(ctx context.Context, in *NewAlbumRequest, opts ...grpc.CallOption) (*NewAlbumResponse, error) {
+	out := new(NewAlbumResponse)
+	err := c.cc.Invoke(ctx, MusicService_AddNewAlbum_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // MusicServiceServer is the server API for MusicService service.
 // All implementations must embed UnimplementedMusicServiceServer
 // for forward compatibility
 type MusicServiceServer interface {
 	AddNewTrack(context.Context, *NewTrackRequest) (*NewTrackResponse, error)
 	DeleteTrack(context.Context, *DeleteRequest) (*DeleteResponse, error)
+	AddNewAlbum(context.Context, *NewAlbumRequest) (*NewAlbumResponse, error)
 	mustEmbedUnimplementedMusicServiceServer()
 }
 
@@ -75,6 +87,9 @@ func (UnimplementedMusicServiceServer) AddNewTrack(context.Context, *NewTrackReq
 }
 func (UnimplementedMusicServiceServer) DeleteTrack(context.Context, *DeleteRequest) (*DeleteResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteTrack not implemented")
+}
+func (UnimplementedMusicServiceServer) AddNewAlbum(context.Context, *NewAlbumRequest) (*NewAlbumResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddNewAlbum not implemented")
 }
 func (UnimplementedMusicServiceServer) mustEmbedUnimplementedMusicServiceServer() {}
 
@@ -125,6 +140,24 @@ func _MusicService_DeleteTrack_Handler(srv interface{}, ctx context.Context, dec
 	return interceptor(ctx, in, info, handler)
 }
 
+func _MusicService_AddNewAlbum_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(NewAlbumRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MusicServiceServer).AddNewAlbum(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MusicService_AddNewAlbum_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MusicServiceServer).AddNewAlbum(ctx, req.(*NewAlbumRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // MusicService_ServiceDesc is the grpc.ServiceDesc for MusicService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -139,6 +172,10 @@ var MusicService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeleteTrack",
 			Handler:    _MusicService_DeleteTrack_Handler,
+		},
+		{
+			MethodName: "AddNewAlbum",
+			Handler:    _MusicService_AddNewAlbum_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

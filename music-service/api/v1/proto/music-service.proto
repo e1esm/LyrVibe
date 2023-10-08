@@ -71,5 +71,6 @@ message DeleteRequest{
 service MusicService{
   rpc AddNewTrack(NewTrackRequest) returns (NewTrackResponse);
   rpc DeleteTrack(DeleteRequest) returns (DeleteResponse);
+  rpc AddNewAlbum(NewAlbumRequest) returns (NewAlbumResponse);
 }
 

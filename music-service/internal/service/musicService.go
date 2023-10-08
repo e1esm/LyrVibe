@@ -9,8 +9,9 @@ import (
 )
 
 type MusicServiceProvider interface {
-	AddNew(context.Context, *proto.NewTrackRequest) (entity.TrackEntity, error)
+	AddNewTrack(context.Context, *proto.NewTrackRequest) (entity.TrackEntity, error)
 	Delete(context.Context, *proto.DeleteRequest) (*proto.DeleteResponse, error)
+	AddNewAlbum(context.Context, *proto.NewAlbumRequest) (entity.AlbumEntity, error)
 }
 
 type MusicService struct {
@@ -21,7 +22,7 @@ func NewMusicService(repo repository.Repository) MusicServiceProvider {
 	return &MusicService{Repository: repo}
 }
 
-func (ms *MusicService) AddNew(ctx context.Context, request *proto.NewTrackRequest) (entity.TrackEntity, error) {
+func (ms *MusicService) AddNewTrack(ctx context.Context, request *proto.NewTrackRequest) (entity.TrackEntity, error) {
 	track := entity.NewTrackEntity(request)
 	return ms.Repository.NewTrack(ctx, *track)
 }
@@ -32,4 +33,8 @@ func (ms *MusicService) Delete(ctx context.Context, request *proto.DeleteRequest
 		return nil, fmt.Errorf("track wasn't deleted: %v", err)
 	}
 	return resp, nil
+}
+
+func (ms *MusicService) AddNewAlbum(ctx context.Context, request *proto.NewAlbumRequest) (entity.AlbumEntity, error) {
+	return ms.Repository.NewAlbum(ctx, *entity.NewAlbum(request))
 }
