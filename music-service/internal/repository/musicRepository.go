@@ -26,7 +26,7 @@ const (
 
 type Repository interface {
 	NewTrack(context.Context, entity.TrackEntity) (entity.TrackEntity, error)
-	NewAlbum(context.Context,)
+	NewAlbum(context.Context, entity.AlbumEntity) (entity.AlbumEntity, error)
 	DeleteTrack(context.Context, *proto.DeleteRequest) (*proto.DeleteResponse, error)
 }
 
@@ -169,4 +169,36 @@ func (mr *MusicRepository) DeleteTrack(ctx context.Context, request *proto.Delet
 		Title: request.Title,
 		Views: views,
 	}, nil
+}
+
+func (mr *MusicRepository) NewAlbum(ctx context.Context, album entity.AlbumEntity) (entity.AlbumEntity, error) {
+
+	ctx, cancel := context.WithTimeout(ctx, timeout)
+	defer cancel()
+	tx, err := mr.pool.Begin(ctx)
+	if err != nil {
+		return entity.AlbumEntity{}, fmt.Errorf("can't start transaction: %v", err)
+	}
+
+	mr.transactionRepo.AddTx(album.ID, tx)
+	defer func() {
+		tx.Rollback(ctx)
+		mr.transactionRepo.Delete(album.ID)
+	}()
+	tx.Exec(ctx, "INSERT INTO albums VALUES ($1, $2, $3, $4, $5);",
+		album.ID,
+		album.Tracks[0].Data.ArtistId,
+		album.Title,
+		album.Tracks[0].CreatedAt)
+
+	for i := 0; i < len(album.Tracks); i++ {
+		if _, err := mr.NewTrack(ctx, album.Tracks[i]); err != nil {
+			return entity.AlbumEntity{}, fmt.Errorf("error while uploading album's tracks: %v", err)
+		}
+	}
+	if err := tx.Commit(ctx); err != nil {
+		return entity.AlbumEntity{}, fmt.Errorf("commitment error: %v", err)
+	}
+
+	return album, nil
 }

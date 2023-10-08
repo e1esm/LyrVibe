@@ -361,6 +361,17 @@ func (m *NewAlbumRequest) validate(all bool) error {
 		errors = append(errors, err)
 	}
 
+	if len(m.GetTracks()) < 1 {
+		err := NewAlbumRequestValidationError{
+			field:  "Tracks",
+			reason: "value must contain at least 1 item(s)",
+		}
+		if !all {
+			return err
+		}
+		errors = append(errors, err)
+	}
+
 	for idx, item := range m.GetTracks() {
 		_, _ = idx, item
 

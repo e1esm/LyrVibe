@@ -2,6 +2,7 @@ package server
 
 import (
 	"context"
+	"fmt"
 	"github.com/e1esm/LyrVibe/music-service/api/v1/proto"
 	"github.com/e1esm/LyrVibe/music-service/internal/service"
 	"github.com/e1esm/LyrVibe/music-service/pkg/logger"
@@ -28,6 +29,9 @@ func NewServer(server *grpc.Server, services service.Services) *Server {
 }
 
 func (s *Server) AddNewTrack(ctx context.Context, request *proto.NewTrackRequest) (*proto.NewTrackResponse, error) {
+	if err := request.ValidateAll(); err != nil {
+		return nil, fmt.Errorf("validation error: %v", err)
+	}
 	track, err := s.Services.MusicService.AddNew(ctx, request)
 	if err != nil {
 		logger.GetLogger().Error(err.Error())
@@ -40,6 +44,11 @@ func (s *Server) AddNewTrack(ctx context.Context, request *proto.NewTrackRequest
 }
 
 func (s *Server) DeleteTrack(ctx context.Context, request *proto.DeleteRequest) (*proto.DeleteResponse, error) {
+
+	if err := request.ValidateAll(); err != nil {
+		return nil, fmt.Errorf("validation error: %v", err)
+	}
+
 	resp, err := s.Services.MusicService.Delete(ctx, request)
 	if err != nil {
 		logger.GetLogger().Error(err.Error())

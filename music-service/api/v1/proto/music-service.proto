@@ -44,7 +44,7 @@ message NewTrackResponse{
 
 message NewAlbumRequest{
   string title = 1 [(validate.rules).string.min_len = 1];
-  repeated NewTrackRequest tracks = 2;
+  repeated NewTrackRequest tracks = 2 [(validate.rules).repeated.min_items = 1];
 }
 
 
