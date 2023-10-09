@@ -94,3 +94,7 @@ func (ps *ProxyServer) DeleteTrack(c *gin.Context) {
 		"status": resp.RequestStatus.String(),
 	})
 }
+
+func (ps *ProxyServer) ReleaseAlbum(c *gin.Context) {
+
+}

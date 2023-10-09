@@ -9,8 +9,9 @@ import (
 )
 
 type MusicServiceProvider interface {
-	Release(context.Context, *models.Song) (*proto.NewTrackResponse, error)
+	ReleaseTrack(context.Context, *models.Song) (*proto.NewTrackResponse, error)
 	DeleteTrack(context.Context, *artist.DeleteTrackRequest) (*artist.DeleteTrackResponse, error)
+	ReleaseAlbum(context.Context, *artist.NewAlbumRequest) (*artist.NewAlbumResponse, error)
 }
 
 type MusicService struct {
@@ -21,7 +22,7 @@ func NewMusicService(client proto.MusicServiceClient) MusicServiceProvider {
 	return &MusicService{musicClient: client}
 }
 
-func (m *MusicService) Release(ctx context.Context, song *models.Song) (*proto.NewTrackResponse, error) {
+func (m *MusicService) ReleaseTrack(ctx context.Context, song *models.Song) (*proto.NewTrackResponse, error) {
 	releaseRequest := models.NewReleaseRequest(song)
 	if releaseRequest == nil {
 		return nil, fmt.Errorf("invalid Release request")
@@ -34,8 +35,31 @@ func (m *MusicService) DeleteTrack(ctx context.Context, deleteRequest *artist.De
 	if err != nil {
 		return nil, err
 	}
-	
+
 	return &artist.DeleteTrackResponse{
+		Title:         resp.Title,
+		RequestStatus: artist.RequestStatus_OK,
+	}, nil
+}
+
+func (m *MusicService) ReleaseAlbum(ctx context.Context, album *artist.NewAlbumRequest) (*artist.NewAlbumResponse, error) {
+	tracks := make([]*proto.NewTrackRequest, len(album.Tracks))
+
+	for i := 0; i < len(tracks); i++ {
+		tracks[i] = models.NewReleaseRequest(models.NewSong(album.Tracks[i]))
+	}
+
+	resp, err := m.musicClient.AddNewAlbum(ctx,
+		&proto.NewAlbumRequest{
+			Title:  album.Title,
+			Tracks: tracks,
+		})
+
+	if err != nil {
+		return nil, fmt.Errorf("album creating error: %v", err)
+	}
+
+	return &artist.NewAlbumResponse{
 		Title:         resp.Title,
 		RequestStatus: artist.RequestStatus_OK,
 	}, nil

@@ -16,6 +16,7 @@ var (
 	validationError = "validation's failed: %s"
 	verifyingError  = "couldn't validate artist with username: %s"
 	deleteErr       = "can't delete the track: %v"
+	albumErr        = "can't create album: %v"
 )
 
 var artistRole = "Artist"
@@ -47,7 +48,12 @@ func (s *Server) Verify(ctx context.Context, request *artist.VerificationRequest
 }
 
 func (s *Server) AddTrack(ctx context.Context, request *artist.NewTrackRequest) (*artist.NewTrackResponse, error) {
-	resp, err := s.Services.MusicService.Release(ctx, models.NewSong(request))
+
+	if err := request.ValidateAll(); err != nil {
+		return nil, status.Errorf(codes.InvalidArgument, fmt.Errorf(validationError, err.Error()).Error())
+	}
+
+	resp, err := s.Services.MusicService.ReleaseTrack(ctx, models.NewSong(request))
 	if err != nil {
 		return nil, fmt.Errorf("can't release track: %v", err)
 	}
@@ -63,4 +69,20 @@ func (s *Server) DeleteTrack(ctx context.Context, req *artist.DeleteTrackRequest
 		return nil, fmt.Errorf(deleteErr, err.Error())
 	}
 	return resp, nil
+}
+
+func (s *Server) AddAlbum(ctx context.Context, album *artist.NewAlbumRequest) (*artist.NewAlbumResponse, error) {
+
+	if err := album.ValidateAll(); err != nil {
+		return nil, status.Errorf(codes.InvalidArgument, fmt.Errorf(validationError, err).Error())
+	}
+
+	resp, err := s.Services.MusicService.ReleaseAlbum(ctx, album)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, fmt.Errorf(albumErr, err.Error()).Error())
+	}
+	return &artist.NewAlbumResponse{
+		Title:         resp.Title,
+		RequestStatus: artist.RequestStatus_OK,
+	}, nil
 }

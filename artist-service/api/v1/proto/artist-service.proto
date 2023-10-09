@@ -54,6 +54,16 @@ message NewTrackResponse{
   RequestStatus requestStatus = 2;
 }
 
+message NewAlbumRequest{
+  string title = 1 [(validate.rules).string.min_len = 1];
+  repeated NewTrackRequest tracks = 2 [(validate.rules).repeated.min_items = 1];
+}
+
+message NewAlbumResponse{
+  string title = 1;
+  RequestStatus requestStatus = 2;
+}
+
 message DeleteTrackRequest{
   string author_id = 1;
   string track_title = 2;
@@ -68,4 +78,5 @@ service ArtistService{
   rpc Verify(VerificationRequest) returns (VerificationResponse) {};
   rpc AddTrack(NewTrackRequest) returns (NewTrackResponse) {};
   rpc DeleteTrack(DeleteTrackRequest) returns (DeleteTrackResponse) {};
+  rpc AddAlbum(NewAlbumRequest) returns(NewAlbumResponse);
 }
