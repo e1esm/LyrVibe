@@ -14,7 +14,7 @@ var (
 	badRequest          = "Bad request: %s"
 	verificationFailed  = "Verification failed for user: %s"
 	verificationSucceed = "Verification succeed for user: %s"
-	releaseError        = "Track cannot be released: %s"
+	releaseError        = "Cannot be released: %s"
 	deleteError         = "Track cannot be deleted: %s"
 )
 
@@ -96,5 +96,21 @@ func (ps *ProxyServer) DeleteTrack(c *gin.Context) {
 }
 
 func (ps *ProxyServer) ReleaseAlbum(c *gin.Context) {
-
+	albumRequest := proto.NewAlbumRequest{}
+	if err := c.BindJSON(&albumRequest); err != nil {
+		c.JSON(http.StatusBadRequest, fmt.Sprintf(badRequest, err.Error()))
+		return
+	}
+	for i := 0; i < len(albumRequest.Tracks); i++ {
+		albumRequest.Tracks[i].ArtistId = c.GetString("id")
+	}
+	resp, err := ps.Services.ArtistService.ReleaseAlbum(&albumRequest)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, fmt.Sprintf("Error while releasing album: %v", releaseError))
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"title":  resp.Title,
+		"status": resp.RequestStatus.String(),
+	})
 }

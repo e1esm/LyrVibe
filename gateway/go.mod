@@ -3,7 +3,7 @@ module github.com/e1esm/LyrVibe/gateway
 go 1.20
 
 require (
-	github.com/e1esm/LyrVibe/artist-service v0.0.0-20230914211420-269912d50341
+	github.com/e1esm/LyrVibe/artist-service v0.0.0-20231009135709-4884e1de5de6
 	github.com/e1esm/LyrVibe/auth-service v0.0.0-20230904202617-8d562ab8e46d
 	github.com/e1esm/LyrVibe/music-service v0.0.0-20231008224306-37b3aaa3100b
 	github.com/gin-gonic/gin v1.9.1

@@ -11,6 +11,7 @@ type ArtistServiceProvider interface {
 	New(*proto.VerificationRequest) (*proto.VerificationResponse, error)
 	ReleaseTrack(*proto.NewTrackRequest) (*proto.NewTrackResponse, error)
 	DeleteTrack(*proto.DeleteTrackRequest) (*proto.DeleteTrackResponse, error)
+	ReleaseAlbum(*proto.NewAlbumRequest) (*proto.NewAlbumResponse, error)
 }
 
 type ArtistService struct {
@@ -31,4 +32,8 @@ func (as *ArtistService) ReleaseTrack(req *proto.NewTrackRequest) (*proto.NewTra
 
 func (as *ArtistService) DeleteTrack(req *proto.DeleteTrackRequest) (*proto.DeleteTrackResponse, error) {
 	return as.client.DeleteTrack(context.Background(), req)
+}
+
+func (as *ArtistService) ReleaseAlbum(req *proto.NewAlbumRequest) (*proto.NewAlbumResponse, error) {
+	return as.client.AddAlbum(context.Background(), req)
 }
