@@ -19,4 +19,5 @@ func setupArtistRoutes(server *ProxyServer) {
 	artistGroup.POST("new", server.NewArtist)
 	artistGroup.POST("track", server.ReleaseTrack)
 	artistGroup.DELETE("track", server.DeleteTrack)
+	artistGroup.POST("album", server.ReleaseAlbum)
 }
